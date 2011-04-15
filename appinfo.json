@@ -1,0 +1,8 @@
+{
+    "vendor": "Webian",
+    "name": "Webian Shell",
+    "version": "0.1",
+    "developer_email": "ben at tola.me.uk",
+    "resizable": false,
+    "menubar": false
+}

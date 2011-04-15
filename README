@@ -1,0 +1,24 @@
+== Webian Shell 0.1 (development preview) ==
+
+Webian Shell is a graphical shell for the web, a full screen web browser for devices that don't need a desktop.
+
+It's an implementation of a design concept called "A Graphical Shell for the Web" [1] by Ben Francis. 
+
+The code is designed to be run using Mozilla Chromeless [2] and currently lives on the Webian web site [3].
+
+This is a development preview of version 0.1 to be included in the Chromeless gallery. The full 0.1 release will include cross-platform packaged binaries.
+
+To run, check out Chromeless from github [4] and execute... 
+
+  $ ./chromeless /path/to/shell/
+
+...from the Chromeless source directory.
+
+You can sign up to the Webian mailing list [5] or contact the author directly (Ben Francis) [6]
+
+1. https://docs.google.com/View?id=dd4z8wsd_393dd5v2mdg
+2. http://mozillalabs.com/chromeless/
+3. http://webian.org
+4. https://github.com/mozilla/chromeless
+5. http://webian.org/discussions
+6. http://tola.me.uk/contact

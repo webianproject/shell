@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<!-- 
+ Webian Shell browser content
+ http://webian.org
+ 
+ Copyright @authors 2011
+
+ @author Ben Francis http://tola.me.uk
+ 
+
+ Webian Shell is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Webian Shell is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Webian Shell in the LICENSE file. If not, see 
+ <http://www.gnu.org/licenses/>.
+-->
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Webian Shell</title>
+   <link rel="stylesheet" href="main.css" type="text/css" />
+   <script type="text/javascript" src="jquery.js"></script>
+   <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+  <!-- Home Screen -->
+  <div id="home_screen" class="active">
+
+    <div id="top_toolbar" class="toolbar">
+	<input id="power_button" type="image" src="power.png" class="button" alt="Shut down">
+    </div>
+
+    <div id="widget_space">
+
+    </div>
+
+  </div>
+  <!-- End of Home Screen -->
+
+  <!-- Windows -->
+  <div id="windows">
+    <div id="window_template" class="window">
+      <div class="toolbar window_toolbar">
+        <input type="image" src="back.png" class="back_button button" alt="Back">
+        <input type="image" src="forward.png" class="forward_button button" alt="Forward">
+        <div class="address_bar">
+	  <span class="document_title"></span>
+          <form class="url_form">
+            <input type="text" class="url_input">
+          </form>
+          <input type="image" src="go.png" class="go_button" alt="Go">
+        </div>
+        <input type="image" src="close.png" class="close_button button" alt="Close">
+      </div>
+      <!-- iframe is inserted here -->
+    </div>
+  </div>
+  <!-- End of Windows -->
+
+  <!-- Bottom Toolbar -->
+  <div id="bottom_toolbar" class="toolbar">
+    <input type="image" src="home.png" id="home_button" class="button" alt="Home">
+    <div id="tabs">
+      <ul>
+      </ul>
+      <input type="image" src="add.png" id="new_tab_button" class="button" alt="New Tab">
+    </div>
+    <div id="clock">12:00</div>
+  </div>
+  <!-- End of Bottom Toolbar -->
+
+</body>
+
+</html>

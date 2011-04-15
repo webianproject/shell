@@ -1,0 +1,264 @@
+/**
+ * Webian Shell browser styles
+ * http://webian.org
+ * 
+ * Copyright @authors 2011
+ *
+ * @author Ben Francis http://tola.me.uk
+ * 
+ * Webian Shell is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Webian Shell is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Webian Shell in the LICENSE file. If not, see 
+ * <http://www.gnu.org/licenses/>.
+ */
+
+html, body {
+	height: 100%;
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	font-family: Arial, Helvetica, Sans-serif;
+	font-size: 13px;
+	display: -moz-box;
+	-moz-box-orient: vertical;
+	width: 100%;
+	background-color: #000;
+}
+
+.toolbar {
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	width: 100%;
+	height: 30px;
+	margin: 0;
+}
+
+/* Home Screen Styles */
+
+
+#home_screen {
+	display: none;
+	visibility: hidden;
+	background-color: #000;
+	padding: 0;
+	margin: 0;
+}
+
+#home_screen.active {
+	visibility: visible;
+	display: -moz-box;
+	-moz-box-flex: 1;	
+	-moz-box-orient: vertical;
+}
+
+#home_screen #top_toolbar {
+	
+}
+
+#home_screen #top_toolbar #power_button {
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+#home_screen #widget_space {
+	background-image: url('webian_shell_logo.png'), -moz-radial-gradient(closest-side, #434343 0%, #000 100%);
+	background-repeat: no-repeat;
+	background-position: center center;
+	-moz-box-flex: 1;
+	padding: 0;
+	margin: 0;
+}
+
+/* Bottom Toolbar Styles */
+
+#bottom_toolbar {
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	background-color: #000;
+}
+
+#bottom_toolbar #home_button {
+	display: none;
+	visibility: hidden;
+}
+
+#bottom_toolbar #home_button.active {
+	display: inline;
+	visibility: visible;
+}
+
+#bottom_toolbar #clock {
+	padding: 8px;
+	color: #fff;
+}
+
+/* Window Styles */
+#windows {
+	display: none;
+	visibility: hidden;
+}
+
+#windows.active {
+	-moz-box-flex: 1;
+	visibility: visible;
+	display: -moz-box;
+	-moz-box-orient: vertical;
+}
+
+.window {
+	-moz-box-flex: 1;
+	display: none;
+	padding: 0;
+	margin: 0;
+	visibility: hidden;
+	width: 100%;
+}
+
+.window.selected {
+	visibility: visible;
+	display: -moz-box;
+	-moz-box-orient: vertical;
+
+}
+
+.window_toolbar {
+	background-color: #666;
+	top: 0px;
+	left: 0px;
+	-moz-border-radius-topleft: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-right-radius: 5px;
+	border-top-left-radius: 5px;
+}
+
+.button {
+	width: 20px;
+	height: 20px;
+	padding: 5px 4px;
+}
+
+.document_title {
+	float: left;
+	color: #fff;
+	font-weight: bold;
+	padding: 2px 5px;
+	display: none;
+	visibility: hidden;
+}
+
+.document_title.active {
+	display: block;
+	visibility: visible;
+}
+
+.address_bar {
+	-moz-box-flex: 1;
+	display: -moz-box;
+	-moz-box-orient: horizontal;
+	-moz-box-align: start;
+	width: 100%;
+	background-color: #333;
+	height: 20px;
+	padding: 0;
+	-moz-border-radius: 5px;
+	margin: 5px;
+}
+
+.url_form {
+	height: 20px;
+	display: -moz-box;
+	-moz-box-flex: 1;
+	padding: 0;
+	margin: 0;
+}
+
+.url_form .url_input {
+	background-color: #fff;
+	-moz-box-flex: 1;
+	height: 16px;
+	padding: 2px 5px;
+	border: none;
+	-moz-border-radius: 5px;
+}
+
+.url_form .url_input.loading {
+	background-image: url('progress_bar.png');
+	background-repeat: no-repeat;
+}
+
+.url_form .url_input.loaded {
+	background-color: #dae2e9;
+}
+
+.go_button {
+	display: block;
+	padding: 0px 4px;
+}
+
+.window_iframe {
+	-moz-box-flex: 1;
+	width: 100%;
+	height: 100%;
+	border: solid 5px #666;
+	border-top: none;
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-bottomright: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+
+/* Tab Styles */
+#tabs {
+	-moz-box-flex: 1;
+}
+
+#tabs ul {
+	margin: 0;
+	padding: 0;
+	float: left;
+}
+
+.tab {
+	padding: 0 0 0 5px;
+	list-style-type: none;
+	margin: 0;
+	float: left;
+}
+
+.tab a {
+	background-color: #333;
+	display: block;
+	width: 16px;
+	height: 17px;
+	padding: 4px 7px;
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-bottomright: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+}
+
+#tabs.detached .tab a {
+	-moz-border-radius: 5px;
+	border-radius: 5px;	
+}
+
+.tab.selected a {
+	background-color: #666;
+}
+
+#new_tab_button {
+	float: left;
+}
