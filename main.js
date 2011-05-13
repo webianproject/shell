@@ -71,15 +71,15 @@ function makeIframe(windowId) {
 	// Add event listeners to iFrame...	
 
 	// Check progress of page load...
-	iFrame.addEventListener("ChromelessLoadProgress", function (e) {
+	iFrame.addEventListener("ChromelessDOMProgress", function (e) {
 		$(url_input).addClass('loading');
-		$(url_input).css('-moz-background-size', e.percentage+"%");
-		$(url_input).css('background-size', e.percentage+"%");
+		$(url_input).css('-moz-background-size', e.percent+"%");
+		$(url_input).css('background-size', e.percent+"%");
 		}
 	,false);
 
 	// When page starts to load...
-	iFrame.addEventListener("ChromelessLoadStart", function(e) {
+	iFrame.addEventListener("ChromelessDOMLoadStart", function(e) {
 		// Update address bar
 		$(url_input).val(e.url);
 		// Set go button as stop button
@@ -102,15 +102,18 @@ function makeIframe(windowId) {
 	}, false, true);
 
 	// When page and contents are completely loaded...
-	iFrame.addEventListener("ChromelessLoadStop", function(e) {
+	iFrame.addEventListener("ChromelessDOMLoadStop", function(e) {
 		// Set URL input textbox to loaded state
 		$(url_input).removeClass('loading');
 		$(url_input).addClass('loaded');
 		// Change "Go" button to "Refresh"
 		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");
 		// Display document title if set
-		var window_iframe = $("#windows .selected .window_iframe")[0];
-		var document_title = require("iframe-controls").title(window_iframe);
+	}, false, true);
+
+	// When page and contents are completely loaded...
+	iFrame.addEventListener("ChromelessDOMTitleChange", function(e) {
+		var document_title = e.title;
 		if(document_title) {
 			$('#window_' + windowId + ' .document_title').addClass("active");
 			$('#window_' + windowId + ' .document_title').text(document_title);
@@ -120,6 +123,52 @@ function makeIframe(windowId) {
 	}, false, true);
 
 	return iFrame;
+}
+
+/**
+ * Fix Up Iframe with CommonsJS ( web-content ) to DOM interfaces. 
+ * 
+ * Call this function for each iframe if you want to get standard DOM events ( Chromeless 0.1 ) 
+ */
+function fixUpIframe(iframeElement) {
+      var pm = require('web-content').ProgressMonitor();
+      pm.attach(iframeElement);
+      pm.on('title-change', function(title) {
+         var evt = document.createEvent("HTMLEvents");
+         evt.initEvent("ChromelessDOMTitleChange", true, false);
+         evt.title = title;
+         iframeElement.dispatchEvent(evt);
+      });
+      pm.on('load-start', function() {
+         var evt = document.createEvent("HTMLEvents");
+         evt.initEvent("ChromelessDOMLoadStart", true, false);
+         iframeElement.dispatchEvent(evt);
+      });
+      pm.on('progress', function(percent) {
+         var evt = document.createEvent("HTMLEvents");
+         evt.initEvent("ChromelessDOMProgress", true, false);
+         evt.percent = percent;
+         iframeElement.dispatchEvent(evt);
+      });
+      pm.on('load-stop', function() {
+         var evt = document.createEvent("HTMLEvents");
+         evt.initEvent("ChromelessDOMLoadStop", true, false);
+         iframeElement.dispatchEvent(evt);
+      });
+      pm.on('security-change', function(e) {
+         var evt = document.createEvent("HTMLEvents");
+         evt.initEvent("ChromelessDOMSecurityChange", true, false);
+         evt.state = e.state;
+         evt.strength = e.state;
+         iframeElement.dispatchEvent(evt);
+      });
+      var currentIframeElementId = iframeElement.getAttribute("id");
+      document.getElementById("window_template").addEventListener("DOMNodeRemoved", function(e){
+         if(e.target.getAttribute("id") == currentIframeElementId) {
+             console.log("It's me!, detaching ");
+             pm.detach();
+         }
+      }, false);
 }
 
 /**
@@ -230,6 +279,8 @@ function newTab(url) {
 	// Add new window to interface
 	$("#windows").append(newWindow);
 
+        
+
 	// Add corresponding tab
 	$("#tabs ul").append('<li id="tab_' + windowId + 
 		'" class="tab"><a href="javascript:null()"></a></li>');
@@ -241,6 +292,8 @@ function newTab(url) {
 	var newIframe = makeIframe(windowId);
 	$("#windows .selected .window_toolbar").after(newIframe);
 	
+        //Fixup the iframe with CommonJS to DOM bridge
+        fixUpIframe(newIframe);
 	// Register window event listeners
 	registerWindowEventListeners(windowId);
 	
