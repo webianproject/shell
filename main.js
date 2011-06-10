@@ -21,9 +21,11 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-// Import Chromeless libraries
+// Import Chromeless modules
 var favicon = require("favicon");
+var web_content = require("web-content");
 const url = require("url");
+const fullscreen = require("fullscreen");
 
 // Set up console for debugging
 //console.log('hello world');
@@ -56,8 +58,7 @@ function clock() {
  * Make iFrame
  * 
  * Creates a special iFrame which acts like a browser and will contain the
- * content of a new window. Event listeners are added to monitor progress
- * of page loading.
+ * content of a new window.
  * 
  * @return new iFrame object
  */
@@ -65,60 +66,6 @@ function makeIframe(windowId) {
 	var iFrame = document.createElement("iframe");
 	$(iFrame).attr("privilege", "content");
 	$(iFrame).attr("class", "window_iframe");
-	
-	var url_input = $('#window_' + windowId + ' .url_input');
-
-	// Add event listeners to iFrame...	
-
-	// Check progress of page load...
-	iFrame.addEventListener("ChromelessLoadProgress", function (e) {
-		$(url_input).addClass('loading');
-		$(url_input).css('-moz-background-size', e.percentage+"%");
-		$(url_input).css('background-size', e.percentage+"%");
-		}
-	,false);
-
-	// When page starts to load...
-	iFrame.addEventListener("ChromelessLoadStart", function(e) {
-		// Update address bar
-		$(url_input).val(e.url);
-		// Set go button as stop button
-		$("#window_" + windowId + " .go_button").attr("src", "stop.png");
-		// If URL has changed, add to history and update index
-		if (e.url !== urlHistory[windowId][urlHistory[windowId][0]]) {
-			// Remove previous future if new future being created!
-			if (urlHistory[windowId][0] < urlHistory[windowId].length) {
-				urlHistory[windowId].splice(
-					urlHistory[windowId][0] + 1,
-					urlHistory[windowId].length - urlHistory[windowId][0]);
-			}
-			
-			// Add new URL to history
-			urlHistory[windowId].push(e.url);
-			
-			// Update index
-			urlHistory[windowId][0]++;
-		}
-	}, false, true);
-
-	// When page and contents are completely loaded...
-	iFrame.addEventListener("ChromelessLoadStop", function(e) {
-		// Set URL input textbox to loaded state
-		$(url_input).removeClass('loading');
-		$(url_input).addClass('loaded');
-		// Change "Go" button to "Refresh"
-		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");
-		// Display document title if set
-		var window_iframe = $("#windows .selected .window_iframe")[0];
-		var document_title = require("iframe-controls").title(window_iframe);
-		if(document_title) {
-			$('#window_' + windowId + ' .document_title').addClass("active");
-			$('#window_' + windowId + ' .document_title').text(document_title);
-		} else {
-			$('#window_' + windowId + ' .document_title').removeClass("active");
-		}
-	}, false, true);
-
 	return iFrame;
 }
 
@@ -126,12 +73,13 @@ function makeIframe(windowId) {
  * Register Window Event Listeners
  * 
  * Registers event listeners for the currently selected window to detect
- * user actions like go, back forward etc.
+ * user actions like go, back forward etc. and attaches progress monitor to
+ * iFrame.
  * 
  * @param {String} windowId of window to register listeners for
  */
 function registerWindowEventListeners(windowId) {
-	var url_input = $("#window_" + windowId + " .url_input");
+	var url_input = $('#window_' + windowId + ' .url_input');
 	var go_button = $("#window_" + windowId + " .go_button");
 
 	// When URL input text box is selected, change "Refresh" button to "Go" button and remove loaded state
@@ -152,11 +100,11 @@ function registerWindowEventListeners(windowId) {
 	$("#window_" + windowId + " .url_form").submit(function() { 
 		navigate($(this).parents(".window").attr("id").substring(7)); return false; 
 	});
-	$("#window_" + windowId + " .go_button").click(function() { 
+	$(go_button).click(function() { 
 		// If loading then act as stop button
 		if($('#windows .selected .url_input').hasClass('loading')) {
 			var window_iframe = $("#windows .selected .window_iframe")[0];
-			require("iframe-controls").stopload(window_iframe);
+			web_content.stopload(window_iframe);
 			$(go_button).attr("src", "refresh.png");
 		} else {
 		// otherwise act as go/refresh
@@ -192,6 +140,71 @@ function registerWindowEventListeners(windowId) {
 	$("#window_" + windowId + " .close_button").click(function() {
 		closeTab($(this).parents(".window").attr("id").substring(7));
 	});
+}
+
+/**
+ * Attach iFrame Progress Monitor
+ *
+ * Attach progress monitor to react to page load progress.
+ * 
+ * @param {String} windowId of window containing iFrame to listen to
+ */
+function attachIframeProgressMonitor(windowId) {
+	var progressMonitor = web_content.ProgressMonitor();
+	var window_iframe = $('#window_' + windowId + ' .window_iframe');
+	var url_input = $('#window_' + windowId + ' .url_input');
+	
+	// Add progress monitor to iFrame...
+	progressMonitor.attach(window_iframe[0]);
+	
+	// Check progress of page load...
+	progressMonitor.on('progress', function(percent) {
+		$(url_input).addClass('loading');
+		$(url_input).css('-moz-background-size', percent+"%");
+		$(url_input).css('background-size', percent+"%");			
+	});
+
+	// When page starts to load...
+	progressMonitor.on('load-start', function(url) {
+		// Update address bar
+		$(url_input).val(url);
+		// Set go button as stop button
+		$("#window_" + windowId + " .go_button").attr("src", "stop.png");
+		// If URL has changed, add to history and update index
+		if (url !== urlHistory[windowId][urlHistory[windowId][0]]) {
+			// Remove previous future if new future being created!
+			if (urlHistory[windowId][0] < urlHistory[windowId].length) {
+				urlHistory[windowId].splice(
+					urlHistory[windowId][0] + 1,
+					urlHistory[windowId].length - urlHistory[windowId][0]);
+			}
+			
+			// Add new URL to history
+			urlHistory[windowId].push(url);
+			
+			// Update index
+			urlHistory[windowId][0]++;
+		}			
+	});
+
+	// When page and contents are completely loaded...
+	progressMonitor.on('load-stop', function() {
+		// Set URL input textbox to loaded state
+		$(url_input).removeClass('loading');
+		$(url_input).addClass('loaded');
+		// Change "Go" button to "Refresh"
+		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");				
+	});
+
+	
+	// When title changes...
+	progressMonitor.on('title-change', function(document_title) {
+		if(document_title) {
+			$('#window_' + windowId + ' .document_title').addClass("active");	
+			$('#window_' + windowId + ' .document_title').text(document_title);	
+		}
+	});
+	
 }
 
 /**
@@ -243,6 +256,9 @@ function newTab(url) {
 	
 	// Register window event listeners
 	registerWindowEventListeners(windowId);
+	
+	// Attach iFrame progress monitor
+	attachIframeProgressMonitor(windowId);
 	
 	// Create history array for window, using first element as index
 	urlHistory[windowId] = [];
@@ -331,18 +347,6 @@ function activateWindows() {
 	$("#tabs").removeClass("detached");
 }
 
-
-/**
- * Full Screen
- * 
- * Toggle full screen mode
- */
-function fullScreen() {
-	const fullscreen = require("fullscreen");
-	fullscreen.toggle(window);	
-}
-
-
 // When Shell starts up...
 $(document).ready(function() {
 
@@ -368,5 +372,5 @@ $(document).ready(function() {
 	});
 	
 	// Wait for MS Windows to catch up, then toggle full screen mode
-	setTimeout("fullScreen()", 2000);
+	setTimeout("fullscreen.toggle(window)", 2000);
 });
