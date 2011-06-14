@@ -5,6 +5,8 @@
  * Copyright @authors 2011
  *
  * @author Ben Francis http://tola.me.uk
+ * @author Sam Black http://samwwwblack.lapwing.org
+ * @author Maarten Jacobs http://maartenj.net
  *
  * Webian Shell is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,14 +61,14 @@ function clock() {
 /**
  * Switches element 1 and element 2 in the parent tree.
  * It assumes element 1 and element 2 ARE on the same level in the parent tree.
- * 
+ *
  * @param elem1 First element
  * @param elem2 Second element
  */
 function switchElements(elem1, elem2){
 	// Init vars
 	var small, big, bigFollow;
-	
+
 	// Order elements on index
 	if(elem1.index() < elem2.index()){
 		small = elem1;
@@ -76,14 +78,14 @@ function switchElements(elem1, elem2){
 		big = elem1;
 	}
 	bigFollow = big.next();
-	
+
 	// Move the bigger index element
 	big.insertBefore(small);
 	if(big.index() - small.index() === 1){
 		// Only need to do an insert before --we be done!
 		return;
 	}
-	
+
 	// Move the smaller index element
 	if(bigFollow.length === 0){
 		// append rather than insertBefore
@@ -141,6 +143,7 @@ function registerWindowEventListeners(windowId) {
 		}
 	});
 
+	// Check if valid URL and then goto, else search via Google
 	url_input.keydown(function(event){
 		if(event.keyCode == '13'){
 			var val = $(this).val();
@@ -453,7 +456,7 @@ $(document).ready(function() {
 
 	// Tried this to remove border, doesn't work!
 	$(".tab:active, .tab:focus").css("outline", "none");
-	
+
 	// Select tab
 	$(".tab").live('click', function () {
 		selectTab($(this).attr("id").substring(4));
@@ -462,14 +465,14 @@ $(document).ready(function() {
 	}).live('hover', function(){
 		if(selectedDownTab !== undefined && $(this).index() !== selectedDownTab.index()){
 			enteredTab = $(this);
-			
+
 			// Switch the two tabs position
 			switchElements(selectedDownTab, enteredTab);
-			
+
 			// Un-init our variables
 			selectedDownTab = undefined;
 			enteredTab = undefined;
-		} 
+		}
 	}).live('mouseup', function(){
 		selectedDownTab = undefined;
 		enteredTab = undefined;

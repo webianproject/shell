@@ -5,6 +5,8 @@
  * Copyright @authors 2011
  *
  * @author Ben Francis http://tola.me.uk
+ * @author Sam Black http://samwwwblack.lapwing.org
+ * @author Maarten Jacobs http://maartenj.net
  *
  * Webian Shell is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +47,6 @@ body {
 }
 
 /* Home Screen Styles */
-
 
 #home_screen {
 	display: none;
@@ -105,6 +106,7 @@ body {
 }
 
 /* Window Styles */
+
 #windows {
 	display: none;
 	visibility: hidden;
@@ -219,8 +221,8 @@ body {
 	border-bottom-left-radius: 5px;
 }
 
-
 /* Tab Styles */
+
 #tabs {
 	-moz-box-flex: 1;
 }
