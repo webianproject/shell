@@ -29,7 +29,9 @@ var favicon = require("favicon"),
 	urlHistory = [], // History of URLs
 	currentUrlIndex = 0, // Index of current point in URL history
 	clockElement,
-	urlRegex = /^(http:\/\/|https:\/\/)?(www[.])?(\w)+[.](\w){2,6}\/?/;
+	urlRegex = /^(http[s]{0,1}:\/\/)?(www[.])?(\w)+[.](\w){2,6}\/?/,
+	selectedDownTab,
+	enteredTab;
 
 /**
  * Clock
@@ -52,6 +54,43 @@ function clock() {
 	}
 
 	clockElement.text(hours + ":" + minutes);
+}
+
+/**
+ * Switches element 1 and element 2 in the parent tree.
+ * It assumes element 1 and element 2 ARE on the same level in the parent tree.
+ * 
+ * @param elem1 First element
+ * @param elem2 Second element
+ */
+function switchElements(elem1, elem2){
+	// Init vars
+	var small, big, bigFollow;
+	
+	// Order elements on index
+	if(elem1.index() < elem2.index()){
+		small = elem1;
+		big = elem2;
+	} else {
+		small = elem2;
+		big = elem1;
+	}
+	bigFollow = big.next();
+	
+	// Move the bigger index element
+	big.insertBefore(small);
+	if(big.index() - small.index() === 1){
+		// Only need to do an insert before --we be done!
+		return;
+	}
+	
+	// Move the smaller index element
+	if(bigFollow.length === 0){
+		// append rather than insertBefore
+		big.parent().append(small);
+	} else {
+		small.insertBefore(bigFollow);
+	}
 }
 
 /**
@@ -153,12 +192,15 @@ function registerWindowEventListeners(windowId) {
 		faviconUpdate(windowId);
 	});
 
+	/**
+	 *	Moved to ready function
+	 */
 	// Select tab
 	// TODO(tola): de-generalise this and put it somewhere more sensible
-	$(".tab").click(function () {
-		var tabId = $(this).attr("id");
-		selectTab(tabId.substring(4));
-	});
+	//$(".tab").click(function () {
+		//var tabId = $(this).attr("id");
+		//selectTab(tabId.substring(4));
+	//});
 
 	// Close tab
 	our_window.find(" .close_button").click(function() {
@@ -177,8 +219,6 @@ function attachIframeProgressMonitor(windowId) {
 	var progressMonitor = web_content.ProgressMonitor(),
 		window_iframe = $('#window_' + windowId + ' .window_iframe'),
 		url_input = $('#window_' + windowId + ' .url_input');
-
-	console.log('attachIframeProgressMonitor, count iFrame: ' + window_iframe.length);
 
 	// Add progress monitor to iFrame...
 	progressMonitor.attach(window_iframe[0]);
@@ -420,6 +460,24 @@ $(document).ready(function() {
 
 	// Tried this to remove border, doesn't work!
 	$(".tab:active, .tab:focus").css("outline", "none");
+	
+	// Select tab
+	$(".tab").live('click', function () {
+		selectTab($(this).attr("id").substring(4));
+	}).live('mousedown', function(){
+		selectedDownTab = $(this);
+	}).live('hover', function(){
+		if(selectedDownTab !== undefined && $(this).index() !== selectedDownTab.index()){
+			enteredTab = $(this);
+			
+			// Switch the two tabs position
+			switchElements(selectedDownTab, enteredTab);
+			
+			// Un-init our variables
+			selectedDownTab = undefined;
+			enteredTab = undefined;
+		} 
+	});
 
 	// Wait for MS Windows to catch up, then toggle full screen mode
 	setTimeout(function(){ fullscreen.toggle(window); }, 2000);
