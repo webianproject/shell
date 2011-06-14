@@ -121,8 +121,8 @@ function makeIframe(windowId) {
  */
 function registerWindowEventListeners(windowId) {
 	var our_window = $('#window_' + windowId),
-		url_input = our_window.find('.url_input'),
-		go_button = our_window.find('.go_button');
+	url_input = our_window.find('.url_input'),
+	go_button = our_window.find('.go_button');
 
 	// When registering: autofocus!
 	url_input.focus();
@@ -198,8 +198,8 @@ function registerWindowEventListeners(windowId) {
 	// Select tab
 	// TODO(tola): de-generalise this and put it somewhere more sensible
 	//$(".tab").click(function () {
-		//var tabId = $(this).attr("id");
-		//selectTab(tabId.substring(4));
+	//var tabId = $(this).attr("id");
+	//selectTab(tabId.substring(4));
 	//});
 
 	// Close tab
@@ -217,8 +217,8 @@ function registerWindowEventListeners(windowId) {
  */
 function attachIframeProgressMonitor(windowId) {
 	var progressMonitor = web_content.ProgressMonitor(),
-		window_iframe = $('#window_' + windowId + ' .window_iframe'),
-		url_input = $('#window_' + windowId + ' .url_input');
+	window_iframe = $('#window_' + windowId + ' .window_iframe'),
+	url_input = $('#window_' + windowId + ' .url_input');
 
 	// Add progress monitor to iFrame...
 	progressMonitor.attach(window_iframe[0]);
@@ -310,7 +310,7 @@ function newTab(url) {
 	$("#windows").append(newWindow);
 
 	// Add corresponding tab
-	$("#tabs ul").append('<li id="tab_' + windowId + '" class="tab"><a href="javascript:null()"></a></li>');
+	$("#tabs ul").append('<li id="tab_' + windowId + '" class="tab"><img></img></li>');
 
 	// Select new tab
 	selectTab(windowId);
@@ -391,14 +391,7 @@ function faviconUpdate(windowId, address){
 	}
 	// Fetch favicon for window
 	favicon.fetch(address, function(faviconUrl) {
-		var img = $("<img>").attr(
-		{
-			"src": faviconUrl,
-			"width": 16,
-			"height": 16
-		}
-		);
-		$("#tab_" + windowId + " a").empty().append(img);
+		$("#tab_" + windowId + " img").attr('src', faviconUrl);
 	});
 }
 
@@ -477,8 +470,13 @@ $(document).ready(function() {
 			selectedDownTab = undefined;
 			enteredTab = undefined;
 		} 
+	}).live('mouseup', function(){
+		selectedDownTab = undefined;
+		enteredTab = undefined;
 	});
 
 	// Wait for MS Windows to catch up, then toggle full screen mode
-	setTimeout(function(){ fullscreen.toggle(window); }, 2000);
+	setTimeout(function(){
+		fullscreen.toggle(window);
+	}, 2000);
 });
