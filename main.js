@@ -86,6 +86,9 @@ function registerWindowEventListeners(windowId) {
 	var url_input = $('#window_' + windowId + ' .url_input');
 	var go_button = $("#window_" + windowId + " .go_button");
 
+	// When registering: autofocus!
+	url_input.focus();
+
 	// When URL input text box is selected, change "Refresh" button to "Go" button and remove loaded state
 	$(url_input).focusin(function() {
 		$(url_input).removeClass('loaded');
