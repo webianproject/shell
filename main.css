@@ -240,25 +240,30 @@ body {
 	float: left;
 }
 
-.tab a {
+.tab img {
 	background-color: #333;
 	display: block;
 	width: 16px;
-	height: 17px;
-	padding: 4px 7px;
+	height: 16px;
+	padding: 8px 8px;
 	-moz-border-radius-bottomleft: 5px;
 	-moz-border-radius-bottomright: 5px;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
 
-#tabs.detached .tab a {
+#tabs.detached .tab img {
 	-moz-border-radius: 5px;
 	border-radius: 5px;	
 }
 
-.tab.selected a {
+.tab.selected img {
 	background-color: #666;
+}
+
+.tab img:focus, 
+.tab img:hover {
+	cursor: pointer;
 }
 
 #new_tab_button {

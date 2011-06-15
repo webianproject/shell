@@ -45,11 +45,15 @@ function clock() {
 	// get hours as string
 	var hours = date.getHours()+'';
 	// pad with zero if needed
-	if(hours.length < 2) { hours = "0" + hours; }
+	if(hours.length < 2) {
+		hours = "0" + hours;
+	}
 	// get minutes as string
 	var minutes = date.getMinutes()+'';
 	// pad with zero if needed
-	if(minutes.length < 2) { minutes = "0" + minutes; }
+	if(minutes.length < 2) {
+		minutes = "0" + minutes;
+	}
 	var time = hours + ":" + minutes;
 	$('#clock').text(time);
 }
@@ -98,7 +102,8 @@ function registerWindowEventListeners(windowId) {
 
 	// Go/Stop/Refresh (Submit URL form or click go button)
 	$("#window_" + windowId + " .url_form").submit(function() { 
-		navigate($(this).parents(".window").attr("id").substring(7)); return false; 
+		navigate($(this).parents(".window").attr("id").substring(7));
+		return false; 
 	});
 	$(go_button).click(function() { 
 		// If loading then act as stop button
@@ -107,7 +112,7 @@ function registerWindowEventListeners(windowId) {
 			web_content.stopload(window_iframe);
 			$(go_button).attr("src", "refresh.png");
 		} else {
-		// otherwise act as go/refresh
+			// otherwise act as go/refresh
 			navigate($(this).parents(".window").attr("id").substring(7));
 		}
 	});
@@ -118,7 +123,7 @@ function registerWindowEventListeners(windowId) {
 		$("#windows .selected .window_iframe").attr("src", 
 			urlHistory[windowId][--urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
-    	});
+	});
 
 	// Forward
 	$("#window_" + windowId + " .forward_button").click(function() {
@@ -244,8 +249,7 @@ function newTab(url) {
 	$("#windows").append(newWindow);
 
 	// Add corresponding tab
-	$("#tabs ul").append('<li id="tab_' + windowId + 
-		'" class="tab"><a href="javascript:null()"></a></li>');
+	$("#tabs ul").append('<li id="tab_' + windowId + '" class="tab"><img></img></li>');
 
 	// Select new tab
 	selectTab(windowId);
@@ -307,18 +311,12 @@ function closeTab(windowId) {
  * @param windowId of window to use
  */
 function navigate(windowId) {
-        // invoked when the user hits the go button or hits enter in url box
-        var address = url.guess($.trim($("#windows .selected .url_input").val()));
-        // trigger navigation        
-        $("#windows .selected .window_iframe").attr("src", address);
-        // Fetch favicon for window
-        favicon.fetch(address, function(faviconUrl) {
-        	var img = $("<img>").attr("src", faviconUrl);
-        	img.attr("width", 16);
-        	img.attr("height", 16);
-        	$("#tab_" + windowId + " a").empty();
-		$("#tab_" + windowId + " a").append(img);		
-        });
+	// invoked when the user hits the go button or hits enter in url box
+	var address = url.guess($.trim($("#windows .selected .url_input").val()));
+	// trigger navigation        
+	$("#windows .selected .window_iframe").attr("src", address);
+	// Fetch favicon for window
+	faviconUpdate(windowId, address);	
 }
 
 /**
@@ -333,6 +331,22 @@ function activateHomeScreen() {
 	$("#home_screen").addClass("active");
 	$("#home_button").removeClass("active");
 	$("#tabs").addClass("detached");
+}
+
+
+/**
+ * FaviconUpdate
+ *
+ * Retrieves the favicon from the page.
+ */
+function faviconUpdate(windowId, address){
+	if(address === undefined){
+		address = url.guess($.trim($("#windows .selected .url_input").val()));
+	}
+	// Fetch favicon for window
+	favicon.fetch(address, function(faviconUrl) {
+		$("#tab_" + windowId + " img").attr('src', faviconUrl);
+	});
 }
 
 /**
