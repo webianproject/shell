@@ -100,6 +100,10 @@ body {
 	visibility: visible;
 }
 
+#bottom_toolbar img#new_tab_button {
+	cursor: pointer;
+}
+
 #bottom_toolbar #clock {
 	padding: 8px;
 	color: #fff;
