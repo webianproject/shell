@@ -26,6 +26,7 @@ var favicon = require("favicon");
 var web_content = require("web-content");
 const url = require("url");
 const fullscreen = require("fullscreen");
+var selectedDownTab, enteredTab;
 
 // Set up console for debugging
 //console.log('hello world');
@@ -138,13 +139,6 @@ function registerWindowEventListeners(windowId) {
 		
 		// Update favicon
 		faviconUpdate(windowId);
-	});
-
-	// Select tab
-	// TODO(tola): de-generalise this and put it somewhere more sensible
-	$(".tab").click(function () {
-		var tabId = $(this).attr("id");
-		selectTab(tabId.substring(4));
 	});
 
 	// Close tab
@@ -356,6 +350,43 @@ function faviconUpdate(windowId, address){
 }
 
 /**
+ * Switches element 1 and element 2 in the parent tree.
+ * It assumes element 1 and element 2 ARE on the same level in the parent tree.
+ * 
+ * @param elem1 First element
+ * @param elem2 Second element
+ */
+function switchElements(elem1, elem2){
+	// Init vars
+	var small, big, bigFollow;
+	
+	// Order elements on index
+	if(elem1.index() < elem2.index()){
+		small = elem1;
+		big = elem2;
+	} else {
+		small = elem2;
+		big = elem1;
+	}
+	bigFollow = big.next();
+	
+	// Move the bigger index element
+	big.insertBefore(small);
+	if(big.index() - small.index() === 1){
+		// Only need to do an insert before --we be done!
+		return;
+	}
+	
+	// Move the smaller index element
+	if(bigFollow.length === 0){
+		// append rather than insertBefore
+		big.parent().append(small);
+	} else {
+		small.insertBefore(bigFollow);
+	}
+}
+
+/**
  * Activate Windows
  * 
  * Hides the home screen and makes the windows container active
@@ -389,6 +420,27 @@ $(document).ready(function() {
 	// Home
 	$("#home_button").click(function() {
 		activateHomeScreen();
+	});
+	
+	// Select tab
+	$(".tab").live('click', function () {
+		selectTab($(this).attr("id").substring(4));
+	}).live('mousedown', function(){
+		selectedDownTab = $(this);
+	}).live('hover', function(){
+		if(selectedDownTab !== undefined && $(this).index() !== selectedDownTab.index()){
+			enteredTab = $(this);
+			
+			// Switch the two tabs position
+			switchElements(selectedDownTab, enteredTab);
+			
+			// Un-init our variables
+			selectedDownTab = undefined;
+			enteredTab = undefined;
+		} 
+	}).live('mouseup', function(){
+		selectedDownTab = undefined;
+		enteredTab = undefined;
 	});
 	
 	// Wait for MS Windows to catch up, then toggle full screen mode
