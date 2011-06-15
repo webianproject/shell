@@ -118,19 +118,19 @@ body {
 }
 
 .window {
-	-moz-box-flex: 1;
-	display: none;
 	padding: 0;
 	margin: 0;
-	visibility: hidden;
 	width: 100%;
+	height: 0;
+	overflow: hidden;
+	display: -moz-box;
+	-moz-box-flex: -1;
 }
 
 .window.selected {
-	visibility: visible;
-	display: -moz-box;
+	height:auto;
 	-moz-box-orient: vertical;
-
+	-moz-box-flex: 1;
 }
 
 .window_toolbar {
