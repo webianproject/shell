@@ -1,11 +1,13 @@
 /**
  * Webian Shell browser styles
  * http://webian.org
- * 
+ *
  * Copyright @authors 2011
  *
  * @author Ben Francis http://tola.me.uk
- * 
+ * @author Sam Black http://samwwwblack.lapwing.org
+ * @author Maarten Jacobs http://maartenj.net
+ *
  * Webian Shell is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -17,7 +19,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Webian Shell in the LICENSE file. If not, see 
+ * along with Webian Shell in the LICENSE file. If not, see
  * <http://www.gnu.org/licenses/>.
  */
 
@@ -46,7 +48,6 @@ body {
 
 /* Home Screen Styles */
 
-
 #home_screen {
 	display: none;
 	visibility: hidden;
@@ -58,12 +59,12 @@ body {
 #home_screen.active {
 	visibility: visible;
 	display: -moz-box;
-	-moz-box-flex: 1;	
+	-moz-box-flex: 1;
 	-moz-box-orient: vertical;
 }
 
 #home_screen #top_toolbar {
-	
+
 }
 
 #home_screen #top_toolbar #power_button {
@@ -99,12 +100,17 @@ body {
 	visibility: visible;
 }
 
+#bottom_toolbar img#new_tab_button {
+	cursor: pointer;
+}
+
 #bottom_toolbar #clock {
 	padding: 8px;
 	color: #fff;
 }
 
 /* Window Styles */
+
 #windows {
 	display: none;
 	visibility: hidden;
@@ -118,19 +124,19 @@ body {
 }
 
 .window {
-	-moz-box-flex: 1;
-	display: none;
 	padding: 0;
 	margin: 0;
-	visibility: hidden;
 	width: 100%;
+	height: 0;
+	overflow: hidden;
+	display: -moz-box;
+	-moz-box-flex: -1;
 }
 
 .window.selected {
-	visibility: visible;
-	display: -moz-box;
+	height: auto;
 	-moz-box-orient: vertical;
-
+	-moz-box-flex: 1;
 }
 
 .window_toolbar {
@@ -219,8 +225,8 @@ body {
 	border-bottom-left-radius: 5px;
 }
 
-
 /* Tab Styles */
+
 #tabs {
 	-moz-box-flex: 1;
 }
@@ -238,24 +244,24 @@ body {
 	float: left;
 }
 
-.tab a {
+.tab img {
 	background-color: #333;
 	display: block;
 	width: 16px;
-	height: 17px;
-	padding: 4px 7px;
+	height: 16px;
+	padding: 10px 10px;
 	-moz-border-radius-bottomleft: 5px;
 	-moz-border-radius-bottomright: 5px;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 }
 
-#tabs.detached .tab a {
+#tabs.detached .tab img {
 	-moz-border-radius: 5px;
-	border-radius: 5px;	
+	border-radius: 5px;
 }
 
-.tab.selected a {
+.tab.selected img {
 	background-color: #666;
 }
 
