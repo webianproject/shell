@@ -120,18 +120,21 @@ function registerWindowEventListeners(windowId) {
 	// Back
 	$("#window_" + windowId + " .back_button").click(function() {
 		if (urlHistory[windowId][0] < 2) return;
-		$("#windows .selected .window_iframe").attr("src", 
-			urlHistory[windowId][--urlHistory[windowId][0]]);
+		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][--urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
+		
+		// Update favicon
+		faviconUpdate(windowId);
 	});
 
 	// Forward
 	$("#window_" + windowId + " .forward_button").click(function() {
 		if(urlHistory[windowId][0] + 1 >= urlHistory[windowId].length) return;
-		$("#windows .selected .window_iframe").attr("src", 
-			urlHistory[windowId][++urlHistory[windowId][0]]);
+		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][++urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
 		
+		// Update favicon
+		faviconUpdate(windowId);
 	});
 
 	// Select tab
