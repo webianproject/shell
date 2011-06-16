@@ -23,6 +23,7 @@
 
 // Import Chromeless modules
 var favicon = require("favicon");
+var hotkey = require("hotkey");
 var web_content = require("web-content");
 const url = require("url");
 const fullscreen = require("fullscreen");
@@ -138,7 +139,7 @@ function registerWindowEventListeners(windowId) {
 
 	// Close tab
 	$("#window_" + windowId + " .close_button").click(function() {
-		closeTab($(this).parents(".window").attr("id").substring(7));
+		closeTab();
 	});
 }
 
@@ -268,7 +269,23 @@ function newTab(url) {
 	if(url) {
 		$("#windows .selected .url_input").val(url);
 		navigate(windowId);
+	} else {
+		// else set focus on input
+		$("#windows .selected .url_input")[0].focus();
 	}
+}
+
+/**
+ * Tab Focus?
+ * 
+ * Tests if tab is focussed
+ * 
+ * @return true if a tab is focussed (not on home screen)
+ */
+ 
+function tabFocus() {
+	// maybe a bit hacky because the home screen has no Id
+	return $("#windows .selected").attr("id");
 }
 
 /** 
@@ -279,6 +296,8 @@ function newTab(url) {
  * @param {String} windowId
  */
 function closeTab(windowId) {
+	if(!windowId)
+		windowId = $("#windows .selected").attr("id").substring(7);
 	// Remove selected window & corresponding tab
 	$("#window_" + windowId).remove();
 	$("#tab_" + windowId).remove();
@@ -373,4 +392,14 @@ $(document).ready(function() {
 	
 	// Wait for MS Windows to catch up, then toggle full screen mode
 	setTimeout("fullscreen.toggle(window)", 2000);
+	
+	hotkey.register("accel-w", function(){
+		if(tabFocus()) closeTab();
+	});
+	hotkey.register("accel-t", function(){
+		newTab();
+	});
+	hotkey.register("accel-l", function(){
+		if(tabFocus()) $("#windows .selected .url_input")[0].select();
+	});
 });
