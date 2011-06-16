@@ -275,6 +275,19 @@ function newTab(url) {
 	}
 }
 
+/**
+ * Tab Focus?
+ * 
+ * Tests if tab is focussed
+ * 
+ * @return true if a tab is focussed (not on home screen)
+ */
+ 
+function tabFocus() {
+	// maybe a bit hacky because the home screen has no Id
+	return $("#windows .selected").attr("id");
+}
+
 /** 
  * Close Tab
  * 
@@ -381,12 +394,12 @@ $(document).ready(function() {
 	setTimeout("fullscreen.toggle(window)", 2000);
 	
 	hotkey.register("accel-w", function(){
-		closeTab();
+		if(tabFocus()) closeTab();
 	});
 	hotkey.register("accel-t", function(){
 		newTab();
 	});
 	hotkey.register("accel-l", function(){
-		$("#windows .selected .url_input")[0].select();
+		if(tabFocus()) $("#windows .selected .url_input")[0].select();
 	});
 });
