@@ -23,6 +23,7 @@
 
 // Import Chromeless modules
 var favicon = require("favicon");
+var hotkey = require("hotkey");
 var web_content = require("web-content");
 const url = require("url");
 const fullscreen = require("fullscreen");
@@ -378,4 +379,14 @@ $(document).ready(function() {
 	
 	// Wait for MS Windows to catch up, then toggle full screen mode
 	setTimeout("fullscreen.toggle(window)", 2000);
+	
+	hotkey.register("accel-w", function(){
+		closeTab();
+	});
+	hotkey.register("accel-t", function(){
+		newTab();
+	});
+	hotkey.register("accel-l", function(){
+		$("#windows .selected .url_input")[0].select();
+	});
 });
