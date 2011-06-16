@@ -268,6 +268,9 @@ function newTab(url) {
 	if(url) {
 		$("#windows .selected .url_input").val(url);
 		navigate(windowId);
+	} else {
+		// else set focus on input
+		$("#windows .selected .url_input")[0].focus();
 	}
 }
 
