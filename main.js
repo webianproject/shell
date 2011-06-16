@@ -20,20 +20,16 @@
  * along with Webian Shell in the LICENSE file. If not, see 
  * <http://www.gnu.org/licenses/>.
  */
-
-// Import Chromeless modules
-var favicon = require("favicon");
-var web_content = require("web-content");
-const url = require("url");
-const fullscreen = require("fullscreen");
-
-// Set up console for debugging
-//console.log('hello world');
-
-// History of URLs
-var urlHistory = [];
-// Index of current point in URL history
-var currentUrlIndex = 0;
+// Global variables
+var favicon = require("favicon"),
+web_content = require("web-content"),
+url = require("url"),
+fullscreen = require("fullscreen"),
+urlHistory = [], // History of URLs
+currentUrlIndex = 0, // Index of current point in URL history
+clockElement,
+selectedDownTab,
+enteredTab;
 
 /**
  * Clock
@@ -41,17 +37,21 @@ var currentUrlIndex = 0;
  * Updates the time on the clock when called
  */
 function clock() {
-	var date = new Date();
-	// get hours as string
-	var hours = date.getHours()+'';
+	var date = new Date(),
+	hours = date.getHours()+'',		// get hours as string
+	minutes = date.getMinutes()+''; // get minutes as string
+
 	// pad with zero if needed
-	if(hours.length < 2) { hours = "0" + hours; }
-	// get minutes as string
-	var minutes = date.getMinutes()+'';
+	if(hours.length < 2) {
+		hours = "0" + hours;
+	}
+
 	// pad with zero if needed
-	if(minutes.length < 2) { minutes = "0" + minutes; }
-	var time = hours + ":" + minutes;
-	$('#clock').text(time);
+	if(minutes.length < 2) {
+		minutes = "0" + minutes;
+	}
+
+	clockElement.text(hours + ":" + minutes);
 }
 
 /**
@@ -64,8 +64,10 @@ function clock() {
  */
 function makeIframe(windowId) {
 	var iFrame = document.createElement("iframe");
-	$(iFrame).attr("privilege", "content");
-	$(iFrame).attr("class", "window_iframe");
+	$(iFrame).attr({
+		"privilege": "content",
+		"class": "window_iframe"
+	});
 	return iFrame;
 }
 
@@ -79,35 +81,39 @@ function makeIframe(windowId) {
  * @param {String} windowId of window to register listeners for
  */
 function registerWindowEventListeners(windowId) {
-	var url_input = $('#window_' + windowId + ' .url_input');
-	var go_button = $("#window_" + windowId + " .go_button");
+	var url_input = $('#window_' + windowId + ' .url_input'),
+		go_button = $("#window_" + windowId + " .go_button");
+
+	// When registering: autofocus!
+	url_input.focus();
 
 	// When URL input text box is selected, change "Refresh" button to "Go" button and remove loaded state
-	$(url_input).focusin(function() {
-		$(url_input).removeClass('loaded');
-		$(go_button).attr("src", "go.png");
+	url_input.focusin(function() {
+		url_input.removeClass('loaded');
+		go_button.attr("src", "go.png");
 	});
 
 	// When URL input box is de-selected and URL un-changed, change "Go" button back to "Refresh" button and set to loaded state
-	$(url_input).focusout(function() {
-		if ($(url_input).val() == urlHistory[currentUrlIndex]) {
-			$(url_input).addClass('loaded');
-			$(go_button).attr("src", "refresh.png");
+	url_input.focusout(function() {
+		if (url_input.val() == urlHistory[currentUrlIndex]) {
+			url_input.addClass('loaded');
+			go_button.attr("src", "refresh.png");
 		}
 	});
 
 	// Go/Stop/Refresh (Submit URL form or click go button)
 	$("#window_" + windowId + " .url_form").submit(function() { 
-		navigate($(this).parents(".window").attr("id").substring(7)); return false; 
+		navigate($(this).parents(".window").attr("id").substring(7));
+		return false; 
 	});
-	$(go_button).click(function() { 
+	go_button.click(function() { 
 		// If loading then act as stop button
 		if($('#windows .selected .url_input').hasClass('loading')) {
 			var window_iframe = $("#windows .selected .window_iframe")[0];
 			web_content.stopload(window_iframe);
 			$(go_button).attr("src", "refresh.png");
 		} else {
-		// otherwise act as go/refresh
+			// otherwise act as go/refresh
 			navigate($(this).parents(".window").attr("id").substring(7));
 		}
 	});
@@ -115,25 +121,21 @@ function registerWindowEventListeners(windowId) {
 	// Back
 	$("#window_" + windowId + " .back_button").click(function() {
 		if (urlHistory[windowId][0] < 2) return;
-		$("#windows .selected .window_iframe").attr("src", 
-			urlHistory[windowId][--urlHistory[windowId][0]]);
+		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][--urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
-    	});
+		
+		// Update favicon
+		faviconUpdate(windowId);
+	});
 
 	// Forward
 	$("#window_" + windowId + " .forward_button").click(function() {
 		if(urlHistory[windowId][0] + 1 >= urlHistory[windowId].length) return;
-		$("#windows .selected .window_iframe").attr("src", 
-			urlHistory[windowId][++urlHistory[windowId][0]]);
+		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][++urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
 		
-	});
-
-	// Select tab
-	// TODO(tola): de-generalise this and put it somewhere more sensible
-	$(".tab").click(function () {
-		var tabId = $(this).attr("id");
-		selectTab(tabId.substring(4));
+		// Update favicon
+		faviconUpdate(windowId);
 	});
 
 	// Close tab
@@ -150,9 +152,9 @@ function registerWindowEventListeners(windowId) {
  * @param {String} windowId of window containing iFrame to listen to
  */
 function attachIframeProgressMonitor(windowId) {
-	var progressMonitor = web_content.ProgressMonitor();
-	var window_iframe = $('#window_' + windowId + ' .window_iframe');
-	var url_input = $('#window_' + windowId + ' .url_input');
+	var progressMonitor = web_content.ProgressMonitor(),
+		window_iframe = $('#window_' + windowId + ' .window_iframe'),
+		url_input = $('#window_' + windowId + ' .url_input');
 	
 	// Add progress monitor to iFrame...
 	progressMonitor.attach(window_iframe[0]);
@@ -160,8 +162,10 @@ function attachIframeProgressMonitor(windowId) {
 	// Check progress of page load...
 	progressMonitor.on('progress', function(percent) {
 		$(url_input).addClass('loading');
-		$(url_input).css('-moz-background-size', percent+"%");
-		$(url_input).css('background-size', percent+"%");			
+		$(url_input).css({
+			'-moz-background-size': percent+"%",
+			'background-size': percent+"%"
+		});
 	});
 
 	// When page starts to load...
@@ -190,8 +194,7 @@ function attachIframeProgressMonitor(windowId) {
 	// When page and contents are completely loaded...
 	progressMonitor.on('load-stop', function() {
 		// Set URL input textbox to loaded state
-		$(url_input).removeClass('loading');
-		$(url_input).addClass('loaded');
+		$(url_input).removeClass('loading').addClass('loaded');
 		// Change "Go" button to "Refresh"
 		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");				
 	});
@@ -200,8 +203,7 @@ function attachIframeProgressMonitor(windowId) {
 	// When title changes...
 	progressMonitor.on('title-change', function(document_title) {
 		if(document_title) {
-			$('#window_' + windowId + ' .document_title').addClass("active");	
-			$('#window_' + windowId + ' .document_title').text(document_title);	
+			$('#window_' + windowId + ' .document_title').addClass("active").text(document_title);	
 		}
 	});
 	
@@ -219,9 +221,8 @@ function selectTab(windowId) {
 	if (!$("#windows").hasClass("active")) {
 		activateWindows();
 	} 
-	$("#windows .selected").removeClass("selected");
+	$("#windows .selected, #tabs .selected").removeClass("selected");
 	$("#window_" + windowId).addClass("selected");
-	$("#tabs .selected").removeClass("selected");
 	$("#tab_" + windowId).addClass("selected");
 
 }
@@ -233,19 +234,16 @@ function selectTab(windowId) {
  */
 function newTab(url) {
 	// Create new window from template
-	var newWindow = $("#window_template").clone();
-	
-	// Generate unique ID for window
-	var randomNumberString = Math.random() + "";
-	var windowId = randomNumberString.substring(2);
+	var newWindow = $("#window_template").clone(), // Generate unique ID for window
+		windowId = (Math.random() + "").substring(2);
+
 	newWindow.attr("id", "window_" + windowId);
 
 	// Add new window to interface
 	$("#windows").append(newWindow);
 
 	// Add corresponding tab
-	$("#tabs ul").append('<li id="tab_' + windowId + 
-		'" class="tab"><a href="javascript:null()"></a></li>');
+	$("#tabs ul").append('<li id="tab_' + windowId + '" class="tab"><img></img></li>');
 
 	// Select new tab
 	selectTab(windowId);
@@ -307,18 +305,12 @@ function closeTab(windowId) {
  * @param windowId of window to use
  */
 function navigate(windowId) {
-        // invoked when the user hits the go button or hits enter in url box
-        var address = url.guess($.trim($("#windows .selected .url_input").val()));
-        // trigger navigation        
-        $("#windows .selected .window_iframe").attr("src", address);
-        // Fetch favicon for window
-        favicon.fetch(address, function(faviconUrl) {
-        	var img = $("<img>").attr("src", faviconUrl);
-        	img.attr("width", 16);
-        	img.attr("height", 16);
-        	$("#tab_" + windowId + " a").empty();
-		$("#tab_" + windowId + " a").append(img);		
-        });
+	// invoked when the user hits the go button or hits enter in url box
+	var address = url.guess($.trim($("#windows .selected .url_input").val()));
+	// trigger navigation        
+	$("#windows .selected .window_iframe").attr("src", address);
+	// Fetch favicon for window
+	faviconUpdate(windowId, address);	
 }
 
 /**
@@ -327,12 +319,64 @@ function navigate(windowId) {
  * Hides all windows and shows the home screen
  */
 function activateHomeScreen() {
-	$("#windows .selected").removeClass("selected");
-	$("#tabs .selected").removeClass("selected");
+	$("#windows .selected, #tabs .selected").removeClass("selected");
 	$("#windows").removeClass("active");
 	$("#home_screen").addClass("active");
 	$("#home_button").removeClass("active");
 	$("#tabs").addClass("detached");
+}
+
+
+/**
+ * FaviconUpdate
+ *
+ * Retrieves the favicon from the page.
+ */
+function faviconUpdate(windowId, address){
+	if(address === undefined){
+		address = url.guess($.trim($("#windows .selected .url_input").val()));
+	}
+	// Fetch favicon for window
+	favicon.fetch(address, function(faviconUrl) {
+		$("#tab_" + windowId + " img").attr('src', faviconUrl);
+	});
+}
+
+/**
+ * Switches element 1 and element 2 in the parent tree.
+ * It assumes element 1 and element 2 ARE on the same level in the parent tree.
+ * 
+ * @param elem1 First element
+ * @param elem2 Second element
+ */
+function switchElements(elem1, elem2){
+	// Init vars
+	var small, big, bigFollow;
+	
+	// Order elements on index
+	if(elem1.index() < elem2.index()){
+		small = elem1;
+		big = elem2;
+	} else {
+		small = elem2;
+		big = elem1;
+	}
+	bigFollow = big.next();
+	
+	// Move the bigger index element
+	big.insertBefore(small);
+	if(big.index() - small.index() === 1){
+		// Only need to do an insert before --we be done!
+		return;
+	}
+	
+	// Move the smaller index element
+	if(bigFollow.length === 0){
+		// append rather than insertBefore
+		big.parent().append(small);
+	} else {
+		small.insertBefore(bigFollow);
+	}
 }
 
 /**
@@ -350,8 +394,11 @@ function activateWindows() {
 // When Shell starts up...
 $(document).ready(function() {
 
+	// Get clock, once and for all
+	clockElement = $('#clock');
+
 	// Set clock to be updated every second	
-	self.setInterval("clock()",1000);
+	self.setInterval(clock, 1000);
 
 	// Create first tab
 	newTab("http://webian.org/shell/welcome/0.1");
@@ -371,6 +418,29 @@ $(document).ready(function() {
 		activateHomeScreen();
 	});
 	
+	// Select tab
+	$(".tab").live('click', function () {
+		selectTab($(this).attr("id").substring(4));
+	}).live('mousedown', function(){
+		selectedDownTab = $(this);
+	}).live('hover', function(){
+		if(selectedDownTab !== undefined && $(this).index() !== selectedDownTab.index()){
+			enteredTab = $(this);
+			
+			// Switch the two tabs position
+			switchElements(selectedDownTab, enteredTab);
+			
+			// Un-init our variables
+			selectedDownTab = undefined;
+			enteredTab = undefined;
+		} 
+	}).live('mouseup', function(){
+		selectedDownTab = undefined;
+		enteredTab = undefined;
+	});
+	
 	// Wait for MS Windows to catch up, then toggle full screen mode
-	setTimeout("fullscreen.toggle(window)", 2000);
+	setTimeout(function(){
+		//fullscreen.toggle(window)
+	}, 2000);
 });
