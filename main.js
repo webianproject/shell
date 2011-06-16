@@ -441,6 +441,6 @@ $(document).ready(function() {
 	
 	// Wait for MS Windows to catch up, then toggle full screen mode
 	setTimeout(function(){
-		//fullscreen.toggle(window)
+		fullscreen.toggle(window)
 	}, 2000);
 });
