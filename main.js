@@ -123,9 +123,6 @@ function registerWindowEventListeners(windowId) {
 		if (urlHistory[windowId][0] < 2) return;
 		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][--urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
-		
-		// Update favicon
-		faviconUpdate(windowId);
 	});
 
 	// Forward
@@ -133,9 +130,6 @@ function registerWindowEventListeners(windowId) {
 		if(urlHistory[windowId][0] + 1 >= urlHistory[windowId].length) return;
 		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][++urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
-		
-		// Update favicon
-		faviconUpdate(windowId);
 	});
 
 	// Close tab
@@ -196,7 +190,9 @@ function attachIframeProgressMonitor(windowId) {
 		// Set URL input textbox to loaded state
 		$(url_input).removeClass('loading').addClass('loaded');
 		// Change "Go" button to "Refresh"
-		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");				
+		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");	
+		// Update favicon
+		faviconUpdate(windowId);
 	});
 
 	
@@ -309,8 +305,6 @@ function navigate(windowId) {
 	var address = url.guess($.trim($("#windows .selected .url_input").val()));
 	// trigger navigation        
 	$("#windows .selected .window_iframe").attr("src", address);
-	// Fetch favicon for window
-	faviconUpdate(windowId, address);	
 }
 
 /**
