@@ -138,7 +138,7 @@ function registerWindowEventListeners(windowId) {
 
 	// Close tab
 	$("#window_" + windowId + " .close_button").click(function() {
-		closeTab($(this).parents(".window").attr("id").substring(7));
+		closeTab();
 	});
 }
 
@@ -279,6 +279,8 @@ function newTab(url) {
  * @param {String} windowId
  */
 function closeTab(windowId) {
+	if(!windowId)
+		windowId = $("#windows .selected").attr("id").substring(7);
 	// Remove selected window & corresponding tab
 	$("#window_" + windowId).remove();
 	$("#tab_" + windowId).remove();
