@@ -193,6 +193,10 @@ function attachIframeProgressMonitor(windowId) {
 		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");	
 		// Update favicon
 		faviconUpdate(windowId);
+		// Check for background-color
+		if(window_iframe.css('background-color') === 'transparent'){
+			window_iframe.css('background-color', 'white');
+		}
 	});
 
 	
