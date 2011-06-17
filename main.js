@@ -416,6 +416,11 @@ $(document).ready(function() {
 		activateHomeScreen();
 	});
 	
+	// Stop homescreen background from being draggable
+	$("#home_screen #widget_space").mousedown(function(e){
+		e.preventDefault();
+	});
+	
 	// Select tab
 	$(".tab").live('click', function () {
 		selectTab($(this).attr("id").substring(4));
