@@ -193,17 +193,37 @@ function attachIframeProgressMonitor(windowId) {
 		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");	
 		// Update favicon
 		faviconUpdate(windowId);
-		// Check for background-color
-		if(window_iframe.css('background-color') === 'transparent'){
-			window_iframe.css('background-color', 'white');
-		}
 	});
-
 	
 	// When title changes...
 	progressMonitor.on('title-change', function(document_title) {
 		if(document_title) {
-			$('#window_' + windowId + ' .document_title').addClass("active").text(document_title);	
+			var documentTitleElement = $('#window_' + windowId + ' .document_title').empty().addClass("active"),
+				titleRest;
+			
+			// Limit length, if necessary
+			if(document_title.length > 10){
+				titleRest = document_title.substring(10);
+				// Add our title elements
+				documentTitleElement.append(
+					"<span>" + document_title.substring(0, 10) + "</span>", 
+					"<em class=\"expand_title\">...</em>", 
+					"<span class=\"title_rest\">" + titleRest + "</span>"
+				);
+				
+				// Hide our title rest
+				documentTitleElement.find(".title_rest").toggle();
+				
+				// Add listeners to the new title elements
+				documentTitleElement.find(".expand_title").click(function(){
+					$(this).toggle();
+					documentTitleElement.find(".title_rest").toggle();
+				});
+			} else {
+				// We're ok, just pass to document-title element
+				documentTitleElement.text(document_title);	
+			}
+			
 		}
 	});
 	

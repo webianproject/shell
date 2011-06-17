@@ -160,6 +160,11 @@ body {
 	visibility: hidden;
 }
 
+.document_title > .expand_title:hover,
+.document_title > .expand_title:focus {
+	cursor: pointer;
+}
+
 .document_title.active {
 	display: block;
 	visibility: visible;
