@@ -85,6 +85,7 @@ body {
 	display: -moz-box;
 	-moz-box-orient: horizontal;
 	background-color: #000;
+	color: #fff;
 }
 
 #bottom_toolbar #home_button {
@@ -99,7 +100,6 @@ body {
 
 #bottom_toolbar #clock {
 	padding: 8px;
-	color: #fff;
 }
 
 /* Window Styles */
