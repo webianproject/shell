@@ -123,9 +123,6 @@ function registerWindowEventListeners(windowId) {
 		if (urlHistory[windowId][0] < 2) return;
 		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][--urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
-		
-		// Update favicon
-		faviconUpdate(windowId);
 	});
 
 	// Forward
@@ -133,9 +130,6 @@ function registerWindowEventListeners(windowId) {
 		if(urlHistory[windowId][0] + 1 >= urlHistory[windowId].length) return;
 		$("#windows .selected .window_iframe").attr("src", urlHistory[windowId][++urlHistory[windowId][0]]);
 		urlHistory[windowId][0] = urlHistory[windowId][0];
-		
-		// Update favicon
-		faviconUpdate(windowId);
 	});
 
 	// Close tab
@@ -196,14 +190,40 @@ function attachIframeProgressMonitor(windowId) {
 		// Set URL input textbox to loaded state
 		$(url_input).removeClass('loading').addClass('loaded');
 		// Change "Go" button to "Refresh"
-		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");				
+		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");	
+		// Update favicon
+		faviconUpdate(windowId);
 	});
-
 	
 	// When title changes...
 	progressMonitor.on('title-change', function(document_title) {
 		if(document_title) {
-			$('#window_' + windowId + ' .document_title').addClass("active").text(document_title);	
+			var documentTitleElement = $('#window_' + windowId + ' .document_title').empty().addClass("active"),
+				titleRest;
+			
+			// Limit length, if necessary
+			if(document_title.length > 10){
+				titleRest = document_title.substring(10);
+				// Add our title elements
+				documentTitleElement.append(
+					"<span>" + document_title.substring(0, 10) + "</span>", 
+					"<em class=\"expand_title\">...</em>", 
+					"<span class=\"title_rest\">" + titleRest + "</span>"
+				);
+				
+				// Hide our title rest
+				documentTitleElement.find(".title_rest").toggle();
+				
+				// Add listeners to the new title elements
+				documentTitleElement.find(".expand_title").click(function(){
+					$(this).toggle();
+					documentTitleElement.find(".title_rest").toggle();
+				});
+			} else {
+				// We're ok, just pass to document-title element
+				documentTitleElement.text(document_title);	
+			}
+			
 		}
 	});
 	
@@ -309,8 +329,6 @@ function navigate(windowId) {
 	var address = url.guess($.trim($("#windows .selected .url_input").val()));
 	// trigger navigation        
 	$("#windows .selected .window_iframe").attr("src", address);
-	// Fetch favicon for window
-	faviconUpdate(windowId, address);	
 }
 
 /**
@@ -416,6 +434,11 @@ $(document).ready(function() {
 	// Home
 	$("#home_button").click(function() {
 		activateHomeScreen();
+	});
+	
+	// Stop homescreen background from being draggable
+	$("#home_screen #widget_space").mousedown(function(e){
+		e.preventDefault();
 	});
 	
 	// Select tab

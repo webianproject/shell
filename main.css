@@ -160,6 +160,11 @@ body {
 	visibility: hidden;
 }
 
+.document_title > .expand_title:hover,
+.document_title > .expand_title:focus {
+	cursor: pointer;
+}
+
 .document_title.active {
 	display: block;
 	visibility: visible;
@@ -215,10 +220,11 @@ body {
 	height: 100%;
 	border: solid 5px #666;
 	border-top: none;
-	-moz-border-radius-bottomleft: 5px;
-	-moz-border-radius-bottomright: 5px;
+	background-color: white;
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	-moz-border-radius-bottomright: 5px;
 }
 
 
