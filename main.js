@@ -278,6 +278,9 @@ function newTab(url) {
  * @param {String} windowId
  */
 function closeTab(windowId) {
+	if(!windowId)
+		windowId = $("#windows .selected").attr("id").substring(7);
+	
 	// Remove selected window & corresponding tab
 	$("#window_" + windowId).remove();
 	$("#tab_" + windowId).remove();
@@ -399,6 +402,13 @@ function registerKeyboardShortcuts() {
 	// New tab
 	hotkey.register("accel-t", function(){
 		newTab();		
+	});
+	
+	// Close tab
+	hotkey.register("accel-w", function(){
+		if($("#windows").hasClass("active")) {
+			closeTab();
+		}
 	});
 	
 	// Go to location bar
