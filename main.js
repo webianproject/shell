@@ -22,6 +22,7 @@
  */
 // Global variables
 var favicon = require("favicon"),
+hotkey = require("hotkey"),
 web_content = require("web-content"),
 url = require("url"),
 fullscreen = require("fullscreen"),
@@ -277,6 +278,9 @@ function newTab(url) {
  * @param {String} windowId
  */
 function closeTab(windowId) {
+	if(!windowId)
+		windowId = $("#windows .selected").attr("id").substring(7);
+	
 	// Remove selected window & corresponding tab
 	$("#window_" + windowId).remove();
 	$("#tab_" + windowId).remove();
@@ -389,6 +393,32 @@ function activateWindows() {
 	$("#tabs").removeClass("detached");
 }
 
+/**
+ * Register Keyboard Shortcuts
+ *
+ * Registers keyboard shortcuts for new tab, close tab and location bar focus
+ */
+function registerKeyboardShortcuts() {
+	// New tab
+	hotkey.register("accel-t", function(){
+		newTab();		
+	});
+	
+	// Close tab
+	hotkey.register("accel-w", function(){
+		if($("#windows").hasClass("active")) {
+			closeTab();
+		}
+	});
+	
+	// Go to location bar
+	hotkey.register("accel-l", function(){
+		if($("#windows").hasClass("active")) {
+			$("#windows .selected .url_input")[0].select();	
+		}
+	});
+}
+
 // When Shell starts up...
 $(document).ready(function() {
 
@@ -442,8 +472,12 @@ $(document).ready(function() {
 		enteredTab = undefined;
 	});
 	
+	// Register keyboard shortcuts
+	registerKeyboardShortcuts();
+	
 	// Wait for MS Windows to catch up, then toggle full screen mode
 	setTimeout(function(){
 		fullscreen.toggle(window)
 	}, 2000);
+	
 });
