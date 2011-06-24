@@ -98,6 +98,9 @@ body {
 }
 
 #bottom_toolbar #clock {
+	display: -moz-box;
+	-moz-box-orient: vertical;
+	-moz-box-pack: end;
 	padding: 8px;
 	color: #fff;
 }
