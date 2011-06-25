@@ -191,28 +191,116 @@ function attachIframeProgressMonitor(windowId) {
 		// Set URL input textbox to loaded state
 		$(url_input).removeClass('loading').addClass('loaded');
 		// Change "Go" button to "Refresh"
-		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");	
+		$('#window_' + windowId + ' .go_button').attr("src", "refresh.png");
 		// Update favicon
 		faviconUpdate(windowId);
 		// Check for background-color
-		if(window_iframe.css('background-color') === 'transparent'){
+		if(window_iframe.css('background-color') === 'transparent') {
 			window_iframe.css('background-color', 'white');
 		}
 	});
 
-	
 	// When title changes...
 	progressMonitor.on('title-change', function(document_title) {
 		if(document_title) {
-			$('#window_' + windowId + ' .document_title').addClass("active").text(document_title);	
+			var uiTitle = $('#window_' + windowId + ' .document_title'),
+				uiTitleInnerHolder = $('#window_' + windowId + ' .inner_title_holder'),
+				maxOffset;
+			uiTitle.unbind('mousewheel');
+			uiTitle.addClass("active").text(document_title),
+			// Check variable for existing title controller
+			titleController = uiTitleInnerHolder.find('.title_controller');
+
+			// Give the propert css
+			uiTitle.css({
+				'margin-left': 0,
+				'position': 'relative'
+			});
+
+			// Check if expansion/retraction is necessary
+			if(document_title.length > 30) {
+				console.log('adding listeners');
+				var partShown = document_title.substring(0, 30),
+				innerInnerMax;
+				
+				uiTitle.empty();
+				uiTitle.append('<span class="titleShown">' + partShown + '</span>');
+
+				// No title controller present? Add one.
+				if(titleController.length === 0) {
+					uiTitleInnerHolder.append('<span class="title_controller">&hellip;</span>');
+					titleController = uiTitleInnerHolder.find('.title_controller');
+				}
+				console.log(titleController.length);
+
+				titleController.addClass('active').click( function() {
+					if($(this).hasClass('expanded')) {
+
+						// Retract to 30 characters
+						$(this).html('&hellip;');
+
+						uiTitle.find('.titleShown').text(partShown);
+
+					} else {
+
+						// Expand to full length
+						$(this).text('{}');
+
+						//$(this).remove();
+						uiTitle.find('.titleShown').text(document_title);
+
+						// Calculate inner maximum width and save it for further use.
+						innerInnerMax = $(document).width() * 0.5;
+						$('#window_' + windowId + ' .inner_title_holder').css('max-width', innerInnerMax + "px");
+						innerInnerMax -= 30;
+						$('#window_' + windowId + ' .inner_title_holder > div').css('max-width', innerInnerMax + "px");
+
+						// Calculate the maximum negative offset
+						maxOffset = parseInt(-(uiTitle.width() - innerInnerMax + 10), 10);
+
+						uiTitle.mousewheel( function(objEvent, intDelta) {
+							var marginLeft = uiTitle.css('margin-left'),
+							changeMargin = false;
+							marginLeft = marginLeft.length > 2 ? parseInt(marginLeft.substring(0, marginLeft.length - 2), 10) : 0;
+							intDelta = -(intDelta * 30);
+
+							if(intDelta < 0 && marginLeft > maxOffset) {
+								if((marginLeft + intDelta) < maxOffset) {
+									intDelta = -(marginLeft - maxOffset);
+								}
+								changeMargin = true;
+							} else if(intDelta > 0 && marginLeft < 0) {
+								if(marginLeft + intDelta > 0) {
+									intDelta = marginLeft = 0;
+								}
+								changeMargin = true;
+							}
+
+							if(changeMargin) {
+								newMargin = marginLeft + intDelta;
+								uiTitle.css('margin-left', newMargin + "px");
+							}
+						});
+
+					}
+
+					// Remove/Add expanded class for next click event
+					$(this).toggleClass('expanded');
+				})
+
+			}
+			// check if title controller exists, if so -> remove it because we don't need it!
+			else if(titleController.length !== 0) {
+				titleController.remove();
+			}
 		}
 	});
-	
+
 }
 
 /**
  * Select Tab
- * 
+ *
  * Select a tab and its corresponding window
  *
  * @param {String} windowId of tab to be selected
