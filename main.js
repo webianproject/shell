@@ -417,6 +417,13 @@ function registerKeyboardShortcuts() {
 			$("#windows .selected .url_input")[0].select();	
 		}
 	});
+	
+	// Refresh
+	hotkey.register("accel-r", function(){
+		if($("#windows").hasClass("active")) {
+			navigate();
+		}	
+	});
 }
 
 // When Shell starts up...
