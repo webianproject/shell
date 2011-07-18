@@ -31,6 +31,7 @@
 		<title>Webian Shell</title>
 		<link rel="stylesheet" href="main.css" type="text/css" />
 		<script type="text/javascript" src="jquery.js"></script>
+		<script type="text/javascript" src="jquery.mousewheel.js"></script>
 		<script type="text/javascript" src="main.js"></script>
 	</head>
 
@@ -56,7 +57,13 @@
 					<input type="image" src="back.png" class="back_button button" alt="Back">
 					<input type="image" src="forward.png" class="forward_button button" alt="Forward">
 					<div class="address_bar">
-						<span class="document_title"></span>
+						<div class="document_title_holder">
+							<div class="inner_title_holder">
+								<div>
+									<span class="document_title"></span>
+								</div>
+							</div>
+						</div>
 						<form class="url_form">
 							<input type="text" class="url_input">
 						</form>

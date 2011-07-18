@@ -147,27 +147,41 @@ body {
 	border-top-right-radius: 5px;
 	border-top-left-radius: 5px;
 }
-
 .button {
 	width: 20px;
 	height: 20px;
 	padding: 5px 4px;
 }
-
-.document_title {
+.document_title_holder,
+.document_title_holder div,
+.document_title_holder span {
+	display: inline-block;
 	float: left;
+}
+.inner_title_holder > div {
+	overflow: hidden;
+}
+
+.document_title_holder {
+	white-space: nowrap;
+	overflow-x: hidden;
+}
+.title_controller, .document_title {
+	float: left;
+	white-space: nowrap;
 	color: #fff;
 	font-weight: bold;
 	padding: 2px 5px;
 	display: none;
 	visibility: hidden;
 }
-
-.document_title.active {
-	display: block;
+.title_controller.active, .document_title.active {
+	display: inline-block;
 	visibility: visible;
 }
-
+.title_controller.active:hover, .title_controller.active:focus {
+	cursor: pointer;
+}
 .address_bar {
 	-moz-box-flex: 1;
 	display: -moz-box;
