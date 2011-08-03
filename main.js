@@ -96,7 +96,7 @@ function registerWindowEventListeners(windowId) {
 
 	// When URL input box is de-selected and URL un-changed, change "Go" button back to "Refresh" button and set to loaded state
 	url_input.focusout(function() {
-		if (url_input.val() == urlHistory[currentUrlIndex]) {
+		if (url_input.val() == urlHistory[windowId][urlHistory[windowId][0]]) {
 			url_input.addClass('loaded');
 			go_button.attr("src", "refresh.png");
 		}
