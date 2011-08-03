@@ -207,6 +207,8 @@ function attachIframeProgressMonitor(windowId) {
 			if(window_iframe.css('background-color') === 'transparent'){
 				window_iframe.css('background-color', 'white');
 			}
+			// And focus on the iFrame
+			window_iframe.focus();
 		}
 	});
 
