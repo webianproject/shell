@@ -27,7 +27,6 @@ web_content = require("web-content"),
 url = require("url"),
 fullscreen = require("fullscreen"),
 urlHistory = [], // History of URLs
-currentUrlIndex = 0, // Index of current point in URL history
 clockElement,
 selectedDownTab,
 enteredTab;
