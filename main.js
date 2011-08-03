@@ -114,8 +114,15 @@ function registerWindowEventListeners(windowId) {
 			web_content.stopload(window_iframe);
 			$(go_button).attr("src", "refresh.png");
 		} else {
-			// otherwise act as go/refresh
-			navigate($(this).parents(".window").attr("id").substring(7));
+			if (!url_input.val()) {
+				// The user has hit Go without a URL, so refocus url_input
+				// TODO: samwwwblack; this causes a minor flicker as url_input
+				// loses then regains focus. Ideas to fix this?
+				url_input.focus();
+			} else {
+				// otherwise act as go/refresh
+				navigate($(this).parents(".window").attr("id").substring(7));
+			}
 		}
 	});
 
@@ -315,8 +322,10 @@ function closeTab(windowId) {
 function navigate(windowId) {
 	// invoked when the user hits the go button or hits enter in url box
 	var address = url.guess($.trim($("#windows .selected .url_input").val()));
-	// trigger navigation
-	$("#windows .selected .window_iframe").attr("src", address);
+	// trigger navigation if we have somewhere to navigate to
+	if (address) {
+		$("#windows .selected .window_iframe").attr("src", address);
+	}
 }
 
 /**
