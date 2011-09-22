@@ -38,9 +38,14 @@ enteredTab;
  */
 function clock() {
 	var date = new Date(),
-	hours = date.getHours()+'',		// get hours as string
+	hours = date.getHours(),		// get hours as string
 	minutes = date.getMinutes()+''; // get minutes as string
-
+	var amorpm = "AM";
+	if (hours>12){
+		hours-=12;
+		amorpm="PM";
+	}
+	hours = hours + '';
 	// pad with zero if needed
 	if(hours.length < 2) {
 		hours = "0" + hours;
@@ -51,7 +56,7 @@ function clock() {
 		minutes = "0" + minutes;
 	}
 
-	clockElement.text(hours + ":" + minutes);
+	clockElement.text(hours + ":" + minutes + " " + amorpm);
 }
 
 /**
