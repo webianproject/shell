@@ -1,4 +1,4 @@
-== Webian Shell 0.2 ==
+# Webian Shell 0.2
 
 [Webian Shell](http://webian.org/shell) is a graphical shell for the web.
 
@@ -6,7 +6,7 @@ From version 0.2 Shell can be used as a desktop front end for Firefox OS and is 
 
 For more information see [webian.org](http://webian.org).
 
-== Copyrights, Trademarks and Licensing ==
+## Copyrights, Trademarks and Licensing
 © Ben Francis 2012
 
 Webian is not affiliated with Firefox which is a registered trademark of the [Mozilla Foundation](http://mozilla.org), or Debian which is a registered trademark of [SPI](http://www.spi-inc.org/corporate/trademarks/).
