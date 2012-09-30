@@ -6,6 +6,11 @@ From version 0.2 Shell can be used as a desktop front end for Firefox OS and is 
 
 For more information see [webian.org](http://webian.org).
 
+## Hacking
+To hack on Webian Shell, all you need is [Firefox Nightly](http://nightly.mozilla.org/) and a text editor. Just load up index.html and off you go!
+
+We also recommend the [Firebug](http://getfirebug.com/) addon for debugging and inspecting the DOM.
+
 ## Copyrights, Trademarks and Licensing
 © Ben Francis 2012
 
