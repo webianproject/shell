@@ -1,22 +1,26 @@
-== Webian Shell 0.1 ==
+== Webian Shell 0.2 ==
 
-Webian Shell is a graphical shell for the web, a full screen web browser for devices that don't need a desktop.
+[Webian Shell](http://webian.org/shell) is a graphical shell for the web.
 
-It's an implementation of a design concept called "A Graphical Shell for the Web" [1] by Ben Francis. 
+From version 0.2 Shell can be used as a desktop front end for Firefox OS and is built entirely on emerging web standards. 
 
-The code is designed to be run using Mozilla Chromeless [2] and currently lives on the Webian web site [3].
+For more information see [webian.org](http://webian.org).
 
-To run, check out Chromeless from github [4] and execute... 
+== Copyrights, Trademarks and Licensing ==
+© Ben Francis 2012
 
-  $ ./chromeless /path/to/shell/
+Webian is not affiliated with Firefox which is a registered trademark of the [Mozilla Foundation](http://mozilla.org), or Debian which is a registered trademark of [SPI](http://www.spi-inc.org/corporate/trademarks/).
 
-...from the Chromeless source directory.
+Webian Shell is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-You can sign up to the Webian mailing list [5] or contact the author directly (Ben Francis) [6]
+Webian Shell is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-1. https://docs.google.com/View?id=dd4z8wsd_393dd5v2mdg
-2. http://mozillalabs.com/chromeless/
-3. http://webian.org
-4. https://github.com/mozilla/chromeless
-5. http://webian.org/discussions
-6. http://tola.me.uk/contact
+You should have received a copy of the GNU General Public License
+along with Webian Shell in the LICENSE file. If not, see
+<http://www.gnu.org/licenses/>.
