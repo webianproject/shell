@@ -2,7 +2,7 @@
  * Webian Shell logic
  * http://webian.org
  *
- * Copyright Ben Francis 2012
+ * Copyright Ben Francis 2013
  *
  * Webian Shell is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,11 @@
 
 /**
  * Main Shell Object
- *
- * Initialises all the other components of Shell.
  */
 var Shell = {
 
   /**
-   * Initialise system toolbar
+   * Initialise Shell.
    */
   init: function shell_init() {
     WindowToolbar.init();
@@ -49,8 +47,34 @@ var WindowToolbar = {
   init: function windowToolbar_init() {
     this.urlButton = document.getElementById('url_button');
     this.urlInput = document.getElementById('url_input');
-    this.urlButton.addEventListener('click', WindowFrame.go.bind(WindowFrame));
-    this.urlInput.addEventListener('submit', WindowFrame.go.bind(WindowFrame));
+    this.urlButton.addEventListener('click', this.handleUrlSubmit.bind(this));
+    this.urlInput.addEventListener('submit', this.handleUrlSubmit.bind(this));
+  },
+
+  /**
+   * Handle URL bar submit.
+   */
+  handleUrlSubmit: function windowToolbar_handleUrlSubmit(event) {
+    // Stop form submitting & refreshing the page
+    event.preventDefault();
+
+    var url = this.urlInput.value;
+    url = url.trim();
+
+    // Prepend http:// if no protocol specified
+    var protocolRegex = /^([a-z]+:)(\/\/)?/i;
+    if (!protocolRegex.exec(url))
+      url = 'http://' + url;
+    WindowFrame.go(url);
+  },
+
+  /**
+   * Set value of URL bar.
+   *
+   * @param {string} url The URL to set the address bar to
+   */
+  setUrl: function windowToolbar_setUrl(url) {
+    this.urlInput.value = url;
   }
 
 };
@@ -63,29 +87,29 @@ var WindowToolbar = {
 var WindowFrame = {
 
   /**
-   * Initialises window.
+   * Initialise window.
    */
-  init: function window_init() {
+  init: function windowFrame_init() {
     this.frame = document.getElementById('window_frame');
+    this.frame.addEventListener('mozbrowserlocationchange',
+      this.handleLocationChange);
   },
 
   /**
-   * Navigates to a web page.
+   * Handle mozbrowserlocationchange event.
+   *
+   * @param {Event} locationchange event containing URL.
    */
-  go: function window_go(event) {
+  handleLocationChange: function windowFrame_handleLocationChange(event) {
+    WindowToolbar.setUrl(event.detail);
+  },
 
-    // Stop form submitting & refreshing the page
-    event.preventDefault();
-    var url = WindowToolbar.urlInput.value;
-
-    // Trim whitespace
-    url = url.trim();
-
-    // Prepend http:// if no protocol specified
-    var protocolRegex = /^([a-z]+:)(\/\/)?/i;
-    if (!protocolRegex.exec(url))
-      url = 'http://' + url;
-
+  /**
+   * Navigate to a web page.
+   *
+   * @param {string} URL to navigate to.
+   */
+  go: function window_go(url) {
     // Navigate the iframe
     this.frame.src = url;
   }
