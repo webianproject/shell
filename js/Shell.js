@@ -45,10 +45,14 @@ var WindowToolbar = {
    * Initialises system toolbar.
    */
   init: function windowToolbar_init() {
+    this.windowToolbar = document.getElementById('window_toolbar');
+    this.addressBar = document.getElementById('address_bar');
     this.urlButton = document.getElementById('url_button');
     this.urlInput = document.getElementById('url_input');
     this.urlButton.addEventListener('click', this.handleUrlSubmit.bind(this));
     this.urlInput.addEventListener('submit', this.handleUrlSubmit.bind(this));
+    this.urlInput.addEventListener('focus', this.handleUrlFocus.bind(this));
+    this.urlInput.addEventListener('blur', this.handleUrlBlur.bind(this));
   },
 
   /**
@@ -69,13 +73,47 @@ var WindowToolbar = {
   },
 
   /**
-   * Set value of URL bar.
-   *
-   * @param {string} url The URL to set the address bar to
+   * Handle URL bar focus.
    */
-  setUrl: function windowToolbar_setUrl(url) {
-    this.urlInput.value = url;
-  }
+  handleUrlFocus: function windowToolbar_handleUrlFocus() {
+    this.addressBar.classList.add('selected');
+    this.urlInput.value = WindowFrame.getUrl();
+  },
+
+  /**
+   * Handle URL bar blur.
+   */
+  handleUrlBlur: function windowToolbar_handleUrlBlur() {
+    this.addressBar.classList.remove('selected');
+    this.updateAddressBar();
+  },
+
+
+  /**
+   * Update address bar
+   */
+  updateAddressBar: function windowToolbar_updateAddressBar(url) {
+    if (WindowFrame.getTitle()) {
+      this.urlInput.blur();
+      this.urlInput.value = WindowFrame.getTitle();
+    } else {
+      this.urlInput.value = WindowFrame.getUrl();
+    }
+  },
+
+  /**
+   * Set loading state
+   *
+   * @param {boolean} true is loading, false is not loading.
+   */
+  setLoading: function windowToolbar_setLoading(loading) {
+    if (loading) {
+      this.windowToolbar.classList.add('loading');
+    } else {
+      this.windowToolbar.classList.remove('loading');
+      this.urlInput.blur();
+    }
+  },
 
 };
 
@@ -92,8 +130,17 @@ var WindowFrame = {
   init: function windowFrame_init() {
     this.frame = document.getElementById('window_frame');
     this.frame.addEventListener('mozbrowserlocationchange',
-      this.handleLocationChange);
+      this.handleLocationChange.bind(this));
+    this.frame.addEventListener('mozbrowsertitlechange',
+      this.handleTitleChange.bind(this));
+    this.frame.addEventListener('mozbrowserloadstart',
+      this.handleLoadStart.bind(this));
+    this.frame.addEventListener('mozbrowserloadend',
+      this.handleLoadEnd.bind(this));
   },
+
+  url: null,
+  title: null,
 
   /**
    * Handle mozbrowserlocationchange event.
@@ -101,7 +148,33 @@ var WindowFrame = {
    * @param {Event} locationchange event containing URL.
    */
   handleLocationChange: function windowFrame_handleLocationChange(event) {
-    WindowToolbar.setUrl(event.detail);
+    this.url = event.detail;
+    this.title = null;
+    WindowToolbar.updateAddressBar(this.url);
+  },
+
+  /**
+   * Handle mozbrowsertitlechange event.
+   *
+   * @param {Event} titlechange ever containing URL.
+   */
+  handleTitleChange: function windowFrame_handleTitleChange(event) {
+    this.title = event.detail;
+    WindowToolbar.updateAddressBar();
+  },
+
+  /**
+   * Handle mozbrowserloadstart event.
+   */
+  handleLoadStart: function windowFrame_handleLoadStart() {
+    WindowToolbar.setLoading(true);
+  },
+
+  /**
+   * Handle mozbrowserloadend event.
+   */
+  handleLoadEnd: function windowFrame_handleLoadEnd() {
+    WindowToolbar.setLoading(false);
   },
 
   /**
@@ -109,9 +182,27 @@ var WindowFrame = {
    *
    * @param {string} URL to navigate to.
    */
-  go: function window_go(url) {
+  go: function windowFrame_go(url) {
     // Navigate the iframe
     this.frame.src = url;
+  },
+
+  /**
+   * Get current URL
+   *
+   * @return {string} URL
+   */
+  getUrl: function windowFrame_getUrl() {
+    return this.url;
+  },
+
+  /**
+   * Get current page title
+   *
+   * @return {string} title
+   */
+  getTitle: function windowFrame_getTitle() {
+    return this.title;
   }
 
 };
