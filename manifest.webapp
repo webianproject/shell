@@ -1,0 +1,14 @@
+{
+  "name": "Webian Shell",
+  "description": "A desktop shell for the web",
+  "launch_path": "/index.html",
+  "developer": {
+    "name": "Webian",
+    "url": "http://webian.org"
+  },
+  "permissions": {
+    "browser": {},
+    "webapps-manage":{}
+  },
+  "type": "certified"
+}

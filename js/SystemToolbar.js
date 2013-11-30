@@ -1,6 +1,7 @@
 /**
- * Webian Shell logic
- * http://webian.org
+ * System Toolbar
+ *
+ * Contains clock.
  *
  * Copyright Ben Francis 2013
  *
@@ -19,24 +20,32 @@
  * <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Main Shell Object
- */
-var Shell = {
+var SystemToolbar = {
 
   /**
-   * Initialise Shell.
+   * Initialise system toolbar.
    */
-  init: function shell_init() {
-    Grid.init();
-    SystemToolbar.init();
-    WindowManager.init();
-    WindowToolbar.init();
-    WindowFrame.init();
-  }
-};
+  init: function systemToolbar_init() {
+    this.clock = document.getElementById('clock');
+    this.updateClock();
+    window.setInterval(this.updateClock.bind(this), 1000);
+  },
 
-window.addEventListener('load', function shell_onLoad() {
-  window.removeEventListener('load', shell_onLoad);
-  Shell.init();
-});
+  /**
+   * Updates Clock.
+   */
+  updateClock: function systemToolbar_updateClock() {
+    var date = new Date(),
+    hours = date.getHours() + '', // get hours as string
+    minutes = date.getMinutes() + ''; // get minutes as string
+
+    // pad with zero if needed
+    if (hours.length < 2)
+      hours = '0' + hours;
+    if (minutes.length < 2)
+      minutes = '0' + minutes;
+
+    this.clock.innerHTML = hours + ':' + minutes;
+  }
+
+};
