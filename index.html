@@ -28,30 +28,11 @@
     <title>Webian Shell</title>
     <link rel="stylesheet" href="css/shell.css" type="text/css" />
     <script type="text/javascript" src="js/Shell.js"></script>
-    <script type="text/javascript" src="js/Grid.js"></script>
     <script type="text/javascript" src="js/SystemToolbar.js"></script>
-    <script type="text/javascript" src="js/WindowManager.js"></script>
-    <script type="text/javascript" src="js/WindowFrame.js"></script>
-    <script type="text/javascript" src="js/WindowToolbar.js"></script>
   </head>
 
   <body role="application">
-
-    <section id="grid" class="visible">
-      <ul id="app_icons">
-      </ul>
-    </section>
-
-    <menu type="toolbar" id="window_toolbar">
-      <form id="address_bar">
-        <input id="url_input" type="text"></input>
-        <button id="url_button"></button>
-      </form>
-    </menu>
-
-    <iframe id="window_frame" mozbrowser="mozbrowser"></iframe>
-
-    <menu type="toolbar" id="system_toolbar">
+    <menu type="toolbar" id="system-toolbar">
       <span id="clock"></span>
     </menu>
   </body>

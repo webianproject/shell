@@ -28,11 +28,7 @@ var Shell = {
    * Initialise Shell.
    */
   init: function shell_init() {
-    Grid.init();
     SystemToolbar.init();
-    WindowManager.init();
-    WindowToolbar.init();
-    WindowFrame.init();
   }
 };
 

@@ -2,16 +2,12 @@
 
 [Webian Shell](http://webian.org/shell) is a graphical shell for the web.
 
-From version 0.2 Shell can be used as a desktop front end for Firefox OS and is built entirely on emerging web standards. 
-
-For more information see [webian.org](http://webian.org).
-
 ## Hacking
-To hack on Webian Shell, all you need is [Firefox Nightly](http://nightly.mozilla.org/) and a text editor. Just load up index.html and off you go!
 
-We also recommend the [Firebug](http://getfirebug.com/) addon for debugging and inspecting the DOM.
+To hack on Webian Shell, all you need is [Firefox Nightly](http://nightly.mozilla.org/) and a text editor.
 
 ## Copyrights, Trademarks and Licensing
+
 © Ben Francis 2012
 
 Webian is not affiliated with Firefox which is a registered trademark of the [Mozilla Foundation](http://mozilla.org), or Debian which is a registered trademark of [SPI](http://www.spi-inc.org/corporate/trademarks/).

@@ -32,7 +32,7 @@ var SystemToolbar = {
   },
 
   /**
-   * Updates Clock.
+   * Update Clock.
    */
   updateClock: function systemToolbar_updateClock() {
     var date = new Date(),
@@ -45,7 +45,7 @@ var SystemToolbar = {
     if (minutes.length < 2)
       minutes = '0' + minutes;
 
-    this.clock.innerHTML = hours + ':' + minutes;
+    this.clock.textContent = hours + ':' + minutes;
   }
 
 };
