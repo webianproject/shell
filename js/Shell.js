@@ -10,8 +10,8 @@ var Shell = {
    * Start Shell.
    */
   start: function() {
-    this.systemToolbar = SystemToolbar.start();
     this.windowManager = WindowManager.start();
+    this.systemToolbar = SystemToolbar.start();
   }
 };
 

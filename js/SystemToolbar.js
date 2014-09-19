@@ -1,7 +1,7 @@
 /**
  * System Toolbar.
  *
- * UI element containing the clock.
+ * UI element containing the clock and window switcher.
  */
 
 var SystemToolbar = {
@@ -10,14 +10,15 @@ var SystemToolbar = {
    * Start the system toolbar.
    */
   start: function() {
+
     // Get DOM elements
     this.element = document.getElementById('system-toolbar');
-    this.clock = document.getElementById('clock');
     this.newWindowButton = document.getElementById('new-window-button');
+    this.clock = document.getElementById('clock');
 
     // Add event listeners
     this.newWindowButton.addEventListener('click',
-      this.handleNewWindow.bind(this));
+      this.handleNewWindowButtonClick.bind(this));
 
     // Set the clock going
     this.updateClock();
@@ -46,9 +47,8 @@ var SystemToolbar = {
   /**
    * Handle clicks of the new window button.
    */
-  handleNewWindow: function() {
-    var e = new CustomEvent('newwindowrequested');
-    window.dispatchEvent(e);
+  handleNewWindowButtonClick: function() {
+    window.dispatchEvent(new CustomEvent('_windowrequested'));
   }
 
 };

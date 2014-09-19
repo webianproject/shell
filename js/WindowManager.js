@@ -9,7 +9,12 @@ var WindowManager = {
   /**
    * The collection of App Windows.
    */
-  appWindows: [],
+  windows: [],
+
+  /**
+   * The collection of App Window Buttons used to select an App Window.
+   */
+  windowButtons: [],
 
   /**
    * The number of windows opened in this session.
@@ -17,7 +22,7 @@ var WindowManager = {
   windowCount: 0,
 
   /**
-   * The currently displayed window.
+   * The ID of the currently displayed window.
    */
   currentWindow: null,
 
@@ -27,32 +32,52 @@ var WindowManager = {
    * @return {Object} The WindowManager object.
    */
   start: function() {
-    // Add event listeners
-    window.addEventListener('newwindowrequested', this.createWindow.bind(this));
-    
+    window.addEventListener('_windowrequested',
+      this.handleWindowRequest.bind(this));
     return this;
+  },
+
+  /**
+   * Handle _windowrequested event.
+   *
+   * @param {Event} e _windowrequested event.
+   */
+  handleWindowRequest: function(e) {
+    if (e.detail && e.detail.id != null) {
+      this.switchWindow(e.detail.id);
+    } else {
+      this.createWindow();
+    }
   },
 
   /**
    * Create a new window.
    */
   createWindow: function() {
-    var newWindow = new AppWindow(this.windowCount);
-    this.appWindows.push(newWindow);
-    this.switchWindow(newWindow);
+    var id = this.windowCount;
+
+    var newWindow = new AppWindow(id);
+    this.windows[id] = newWindow;
+
+    var newWindowButton = new AppWindowButton(id);
+    this.windowButtons[id] = newWindowButton;
+
+    this.switchWindow(id);
     this.windowCount++;
   },
 
   /**
    * Switch to a window.
    *
-   * @param {Object} appWindow The AppWindow to switch to.
+   * @param {Integer} id The ID of the AppWindow to switch to.
    */
-  switchWindow: function(appWindow) {
-    if (this.currentWindow) {
-      this.currentWindow.hide();
+  switchWindow: function(id) {
+    if (this.currentWindow != null) {
+      this.windows[this.currentWindow].hide();
+      this.windowButtons[this.currentWindow].deselect();
     }
-    this.currentWindow = appWindow;
-    this.currentWindow.show();
+    this.currentWindow = id;
+    this.windows[id].show();
+    this.windowButtons[id].select();
   }
 };

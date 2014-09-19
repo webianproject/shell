@@ -42,11 +42,43 @@ body {
 
 /* System Toolbar */
 #system-toolbar {
+  display: flex;
   width: 100%;
   height: 3rem;
   margin: 0;
   padding: 0;
   color: #fff;
+}
+
+#window-controls {
+  height: 3rem;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+}
+
+#window-switcher {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  height: 3rem;
+  width: auto;
+  float: left;
+}
+
+.app-window-button {
+  width: 3rem;
+  height: 2.6rem;
+  background-color: #333;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border: none;
+  margin: 0 0.2rem;
+  padding: 0;
+}
+
+.app-window-button.selected {
+  background-color: #666;
 }
 
 #new-window-button {
@@ -62,7 +94,6 @@ body {
 }
 
 #clock {
-  float: right;
   font-size: 1.3rem;
   line-height: 30px;
   padding: 0 10px;
