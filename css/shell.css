@@ -1,5 +1,5 @@
 /**
- * Webian Shell presentation.
+ * Webian Shell Style Sheet.
 */
 
 html, body {
@@ -26,18 +26,55 @@ body {
   overflow: hidden;
 }
 
-/* App Window */
+/* Browser Window */
 
-.app-window {
+.browser-window {
   display: block;
+  box-sizing: border-box;
   width: 100%;
   height: 100%;
   background-color: #666;
   border-radius: 0.5rem;
+  border: solid #666 0.5rem;
 }
 
-.app-window.hidden {
+.browser-window.hidden {
   display: none;
+}
+
+/* Browser Tab */
+
+.tab-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs {
+  width: 100%;
+  height: 3rem;
+  display: flex;
+  flex-direction: row;
+}
+
+.browser-tab {
+  height: 3rem;
+  flex: 1;
+  max-width: 30rem;
+  background-color: #e5e5e5;
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+/* Browser Tab Panel */
+
+.tab-panels {
+  flex: 1;
+}
+
+.browser-tab-panel {
+  background-color: #e5e5e5;
+  height: 100%;
 }
 
 /* System Toolbar */
@@ -66,7 +103,7 @@ body {
   float: left;
 }
 
-.app-window-button {
+.window-selector {
   width: 3rem;
   height: 2.6rem;
   background-color: #333;
@@ -77,7 +114,7 @@ body {
   padding: 0;
 }
 
-.app-window-button.selected {
+.window-selector.selected {
   background-color: #666;
 }
 

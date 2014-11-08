@@ -14,7 +14,7 @@ var WindowManager = {
   /**
    * The collection of App Window Buttons used to select an App Window.
    */
-  windowButtons: [],
+  windowSelectors: [],
 
   /**
    * The number of windows opened in this session.
@@ -56,11 +56,11 @@ var WindowManager = {
   createWindow: function() {
     var id = this.windowCount;
 
-    var newWindow = new AppWindow(id);
+    var newWindow = new BrowserWindow(id);
     this.windows[id] = newWindow;
 
-    var newWindowButton = new AppWindowButton(id);
-    this.windowButtons[id] = newWindowButton;
+    var newWindowSelector = new WindowSelector(id);
+    this.windowSelectors[id] = newWindowSelector;
 
     this.switchWindow(id);
     this.windowCount++;
@@ -69,15 +69,15 @@ var WindowManager = {
   /**
    * Switch to a window.
    *
-   * @param {Integer} id The ID of the AppWindow to switch to.
+   * @param {Integer} id The ID of the BrowserWindow to switch to.
    */
   switchWindow: function(id) {
     if (this.currentWindow != null) {
       this.windows[this.currentWindow].hide();
-      this.windowButtons[this.currentWindow].deselect();
+      this.windowSelectors[this.currentWindow].deselect();
     }
     this.currentWindow = id;
     this.windows[id].show();
-    this.windowButtons[id].select();
+    this.windowSelectors[id].select();
   }
 };
