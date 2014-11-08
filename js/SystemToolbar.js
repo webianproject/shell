@@ -48,7 +48,7 @@ var SystemToolbar = {
    * Handle clicks of the new window button.
    */
   handleNewWindowButtonClick: function() {
-    window.dispatchEvent(new CustomEvent('_windowrequested'));
+    window.dispatchEvent(new CustomEvent('_openwindow'));
   }
 
 };

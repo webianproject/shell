@@ -9,7 +9,7 @@
  */
 var BrowserWindow = function(id) {
   if (id === undefined) {
-    return;
+    return null;
   }
   this.container = document.getElementById('windows');
   this.id = id;
@@ -33,6 +33,8 @@ BrowserWindow.prototype.view = function() {
       '<div id="tab-panels' + this.id + '"class="tab-panels">' +
       '</div>' +
     '</div>' +
+    '<button type="button" id="close-window-button' + this.id + '" ' +
+      'class="close-window-button">' +
   '</div>';
 };
 
@@ -42,6 +44,8 @@ BrowserWindow.prototype.view = function() {
 BrowserWindow.prototype.render = function() {
   this.container.insertAdjacentHTML('beforeend', this.view());
   this.element = document.getElementById('window' + this.id);
+  this.closeButton = document.getElementById('close-window-button' + this.id);
+  this.closeButton.addEventListener('click', this.close.bind(this));
 };
 
 /**
@@ -56,4 +60,23 @@ BrowserWindow.prototype.show = function() {
  */
 BrowserWindow.prototype.hide = function() {
   this.element.classList.add('hidden');
+};
+
+/**
+ * Close the window.
+ */
+BrowserWindow.prototype.close = function() {
+  var e = new CustomEvent('_closewindow', {
+    detail: {
+      id: this.id
+    }
+  });
+  window.dispatchEvent(e);
+};
+
+/**
+ * Delete the element from the DOM.
+ */
+BrowserWindow.prototype.destroy = function() {
+  this.container.removeChild(this.element);
 };

@@ -32,21 +32,43 @@ var WindowManager = {
    * @return {Object} The WindowManager object.
    */
   start: function() {
-    window.addEventListener('_windowrequested',
-      this.handleWindowRequest.bind(this));
+    window.addEventListener('_openwindow',
+      this.handleOpenWindow.bind(this));
+    window.addEventListener('_closewindow',
+      this.handleCloseWindow.bind(this));
     return this;
   },
 
   /**
-   * Handle _windowrequested event.
+   * Handle _openwindow event.
    *
-   * @param {Event} e _windowrequested event.
+   * @param {Event} e _openwindow event.
    */
-  handleWindowRequest: function(e) {
+  handleOpenWindow: function(e) {
     if (e.detail && e.detail.id != null) {
       this.switchWindow(e.detail.id);
     } else {
       this.createWindow();
+    }
+  },
+  
+  /**
+   * Handle _closewindow event.
+   *
+   * @param {Event} e _closewindow event.
+   */
+  handleCloseWindow: function(e) {
+    if (!e.detail || e.detail.id === undefined) {
+      return;
+    }
+    this.windows[e.detail.id].destroy();
+    delete this.windows[e.detail.id];
+    this.windowSelectors[e.detail.id].destroy();
+    delete this.windowSelectors[e.detail.id];
+    this.currentWindow = null;
+    var windowIds = Object.keys(this.windows);
+    if (windowIds.length > 0) {
+      this.switchWindow(windowIds[windowIds.length-1]);
     }
   },
 

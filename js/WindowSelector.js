@@ -11,7 +11,7 @@
  */
 var WindowSelector = function(id) {
   if (id === undefined) {
-    return;
+    return null;
   }
   this.id = id;
   this.container = document.getElementById('window-switcher');
@@ -54,7 +54,7 @@ WindowSelector.prototype.deselect = function() {
  * Handle a click on the selector.
  */
 WindowSelector.prototype.handleClick = function() {
-  var e = new CustomEvent('_windowrequested', {
+  var e = new CustomEvent('_openwindow', {
     detail: {
       id: this.id
     }
@@ -62,3 +62,9 @@ WindowSelector.prototype.handleClick = function() {
   window.dispatchEvent(e);
 };
 
+/**
+ * Delete the element from the DOM.
+ */
+WindowSelector.prototype.destroy = function() {
+  this.container.removeChild(this.element);
+};
