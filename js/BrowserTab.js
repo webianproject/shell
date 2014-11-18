@@ -15,9 +15,9 @@ var BrowserTab = function(tabId, windowId) {
   if (tabId === undefined || windowId === undefined) {
     return;
   }
-  this.container = document.getElementById('tabs' + windowId);
   this.id = tabId;
   this.windowId = windowId;
+  this.newTabButton = document.getElementById('new-tab-button' + windowId);
   this.render();
   return this;
 };
@@ -34,6 +34,6 @@ BrowserTab.prototype.view = function() {
  * Render the tab.
  */
 BrowserTab.prototype.render = function() {
-  this.container.insertAdjacentHTML('beforeend', this.view());
+  this.newTabButton.insertAdjacentHTML('beforebegin', this.view());
   this.element = document.getElementById('tab-' + this.windowId + '-' + this.id);
 };

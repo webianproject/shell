@@ -76,18 +76,50 @@ body {
 }
 
 .tabs {
-  width: 100%;
+  width: calc(100% - 3rem);
   height: 3rem;
   display: flex;
   flex-direction: row;
+  overflow-x: auto;
 }
 
 .browser-tab {
   height: 3rem;
   flex: 1;
+  min-width: 6rem;
   max-width: 30rem;
+  border-left: solid 1px #4d4d4d;
+}
+
+.browser-tab:first-child {
+  border-left: none;
+}
+
+.browser-tab.selected {
   background-color: #e5e5e5;
+  border: none;
   border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.new-tab-button {
+  height: 3rem;
+  width: 3rem;
+  min-width: 3rem;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+  background-image: url("../images/new.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.new-tab-button:hover {
+  background-image: url("../images/new-hover.png");
+}
+
+.new-tab-button:active {
+  background-image: url("../images/new-active.png");
 }
 
 /* Browser Tab Panel */
@@ -99,6 +131,11 @@ body {
 .browser-tab-panel {
   background-color: #e5e5e5;
   height: 100%;
+  display: none;
+}
+
+.browser-tab-panel.selected {
+  display: block;
 }
 
 /* System Toolbar */
