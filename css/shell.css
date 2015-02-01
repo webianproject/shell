@@ -52,18 +52,19 @@ body {
   margin: 0;
   background-color: transparent;
   border: none;
-  background-image: url("../images/close.png");
+  background-image: url("../images/close-light.png");
   background-position: center center;
   background-repeat: no-repeat;  
+  opacity: 0.5;
 }
 
 .close-window-button:hover {
-  background-image: url("../images/close-hover.png");
+  opacity: 0.75;
 }
 
 
 .close-window-button:active {
-  background-image: url("../images/close-active.png");
+  opacity: 1;
 }
 
 /* Browser Tab */
@@ -84,6 +85,8 @@ body {
 }
 
 .browser-tab {
+  display: flex;
+  flex-direction: row;
   height: 3rem;
   flex: 1;
   min-width: 6rem;
@@ -101,6 +104,35 @@ body {
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
+.tab-title {
+  flex: 1;
+}
+
+.close-tab-button {
+  height: 3rem;
+  width: 3rem;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+  background-image: url("../images/close-light.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
+
+.close-tab-button:hover {
+   opacity: 0.75;   
+}
+
+.close-tab-button:active {
+   opacity: 1;   
+}
+
+.browser-tab.selected .close-tab-button {
+  background-image: url("../images/close-dark.png");
+}
+
 .new-tab-button {
   height: 3rem;
   width: 3rem;
@@ -112,14 +144,15 @@ body {
   background-image: url("../images/new.png");
   background-position: center center;
   background-repeat: no-repeat;
+  opacity: 0.5;
 }
 
 .new-tab-button:hover {
-  background-image: url("../images/new-hover.png");
+  opacity: 0.75;
 }
 
 .new-tab-button:active {
-  background-image: url("../images/new-active.png");
+  opacity: 1;
 }
 
 /* Browser Tab Panel */
@@ -145,7 +178,7 @@ body {
   height: 3rem;
   margin: 0;
   padding: 0;
-  color: #fff;
+  color: #aaa;
 }
 
 #window-controls {
@@ -197,14 +230,15 @@ body {
   background-image: url("../images/new.png");
   background-position: center center;
   background-repeat: no-repeat;
+  opacity: 0.5;
 }
 
 #new-window-button:hover {
-  background-image: url("../images/new-hover.png");
+  opacity: 0.75;
 }
 
 #new-window-button:active {
-  background-image: url("../images/new-active.png");
+  opacity: 1;
 }
 
 #clock {

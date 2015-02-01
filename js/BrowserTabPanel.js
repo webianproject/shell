@@ -36,3 +36,10 @@ BrowserTabPanel.prototype.render = function() {
   this.container.insertAdjacentHTML('beforeend', this.view());
   this.element = document.getElementById('tab-panel' + this.windowId + '-' + this.id);
 };
+
+/**
+ * Delete the Browser Tab Panel from the DOM.
+ */
+BrowserTabPanel.prototype.destroy = function() {
+  this.container.removeChild(this.element);   
+}

@@ -14,7 +14,7 @@ var BrowserWindow = function(id) {
   this.container = document.getElementById('windows');
   this.id = id;
   this.render();
-  this.tabCount = 0;
+  this.tabCount = 0; // Total number of tabs ever created in this window
   this.tabs = [];
   this.tabPanels = [];
   this.currentTab = null;
@@ -47,8 +47,8 @@ BrowserWindow.prototype.render = function() {
   this.element = document.getElementById('window' + this.id);
   this.closeButton = document.getElementById('close-window-button' + this.id);
   this.closeButton.addEventListener('click', this.close.bind(this));
-  this.newTabButton = document.getElementById('new-tab-button' + this.id);
-  this.newTabButton.addEventListener('click', this.createTab.bind(this));
+  this.tabsElement = document.getElementById('tabs' + this.id);
+  this.tabsElement.addEventListener('click', this.handleTabClick.bind(this));
 };
 
 /**
@@ -113,3 +113,35 @@ BrowserWindow.prototype.switchTab = function(id) {
   this.currentTab = id;
 };
 
+/**
+ * Handle click on tabs element.
+ *
+ * @param Event e Click event.
+ */
+BrowserWindow.prototype.handleTabClick = function(e) {
+  if (e.target.classList.contains('close-tab-button')) {
+    this.closeTab(e.target.parentNode.dataset.tabId);
+  }
+  if (e.target.classList.contains('new-tab-button')) {
+    this.createTab();
+  }
+};
+
+/**
+ * Close Browser Tab.
+ *
+ * @param Integer tabId tabId of BrowserTab.
+ */
+BrowserWindow.prototype.closeTab = function(tabId) {
+  this.tabs[tabId].destroy();
+  delete this.tabs[tabId];
+  this.tabPanels[tabId].destroy();
+  delete this.tabPanels[tabId];
+  this.currentTab = null;
+  var tabIds = Object.keys(this.tabs);
+  if (tabIds.length > 0) {
+    this.switchTab(tabIds[tabIds.length-1]);
+  } else {
+    this.close();
+  }
+};

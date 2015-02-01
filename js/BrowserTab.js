@@ -17,6 +17,7 @@ var BrowserTab = function(tabId, windowId) {
   }
   this.id = tabId;
   this.windowId = windowId;
+  this.container = document.getElementById('tabs' + windowId);
   this.newTabButton = document.getElementById('new-tab-button' + windowId);
   this.render();
   return this;
@@ -27,7 +28,11 @@ var BrowserTab = function(tabId, windowId) {
  */
 BrowserTab.prototype.view = function() {
   return '<div id="tab-' + this.windowId + '-' + this.id +
-    '"class="browser-tab"></div>';
+    '" class="browser-tab" data-tab-id="'+ this.id + '">' +
+      '<span class="tab-title"></span>' +
+      '<button type="button" id="close-tab-button' + this.windowId + 
+        '-' + this.id + '" class="close-tab-button">' +
+    '</div>';
 };
 
 /**
@@ -37,3 +42,10 @@ BrowserTab.prototype.render = function() {
   this.newTabButton.insertAdjacentHTML('beforebegin', this.view());
   this.element = document.getElementById('tab-' + this.windowId + '-' + this.id);
 };
+
+/**
+ * Delete the Browser Tab from the DOM.
+ */
+BrowserTab.prototype.destroy = function() {
+  this.container.removeChild(this.element);   
+}
