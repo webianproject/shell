@@ -94,7 +94,11 @@ body {
   border-left: solid 1px #4d4d4d;
 }
 
-.browser-tab:first-child {
+.browser-tab:last-of-type {
+  border-right: solid 1px #4d4d4d;
+}
+
+.browser-tab:first-child, .browser-tab.selected + .browser-tab {
   border-left: none;
 }
 

@@ -119,10 +119,11 @@ BrowserWindow.prototype.switchTab = function(id) {
  * @param Event e Click event.
  */
 BrowserWindow.prototype.handleTabClick = function(e) {
-  if (e.target.classList.contains('close-tab-button')) {
+  if (e.target.classList.contains('tab-title')) {
+    this.switchTab(e.target.parentNode.dataset.tabId);
+  } else if (e.target.classList.contains('close-tab-button')) {
     this.closeTab(e.target.parentNode.dataset.tabId);
-  }
-  if (e.target.classList.contains('new-tab-button')) {
+  } else if (e.target.classList.contains('new-tab-button')) {
     this.createTab();
   }
 };
@@ -137,8 +138,9 @@ BrowserWindow.prototype.closeTab = function(tabId) {
   delete this.tabs[tabId];
   this.tabPanels[tabId].destroy();
   delete this.tabPanels[tabId];
-  this.currentTab = null;
   var tabIds = Object.keys(this.tabs);
+  if (this.currentTab != tabId)
+    return;
   if (tabIds.length > 0) {
     this.switchTab(tabIds[tabIds.length-1]);
   } else {
