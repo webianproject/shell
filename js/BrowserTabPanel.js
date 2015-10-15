@@ -26,7 +26,8 @@ var BrowserTabPanel = function(tabId, windowId) {
  */
 BrowserTabPanel.prototype.view = function() {
   return '<div id="tab-panel' + this.windowId + '-' + this.id +
-    '"class="browser-tab-panel"></div>';
+    '"class="browser-tab-panel"><iframe src="http://duckduckgo.com"' +
+    'class="browser-tab-frame"></div>';
 };
 
 /**

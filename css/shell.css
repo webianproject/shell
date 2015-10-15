@@ -19,6 +19,11 @@ body {
   flex-direction: column;
 }
 
+/* Prevent dotted outlines on buttons */
+button::-moz-focus-inner {
+  border: 0;
+}
+
 /* Window Manager */
 
 #windows {
@@ -33,9 +38,6 @@ body {
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  background-color: #666;
-  border-radius: 0.5rem;
-  border: solid #666 0.5rem;
 }
 
 .browser-window.hidden {
@@ -46,8 +48,8 @@ body {
   position: absolute;
   top: 0;
   right: 0;
-  height: 3.5rem;
-  width: 3.5rem;
+  height: 3rem;
+  width: 3rem;
   padding: 0;
   margin: 0;
   background-color: transparent;
@@ -103,7 +105,7 @@ body {
 }
 
 .browser-tab.selected {
-  background-color: #e5e5e5;
+  background-color: #5d5d5d;
   border: none;
   border-radius: 0.5rem 0.5rem 0 0;
 }
@@ -131,10 +133,6 @@ body {
 
 .close-tab-button:active {
    opacity: 1;   
-}
-
-.browser-tab.selected .close-tab-button {
-  background-image: url("../images/close-dark.png");
 }
 
 .new-tab-button {
@@ -166,27 +164,43 @@ body {
 }
 
 .browser-tab-panel {
-  background-color: #e5e5e5;
+  background-color: #5d5d5d;
   height: 100%;
   display: none;
+  border-radius: 0.5rem;
+}
+
+.browser-tab-panel:first-child {
+  border-top-left-radius: 0;
 }
 
 .browser-tab-panel.selected {
   display: block;
 }
 
+.browser-tab-frame {
+  height: 100%;
+  width: 100%;
+  border: none;
+  border-radius: 0.5rem;
+}
+
+.browser-tab-panel:first-child .browser-tab-frame {
+  border-top-left-radius: 0;
+}
+
 /* System Toolbar */
 #system-toolbar {
   display: flex;
   width: 100%;
-  height: 3rem;
+  height: 3.2rem;
   margin: 0;
   padding: 0;
   color: #aaa;
 }
 
 #window-controls {
-  height: 3rem;
+  height: 3.2rem;
   padding: 0;
   margin: 0;
   flex: 1;
@@ -196,37 +210,39 @@ body {
   display: inline;
   margin: 0;
   padding: 0;
-  height: 3rem;
+  height: 3.2rem;
   width: auto;
   float: left;
 }
 
 .window-selector {
-  width: 3rem;
-  height: 2.6rem;
-  background-color: #333;
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  width: 3.2rem;
+  height: 3rem;
+  background-color: transparent;
+  background-image: url("../images/browser-icon.png");
+  background-position: center center;
+  background-repeat: no-repeat;
   border: none;
   margin: 0 0.2rem;
   padding: 0;
+  border-bottom: solid 2px transparent;
 }
 
 .window-selector:hover {
-  background-color: #444;
+  border-bottom: solid 2px #666;
 }
 
 .window-selector:active {
-  background-color: #666;
+  border-bottom: solid 2px #fff;
 }
 
 .window-selector.selected {
-  background-color: #666;
+  border-bottom: solid 2px #ccc;
 }
 
 #new-window-button {
-  height: 3rem;
-  width: 3rem;
+  height: 3.2rem;
+  width: 3.2rem;
   padding: 0;
   margin: 0;
   background-color: transparent;
@@ -247,6 +263,6 @@ body {
 
 #clock {
   font-size: 1.3rem;
-  line-height: 30px;
-  padding: 0 10px;
+  line-height: 3.2rem;
+  padding: 0 1rem;
 }
