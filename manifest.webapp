@@ -1,0 +1,15 @@
+{
+  "name": "Webian Shell",
+  "description": "A desktop front end for Boot to Gecko",
+  "type": "privileged",
+  "origin": "app://shell.webian.org",
+  "launch_path": "/index.html",
+  "permissions": {
+      "browser": {}
+  },
+  "fullscreen": "true",
+  "icons": {
+    "64": "/images/shell-64.png",
+    "128": "/images/shell-128.png"
+  }
+}
