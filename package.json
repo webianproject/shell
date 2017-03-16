@@ -1,0 +1,19 @@
+{
+  "name": "webian-shell",
+  "version": "0.3.0",
+  "description": "A graphical shell for the web",
+  "main": "main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webianproject/shell.git"
+  },
+  "author": "Ben Francis",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/webianproject/shell/issues"
+  },
+  "homepage": "https://webian.org/shell",
+  "dependencies": {
+    "qbrt": "^0.1.0"
+  }
+}

@@ -1,10 +1,21 @@
-# Webian Shell 0.2
+# Webian Shell 0.3
 
 [Webian Shell](http://webian.org/shell) is a graphical shell for the web.
 
-## Hacking
+## Getting Started
 
-To hack on Webian Shell, all you need is [Firefox Nightly](http://nightly.mozilla.org/) and a text editor.
+You can run and debug Webian Shell 0.3 using [qbrt](https://mykzilla.org/2017/03/15/introducing-qbrt), an experimental Gecko application runtime.
+
+First make sure that you have [NodeJS](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/) installed.
+
+```
+$ npm install -g qbrt
+$ git clone https://github.com/webianproject/shell.git
+$ cd shell
+$ qbrt run ./
+```
+
+This will launch Webian Shell in a new window and also open developer tools.
 
 ## Copyrights, Trademarks and Licensing
 
