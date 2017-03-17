@@ -42,7 +42,9 @@ BrowserTab.prototype.tabView = function() {
  */
 BrowserTab.prototype.tabPanelView = function() {
   return '<div id="tab-panel' + this.windowId + '-' + this.id +
-    '" class="browser-tab-panel"><iframe src="http://duckduckgo.com" ' +
+    '" class="browser-tab-panel"><menu class="browser-toolbar">' +
+    '<input type="text" class="url-bar" disabled>"</menu>' +
+    '<iframe src="http://duckduckgo.com" ' +
     'id="browser-tab-frame' + this.windowId + '-' + this.id +
     '" class="browser-tab-frame" mozbrowser remote></div>';
 };
@@ -54,7 +56,7 @@ BrowserTab.prototype.renderTab = function() {
   this.newTabButton.insertAdjacentHTML('beforebegin', this.tabView());
   this.tabElement = document.getElementById('tab-' +
     this.windowId + '-' + this.id);
-  this.tabTitleElement = this.tabElement.getElementsByClassName('tab-title')[0];
+  this.tabTitle = this.tabElement.getElementsByClassName('tab-title')[0];
 };
 
 /**
@@ -66,8 +68,11 @@ BrowserTab.prototype.renderTabPanel = function() {
     this.id);
   this.frame = document.getElementById('browser-tab-frame' + this.windowId +
     '-' + this.id);
+  this.urlBar = this.tabPanelElement.getElementsByClassName('url-bar')[0];
   this.frame.addEventListener('mozbrowsertitlechange',
     this.handleTitleChange.bind(this));
+  this.frame.addEventListener('mozbrowserlocationchange',
+      this.handleLocationChange.bind(this));
 };
 
 /**
@@ -100,5 +105,14 @@ BrowserTab.prototype.deselect = function() {
  * @param Event e mozbrowsertitlechange event.
  */
 BrowserTab.prototype.handleTitleChange = function(e) {
-  this.tabTitleElement.textContent = e.detail;
+  this.tabTitle.textContent = e.detail;
+};
+
+/**
+ * Handle a change in document location.
+ *
+ * @param Event e mozbrowserlocationchange event.
+ */
+BrowserTab.prototype.handleLocationChange = function(e) {
+  this.urlBar.value = e.detail.url;
 };

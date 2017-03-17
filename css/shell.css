@@ -177,6 +177,7 @@ button::-moz-focus-inner {
 .browser-tab-panel {
   background-color: #5d5d5d;
   flex: 1;
+  flex-direction: column;
   display: none;
   border-radius: 0.5rem;
 }
@@ -186,7 +187,7 @@ button::-moz-focus-inner {
 }
 
 .browser-tab-panel.selected {
-  display: block;
+  display: flex;
 }
 
 .browser-tab-frame {
@@ -194,10 +195,35 @@ button::-moz-focus-inner {
   width: 100%;
   border: none;
   border-radius: 0.5rem;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .browser-tab-panel:first-child .browser-tab-frame {
   border-top-left-radius: 0;
+}
+
+.browser-toolbar {
+  height: 3.6rem;
+  margin: 0;
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: row;
+  box-sizing: border-box;
+}
+
+.url-bar {
+  height: 2.2rem;
+  flex: 1;
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0 0.5rem;
+  margin-right: -0.5rem;
+  margin-left: -0.2rem;
+}
+
+.url-bar:disabled {
+  background-color: #ccc;
 }
 
 /* System Toolbar */
