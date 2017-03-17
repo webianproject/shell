@@ -56,7 +56,7 @@ button::-moz-focus-inner {
   border: none;
   background-image: url("../images/close-light.png");
   background-position: center center;
-  background-repeat: no-repeat;  
+  background-repeat: no-repeat;
   opacity: 0.5;
 }
 
@@ -94,6 +94,7 @@ button::-moz-focus-inner {
   min-width: 6rem;
   max-width: 30rem;
   border-left: solid 1px #4d4d4d;
+  box-sizing: border-box;
 }
 
 .browser-tab:last-of-type {
@@ -112,6 +113,14 @@ button::-moz-focus-inner {
 
 .tab-title {
   flex: 1;
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 0.6rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  user-select: none;
+  -moz-user-select: none;
 }
 
 .close-tab-button {
@@ -128,11 +137,11 @@ button::-moz-focus-inner {
 }
 
 .close-tab-button:hover {
-   opacity: 0.75;   
+   opacity: 0.75;
 }
 
 .close-tab-button:active {
-   opacity: 1;   
+   opacity: 1;
 }
 
 .new-tab-button {
@@ -161,11 +170,13 @@ button::-moz-focus-inner {
 
 .tab-panels {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .browser-tab-panel {
   background-color: #5d5d5d;
-  height: 100%;
+  flex: 1;
   display: none;
   border-radius: 0.5rem;
 }
@@ -265,4 +276,6 @@ button::-moz-focus-inner {
   font-size: 1.3rem;
   line-height: 3.2rem;
   padding: 0 1rem;
+  user-select: none;
+  -moz-user-select: none;
 }

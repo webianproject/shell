@@ -1,6 +1,6 @@
 /**
  * Browser Window.
- * 
+ *
  * A Browser Window contains a collection of Browser Tabs.
  */
 
@@ -22,7 +22,7 @@ var BrowserWindow = function(id) {
   return this;
 };
 
-/** 
+/**
  * Window View.
  */
 BrowserWindow.prototype.view = function() {
@@ -92,7 +92,6 @@ BrowserWindow.prototype.destroy = function() {
 BrowserWindow.prototype.createTab = function() {
   var tabId = this.tabCount;
   this.tabs[tabId] = new BrowserTab(tabId, this.id);
-  this.tabPanels[tabId] = new BrowserTabPanel(tabId, this.id);
   this.tabCount++;
   this.switchTab(tabId);
   return tabId;
@@ -100,16 +99,14 @@ BrowserWindow.prototype.createTab = function() {
 
 /**
  * Switch Browser Tab.
- * 
+ *
  * @param Integer id ID of tab to switch to.
  */
 BrowserWindow.prototype.switchTab = function(id) {
   if (this.tabs[this.currentTab]) {
-    this.tabs[this.currentTab].element.classList.remove('selected');
-    this.tabPanels[this.currentTab].element.classList.remove('selected');
+    this.tabs[this.currentTab].deselect();
   }
-  this.tabs[id].element.classList.add('selected');
-  this.tabPanels[id].element.classList.add('selected');
+  this.tabs[id].select();
   this.currentTab = id;
 };
 
@@ -136,8 +133,6 @@ BrowserWindow.prototype.handleTabClick = function(e) {
 BrowserWindow.prototype.closeTab = function(tabId) {
   this.tabs[tabId].destroy();
   delete this.tabs[tabId];
-  this.tabPanels[tabId].destroy();
-  delete this.tabPanels[tabId];
   var tabIds = Object.keys(this.tabs);
   if (this.currentTab != tabId)
     return;

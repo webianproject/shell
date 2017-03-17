@@ -29,6 +29,7 @@ if (Services.appinfo.OS === 'Darwin') {
 console.log('Starting Webian Shell...');
 
 const window = Services.ww.openWindow(null, WINDOW_URL, '_blank', WINDOW_FEATURES, null);
+window.fullScreen = true;
 
 // Comment this out to disable Dev Tools
 Runtime.openDevTools(window);
