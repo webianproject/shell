@@ -43,7 +43,7 @@ BrowserTab.prototype.tabView = function() {
 BrowserTab.prototype.tabPanelView = function() {
   return '<div id="tab-panel' + this.windowId + '-' + this.id +
     '" class="browser-tab-panel"><menu class="browser-toolbar">' +
-    '<input type="text" class="url-bar" disabled>"</menu>' +
+    '<input type="text" class="url-bar" disabled></menu>' +
     '<iframe src="http://duckduckgo.com" ' +
     'id="browser-tab-frame' + this.windowId + '-' + this.id +
     '" class="browser-tab-frame" mozbrowser remote></div>';
