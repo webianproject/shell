@@ -55,6 +55,7 @@ BrowserWindow.prototype.render = function() {
  * Show the Window.
  */
 BrowserWindow.prototype.show = function() {
+  this.tabs[this.currentTab].activate();
   this.element.classList.remove('hidden');
 };
 
@@ -63,6 +64,7 @@ BrowserWindow.prototype.show = function() {
  */
 BrowserWindow.prototype.hide = function() {
   this.element.classList.add('hidden');
+  this.tabs[this.currentTab].deactivate();
 };
 
 /**
