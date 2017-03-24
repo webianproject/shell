@@ -213,15 +213,40 @@ button::-moz-focus-inner {
 }
 
 .url-bar {
-  height: 2.2rem;
+  display: flex;
+  flex-direction: row;
   flex: 1;
+  height: 2.2rem;
   border: 0;
   border-radius: 0.5rem;
-  padding: 0 0.5rem;
+  padding: 0;
+  background-color: #fff;
 }
 
-.url-bar:disabled {
-  background-color: #ccc;
+.url-bar-input {
+  color: #666;
+  flex: 1;
+  border: 0;
+  padding: 0 0.5rem;
+  background-color: transparent;
+}
+
+.url-bar-input:focus {
+  color: #000;
+}
+
+.url-bar-button {
+  height: 2.2rem;
+  width: 2.2rem;
+  background-image: url('../images/go.png');
+  border: 0;
+  background-color: transparent;
+  opacity: 0.8;
+  border-radius: 0.5rem;
+}
+
+.url-bar-button:hover, .url-bar-button:active {
+  opacity: 1.0;
 }
 
 /* System Toolbar */

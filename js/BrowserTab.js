@@ -43,10 +43,11 @@ BrowserTab.prototype.tabView = function() {
 BrowserTab.prototype.tabPanelView = function() {
   return '<div id="tab-panel' + this.windowId + '-' + this.id +
     '" class="browser-tab-panel"><menu class="browser-toolbar">' +
-    '<input type="text" class="url-bar" disabled></menu>' +
-    '<iframe src="http://duckduckgo.com" ' +
-    'id="browser-tab-frame' + this.windowId + '-' + this.id +
-    '" class="browser-tab-frame" mozbrowser remote></div>';
+    '<form class="url-bar"><input type="text" class="url-bar-input">' +
+    '<button class="url-bar-button" type="submit"/></form></menu>' +
+    '<iframe src="http://duckduckgo.com" id="browser-tab-frame' +
+    this.windowId + '-' + this.id + '" class="browser-tab-frame" mozbrowser ' +
+    ' remote></div>';
 };
 
 /**
@@ -64,11 +65,16 @@ BrowserTab.prototype.renderTab = function() {
  */
 BrowserTab.prototype.renderTabPanel = function() {
   this.tabPanelContainer.insertAdjacentHTML('beforeend', this.tabPanelView());
-  this.tabPanelElement = document.getElementById('tab-panel' + this.windowId + '-' +
-    this.id);
+  this.tabPanelElement = document.getElementById('tab-panel' + this.windowId +
+    '-' + this.id);
   this.frame = document.getElementById('browser-tab-frame' + this.windowId +
     '-' + this.id);
   this.urlBar = this.tabPanelElement.getElementsByClassName('url-bar')[0];
+  this.urlBarInput = this.tabPanelElement.getElementsByClassName(
+    'url-bar-input')[0];
+  this.urlBarButton = this.tabPanelElement.getElementsByClassName(
+    'url-bar-button')[0];
+  this.urlBar.addEventListener('submit', this.handleSubmit.bind(this));
   this.frame.addEventListener('mozbrowsertitlechange',
     this.handleTitleChange.bind(this));
   this.frame.addEventListener('mozbrowserlocationchange',
@@ -124,6 +130,31 @@ BrowserTab.prototype.deactivate = function() {
 };
 
 /**
+ * Handle URL bar submit.
+ */
+BrowserTab.prototype.handleSubmit = function(e) {
+  // stop form submission reloading top level document
+  e.preventDefault();
+  var url = this.urlBarInput.value;
+  // Check for valid URL
+  try {
+    url = new URL(url).href;
+  }
+  catch (e) {
+    // Otherwise try prepending http://
+    try {
+      url = new URL('http://' + url).href;
+    }
+    catch (e) {
+      // Otherwise invalid URL, don't navigate
+      return;
+    }
+  }
+  this.frame.src = url;
+  this.urlBarInput.blur();
+};
+
+/**
  * Handle a change in document title.
  *
  * @param Event e mozbrowsertitlechange event.
@@ -138,5 +169,5 @@ BrowserTab.prototype.handleTitleChange = function(e) {
  * @param Event e mozbrowserlocationchange event.
  */
 BrowserTab.prototype.handleLocationChange = function(e) {
-  this.urlBar.value = e.detail.url;
+  this.urlBarInput.value = e.detail.url;
 };
