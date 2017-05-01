@@ -45,7 +45,7 @@ BrowserTab.prototype.tabPanelView = function() {
     '" class="browser-tab-panel"><menu class="browser-toolbar">' +
     '<form class="url-bar"><input type="text" class="url-bar-input">' +
     '<button class="url-bar-button" type="submit"/></form></menu>' +
-    '<iframe src="http://duckduckgo.com" id="browser-tab-frame' +
+    '<iframe src="chrome://app/content/new_tab.html" id="browser-tab-frame' +
     this.windowId + '-' + this.id + '" class="browser-tab-frame" mozbrowser ' +
     ' remote></div>';
 };
@@ -169,5 +169,10 @@ BrowserTab.prototype.handleTitleChange = function(e) {
  * @param Event e mozbrowserlocationchange event.
  */
 BrowserTab.prototype.handleLocationChange = function(e) {
-  this.urlBarInput.value = e.detail.url;
+  if (e.detail.url == 'chrome://app/content/new_tab.html') {
+    this.urlBarInput.value = '';
+    this.urlBarInput.focus();
+  } else {
+    this.urlBarInput.value = e.detail.url;
+  }
 };
