@@ -45,7 +45,7 @@ var SystemToolbar = {
   },
 
   /**
-   * Handle clicks of the new window button.
+   * Handle clicks on the new window button.
    */
   handleNewWindowButtonClick: function() {
     window.dispatchEvent(new CustomEvent('_openwindow'));

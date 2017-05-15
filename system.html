@@ -30,13 +30,15 @@
     <script type="text/javascript" src="js/Shell.js"></script>
     <script type="text/javascript" src="js/SystemToolbar.js"></script>
     <script type="text/javascript" src="js/WindowManager.js"></script>
+    <script type="text/javascript" src="js/BaseWindow.js"></script>
+    <script type="text/javascript" src="js/HomeScreenWindow.js"></script>
     <script type="text/javascript" src="js/BrowserWindow.js"></script>
     <script type="text/javascript" src="js/WindowSelector.js"></script>
     <script type="text/javascript" src="js/BrowserTab.js"></script>
   </head>
 
-  <body role="application">
-    <div id="windows"></div>
+  <body role="application" class="home">
+    <div id="windows" class="hidden"></div>
     <menu type="toolbar" id="system-toolbar">
       <menu type="toolbar" id="window-controls">
         <menu type="toolbar" id="window-switcher"></menu>

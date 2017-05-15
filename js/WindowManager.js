@@ -27,6 +27,19 @@ var WindowManager = {
   currentWindow: null,
 
   /**
+   * Types of window that can be created.
+   */
+  WINDOW_TYPES: {
+    'home': 0,
+    'browser' : 1
+  },
+
+  /**
+   * The window ID to designate as the home window.
+   */
+  HOME_WINDOW_ID: 0,
+
+  /**
    * Start the Window Manager.
    *
    * @return {Object} The WindowManager object.
@@ -36,6 +49,7 @@ var WindowManager = {
       this.handleOpenWindow.bind(this));
     window.addEventListener('_closewindow',
       this.handleCloseWindow.bind(this));
+    this.createWindow(this.WINDOW_TYPES.home);
     return this;
   },
 
@@ -45,13 +59,13 @@ var WindowManager = {
    * @param {Event} e _openwindow event.
    */
   handleOpenWindow: function(e) {
-    if (e.detail && e.detail.id != null) {
+    if (e.detail && e.detail.id !== null) {
       this.switchWindow(e.detail.id);
     } else {
-      this.createWindow();
+      this.createWindow(this.WINDOW_TYPES.browser);
     }
   },
-  
+
   /**
    * Handle _closewindow event.
    *
@@ -74,16 +88,28 @@ var WindowManager = {
 
   /**
    * Create a new window.
+   *
+   * @param {number} Window type id from this.WINDOW_TYPES.
    */
-  createWindow: function() {
+  createWindow: function(windowType) {
+    var newWindow = null;
     var id = this.windowCount;
-
-    var newWindow = new BrowserWindow(id);
+    switch(windowType) {
+      // Home Screen Window
+      case this.WINDOW_TYPES.home:
+        newWindow = new HomeScreenWindow(this.HOME_WINDOW_ID);
+        break;
+      // Browser Window
+      case this.WINDOW_TYPES.browser:
+        newWindow = new BrowserWindow(id);
+        break;
+      default:
+        console.error('Window type not recognised.');
+        return;
+    }
     this.windows[id] = newWindow;
-
-    var newWindowSelector = new WindowSelector(id);
+    var newWindowSelector = new WindowSelector(id, windowType);
     this.windowSelectors[id] = newWindowSelector;
-
     this.switchWindow(id);
     this.windowCount++;
   },
@@ -91,14 +117,24 @@ var WindowManager = {
   /**
    * Switch to a window.
    *
-   * @param {Integer} id The ID of the BrowserWindow to switch to.
+   * @param {Integer} id The ID of the window to switch to.
    */
   switchWindow: function(id) {
-    if (this.currentWindow != null) {
+    // Hide the current window
+    if (this.currentWindow !== null) {
       this.windows[this.currentWindow].hide();
       this.windowSelectors[this.currentWindow].deselect();
     }
+    // Dispatch an event if switching to or from homescreen.
+    if (id == this.WINDOW_TYPES.home &&
+      this.currentWindow != this.WINDOW_TYPES.home) {
+      window.dispatchEvent(new CustomEvent('_goinghome'));
+    } else if(this.currentWindow == this.WINDOW_TYPES.home &&
+      id!=this.WINDOW_TYPES.home) {
+      window.dispatchEvent(new CustomEvent('_leavinghome'));
+    }
     this.currentWindow = id;
+    // Show the selected window
     this.windows[id].show();
     this.windowSelectors[id].select();
   }

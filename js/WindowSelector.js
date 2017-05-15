@@ -1,38 +1,47 @@
 /**
- * Window Selector.  
- * 
+ * Window Selector.
+ *
  * UI element which shows an app icon and is used for selecting a window.
  */
 
 /**
  * Window Selector Constructor.
  *
- * @param {Integer} id Window ID.
+ * @param {number} id Window ID.
+ * @param {number} windowType Type of window from WindowManager.WINDOW_TYPES.
  */
-var WindowSelector = function(id) {
+var WindowSelector = function(id, windowType) {
   if (id === undefined) {
     return null;
   }
   this.id = id;
   this.container = document.getElementById('window-switcher');
-  this.render();
+  this.render(windowType);
   this.element.addEventListener('click', this.handleClick.bind(this));
   return this;
 };
 
-/** 
+/**
  * Window Selector View.
+ *
+ * @param {number} windowType Type of window from WindowManager.WINDOW_TYPES.
  */
-WindowSelector.prototype.view = function() {
-  return '<button type="button" id="window-selector' + this.id +
-    '"class="window-selector"></div>';
+WindowSelector.prototype.view = function(windowType) {
+  if (windowType == WindowManager.WINDOW_TYPES.home) {
+    return '<button type="button" id="window-selector' + this.id +
+      '"class="window-selector home-button"></div>';
+  } else {
+    return '<button type="button" id="window-selector' + this.id +
+      '"class="window-selector"></div>';
+  }
 };
 
 /**
  * Render the selector.
+ * @param {number} windowType Type of window from WindowManager.WINDOW_TYPES.
  */
-WindowSelector.prototype.render = function() {
-  this.container.insertAdjacentHTML('beforeend', this.view());
+WindowSelector.prototype.render = function(windowType) {
+  this.container.insertAdjacentHTML('beforeend', this.view(windowType));
   this.element = document.getElementById('window-selector' + this.id);
 };
 

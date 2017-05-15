@@ -14,9 +14,12 @@ html, body {
 body {
   font-family: Helvetica, Sans-serif;
   background-color: #000;
-  background-image: radial-gradient(closest-side, #434343 0%, #000 100%);
   display: flex;
   flex-direction: column;
+}
+
+body.home {
+  background-image: linear-gradient(to bottom, #079fda, #07559f);
 }
 
 /* Prevent dotted outlines on buttons */
@@ -31,8 +34,29 @@ button::-moz-focus-inner {
   overflow: hidden;
 }
 
-/* Browser Window */
+/* Home Screen Window */
+.home-screen-window {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+}
 
+.home-screen-window.hidden {
+  display: none;
+}
+
+.home-screen-frame {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+/* Browser Window */
 .browser-window {
   display: block;
   box-sizing: border-box;
@@ -64,13 +88,11 @@ button::-moz-focus-inner {
   opacity: 0.75;
 }
 
-
 .close-window-button:active {
   opacity: 1;
 }
 
 /* Browser Tab */
-
 .tab-box {
   width: 100%;
   height: 100%;
@@ -167,7 +189,6 @@ button::-moz-focus-inner {
 }
 
 /* Browser Tab Panel */
-
 .tab-panels {
   flex: 1;
   display: flex;
@@ -289,7 +310,7 @@ button::-moz-focus-inner {
 }
 
 .window-selector:hover {
-  border-bottom: solid 2px #666;
+  border-bottom: solid 2px rgba(255, 255, 255, 0.6);
 }
 
 .window-selector:active {
@@ -297,10 +318,15 @@ button::-moz-focus-inner {
 }
 
 .window-selector.selected {
-  border-bottom: solid 2px #ccc;
+  border-bottom: solid 2px rgba(255, 255, 255, 0.9);
+}
+
+.window-selector.home-button {
+  background-image: url("../images/home.png");
 }
 
 #new-window-button {
+  float: left;
   height: 3.2rem;
   width: 3.2rem;
   padding: 0;
@@ -327,4 +353,5 @@ button::-moz-focus-inner {
   padding: 0 1rem;
   user-select: none;
   -moz-user-select: none;
+  color: #fff;
 }

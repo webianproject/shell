@@ -6,14 +6,12 @@
 
 /**
  * Browser Window Constructor.
+ *
+ * @extends BaseWindow.
+ * @param {number} id Window ID to give browser window.
  */
 var BrowserWindow = function(id) {
-  if (id === undefined) {
-    return null;
-  }
-  this.container = document.getElementById('windows');
-  this.id = id;
-  this.render();
+  BaseWindow.call(this, id);
   this.tabCount = 0; // Total number of tabs ever created in this window
   this.tabs = [];
   this.tabPanels = [];
@@ -21,6 +19,8 @@ var BrowserWindow = function(id) {
   this.createTab();
   return this;
 };
+
+BrowserWindow.prototype = Object.create(BaseWindow.prototype);
 
 /**
  * Window View.
@@ -68,28 +68,9 @@ BrowserWindow.prototype.hide = function() {
 };
 
 /**
- * Close the window.
- */
-BrowserWindow.prototype.close = function() {
-  var e = new CustomEvent('_closewindow', {
-    detail: {
-      id: this.id
-    }
-  });
-  window.dispatchEvent(e);
-};
-
-/**
- * Delete the element from the DOM.
- */
-BrowserWindow.prototype.destroy = function() {
-  this.container.removeChild(this.element);
-};
-
-/**
  * Create a new Browser Tab.
  *
- * @returns Integer ID of new Tab.
+ * @return {number} ID of new Tab.
  */
 BrowserWindow.prototype.createTab = function() {
   var tabId = this.tabCount;
@@ -102,7 +83,7 @@ BrowserWindow.prototype.createTab = function() {
 /**
  * Switch Browser Tab.
  *
- * @param Integer id ID of tab to switch to.
+ * @param {number} id ID of tab to switch to.
  */
 BrowserWindow.prototype.switchTab = function(id) {
   if (this.tabs[this.currentTab]) {
@@ -115,7 +96,7 @@ BrowserWindow.prototype.switchTab = function(id) {
 /**
  * Handle click on tabs element.
  *
- * @param Event e Click event.
+ * @param {Event} e Click event.
  */
 BrowserWindow.prototype.handleTabClick = function(e) {
   if (e.target.classList.contains('tab-title')) {
@@ -130,7 +111,7 @@ BrowserWindow.prototype.handleTabClick = function(e) {
 /**
  * Close Browser Tab.
  *
- * @param Integer tabId tabId of BrowserTab.
+ * @param {number} tabId tabId of BrowserTab.
  */
 BrowserWindow.prototype.closeTab = function(tabId) {
   this.tabs[tabId].destroy();

@@ -12,6 +12,7 @@
  * @param Integer windowId ID of window to add tab to.
  */
 var BrowserTab = function(tabId, windowId) {
+  this.NEW_TAB_URL = 'new_tab.html';
   if (tabId === undefined || windowId === undefined) {
     return;
   }
@@ -45,7 +46,7 @@ BrowserTab.prototype.tabPanelView = function() {
     '" class="browser-tab-panel"><menu class="browser-toolbar">' +
     '<form class="url-bar"><input type="text" class="url-bar-input">' +
     '<button class="url-bar-button" type="submit"/></form></menu>' +
-    '<iframe src="chrome://app/content/new_tab.html" id="browser-tab-frame' +
+    '<iframe src="' + this.NEW_TAB_URL + '" id="browser-tab-frame' +
     this.windowId + '-' + this.id + '" class="browser-tab-frame" mozbrowser ' +
     ' remote></div>';
 };
