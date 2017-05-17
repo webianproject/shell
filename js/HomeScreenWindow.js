@@ -11,9 +11,10 @@
  * @param {number} id Window ID to give browser window.
  */
 var HomeScreenWindow = function(id) {
-  this.HOME_SCREEN_URL = 'home.html';
+  this.HOME_SCREEN_URL = 'homescreen/homescreen.html';
   BaseWindow.call(this, id);
   this.frame = document.getElementById('home-screen-frame' + this.id);
+  this.frame.addEventListener('mozbrowseropenwindow', this.newWindow);
   return this;
 };
 
@@ -47,4 +48,13 @@ HomeScreenWindow.prototype.hide = function() {
   this.element.classList.add('hidden');
   this.frame.setVisible(false);
   this.frame.setActive(false);
+};
+
+/**
+ * Open a new window.
+ */
+HomeScreenWindow.prototype.newWindow = function(e) {
+  e.preventDefault();
+  var newEvent = new CustomEvent('_openwindow');
+  window.dispatchEvent(newEvent);
 };

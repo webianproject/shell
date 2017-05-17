@@ -12,7 +12,7 @@
  * @param Integer windowId ID of window to add tab to.
  */
 var BrowserTab = function(tabId, windowId) {
-  this.NEW_TAB_URL = 'new_tab.html';
+  this.NEW_TAB_URL = 'chrome://app/content/newtab/newtab.html';
   if (tabId === undefined || windowId === undefined) {
     return;
   }
@@ -170,7 +170,7 @@ BrowserTab.prototype.handleTitleChange = function(e) {
  * @param Event e mozbrowserlocationchange event.
  */
 BrowserTab.prototype.handleLocationChange = function(e) {
-  if (e.detail.url == 'chrome://app/content/new_tab.html') {
+  if (e.detail.url == this.NEW_TAB_URL) {
     this.urlBarInput.value = '';
     this.urlBarInput.focus();
   } else {
