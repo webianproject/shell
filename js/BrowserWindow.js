@@ -9,14 +9,15 @@
  *
  * @extends BaseWindow.
  * @param {number} id Window ID to give browser window.
+ * @param {string} url URL to navigate to.
  */
-var BrowserWindow = function(id) {
+var BrowserWindow = function(id, url) {
   BaseWindow.call(this, id);
   this.tabCount = 0; // Total number of tabs ever created in this window
   this.tabs = [];
   this.tabPanels = [];
   this.currentTab = null;
-  this.createTab();
+  this.createTab(url);
   return this;
 };
 
@@ -70,11 +71,12 @@ BrowserWindow.prototype.hide = function() {
 /**
  * Create a new Browser Tab.
  *
+ * @param {string} url URL to navigate to.
  * @return {number} ID of new Tab.
  */
-BrowserWindow.prototype.createTab = function() {
+BrowserWindow.prototype.createTab = function(url) {
   var tabId = this.tabCount;
-  this.tabs[tabId] = new BrowserTab(tabId, this.id);
+  this.tabs[tabId] = new BrowserTab(tabId, this.id, url);
   this.tabCount++;
   this.switchTab(tabId);
   return tabId;

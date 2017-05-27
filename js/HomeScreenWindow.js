@@ -55,6 +55,7 @@ HomeScreenWindow.prototype.hide = function() {
  */
 HomeScreenWindow.prototype.newWindow = function(e) {
   e.preventDefault();
-  var newEvent = new CustomEvent('_openwindow');
-  window.dispatchEvent(newEvent);
+  window.dispatchEvent(new CustomEvent('_openwindow', {
+    'detail': e.detail
+  }));
 };

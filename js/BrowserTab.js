@@ -8,11 +8,18 @@
 /**
  * Browser Tab Constructor.
  *
- * @param Integer tabId ID to give to new tab.
- * @param Integer windowId ID of window to add tab to.
+ * @param {number} tabId ID to give to new tab.
+ * @param {number} windowId ID of window to add tab to.
+ * @param {string} url URL to navigate
  */
-var BrowserTab = function(tabId, windowId) {
+var BrowserTab = function(tabId, windowId, url) {
   this.NEW_TAB_URL = 'chrome://app/content/newtab/newtab.html';
+  this.ABOUT_BLANK_URL = 'about:blank';
+  if (url && url.length > 0 && url != this.ABOUT_BLANK_URL) {
+    this.currentUrl = url;
+  } else {
+    this.currentUrl = this.NEW_TAB_URL;
+  }
   if (tabId === undefined || windowId === undefined) {
     return;
   }
@@ -46,7 +53,7 @@ BrowserTab.prototype.tabPanelView = function() {
     '" class="browser-tab-panel"><menu class="browser-toolbar">' +
     '<form class="url-bar"><input type="text" class="url-bar-input">' +
     '<button class="url-bar-button" type="submit"/></form></menu>' +
-    '<iframe src="' + this.NEW_TAB_URL + '" id="browser-tab-frame' +
+    '<iframe src="' + this.currentUrl + '" id="browser-tab-frame' +
     this.windowId + '-' + this.id + '" class="browser-tab-frame" mozbrowser ' +
     ' remote></div>';
 };
@@ -176,4 +183,5 @@ BrowserTab.prototype.handleLocationChange = function(e) {
   } else {
     this.urlBarInput.value = e.detail.url;
   }
+  this.currentUrl = e.detail.url;
 };

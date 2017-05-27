@@ -59,8 +59,10 @@ var WindowManager = {
    * @param {Event} e _openwindow event.
    */
   handleOpenWindow: function(e) {
-    if (e.detail && e.detail.id !== null) {
+    if (e.detail && e.detail.id !== undefined) {
       this.switchWindow(e.detail.id);
+    } else if (e.detail && e.detail.url) {
+      this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
     } else {
       this.createWindow(this.WINDOW_TYPES.browser);
     }
@@ -90,8 +92,9 @@ var WindowManager = {
    * Create a new window.
    *
    * @param {number} Window type id from this.WINDOW_TYPES.
+   * @param {string} url URL to navigate window to.
    */
-  createWindow: function(windowType) {
+  createWindow: function(windowType, url) {
     var newWindow = null;
     var id = this.windowCount;
     switch(windowType) {
@@ -101,7 +104,7 @@ var WindowManager = {
         break;
       // Browser Window
       case this.WINDOW_TYPES.browser:
-        newWindow = new BrowserWindow(id);
+        newWindow = new BrowserWindow(id, url);
         break;
       default:
         console.error('Window type not recognised.');
