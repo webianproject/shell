@@ -31,7 +31,8 @@ var WindowManager = {
    */
   WINDOW_TYPES: {
     'home': 0,
-    'browser' : 1
+    'browser' : 1,
+    'standalone': 2,
   },
 
   /**
@@ -61,6 +62,8 @@ var WindowManager = {
   handleOpenWindow: function(e) {
     if (e.detail && e.detail.id !== undefined) {
       this.switchWindow(e.detail.id);
+    } else if (e.detail && e.detail.name == '_standalone' && e.detail.url) {
+      this.createWindow(this.WINDOW_TYPES.standalone, e.detail.url);
     } else if (e.detail && e.detail.url) {
       this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
     } else {
@@ -105,6 +108,10 @@ var WindowManager = {
       // Browser Window
       case this.WINDOW_TYPES.browser:
         newWindow = new BrowserWindow(id, url);
+        break;
+      // Standalone Window
+      case this.WINDOW_TYPES.standalone:
+        newWindow = new StandaloneWindow(id, url);
         break;
       default:
         console.error('Window type not recognised.');

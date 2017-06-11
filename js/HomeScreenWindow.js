@@ -5,7 +5,7 @@
  */
 
 /**
- * Browser Window Constructor.
+ * Home Screen Window Constructor.
  *
  * @extends BaseWindow.
  * @param {number} id Window ID to give browser window.

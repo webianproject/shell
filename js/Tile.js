@@ -62,7 +62,7 @@ Tile.prototype.render = function(target, pinned) {
  * Launch site in a new window.
  */
 Tile.prototype.open = function() {
-  window.open(this.siteObject.startUrl);
+  window.open(this.siteObject.startUrl, '_standalone');
   console.log('opening window at ' + this.siteObject.startUrl);
 };
 
