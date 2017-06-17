@@ -45,7 +45,7 @@ var HomeScreen = {
     Places.getPinnedSites().then(function(pinnedSites) {
       pinnedSites.forEach(function(siteObject) {
         pinnedSiteIds.push(siteObject.id);
-        var tile = new Tile(siteObject, '_blank', true);
+        var icon = new Icon(siteObject, '_blank', true);
       }, this);
     });
 
@@ -53,7 +53,7 @@ var HomeScreen = {
     Places.getTopSites().then((function(topSites) {
       topSites.forEach(function(siteObject) {
         if (pinnedSiteIds.indexOf(siteObject.id) == -1) {
-          var tile = new Tile(siteObject, '_blank');
+          var icon = new Icon(siteObject, '_blank');
         }
       }, this);
     }).bind(this));
