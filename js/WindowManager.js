@@ -148,7 +148,7 @@ var WindowManager = {
         return;
     }
     this.windows[id] = newWindow;
-    var newWindowSelector = new WindowSelector(id, windowType);
+    var newWindowSelector = new WindowSelector(id, windowType, siteObject);
     this.windowSelectors[id] = newWindowSelector;
     this.switchWindow(id);
     this.windowCount++;

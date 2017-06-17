@@ -65,6 +65,7 @@ button::-moz-focus-inner {
   height: 3rem;
   background-color: transparent;
   background-image: url("../images/browser-icon.png");
+  background-size: 2.4rem;
   background-position: center center;
   background-repeat: no-repeat;
   border: none;
