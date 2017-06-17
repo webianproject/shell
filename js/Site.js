@@ -16,6 +16,7 @@ var Site = function(manifest) {
   this.backgroundColor = manifest.background_color;
   this.themeColor = manifest.theme_color;
   this.scope = manifest.scope;
+  this.display = manifest.display;
   this.frecency = manifest.frecency || 0;
   var hostname = new URL(this.startUrl).hostname;
 

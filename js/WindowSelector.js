@@ -63,7 +63,7 @@ WindowSelector.prototype.deselect = function() {
  * Handle a click on the selector.
  */
 WindowSelector.prototype.handleClick = function() {
-  var e = new CustomEvent('_openwindow', {
+  var e = new CustomEvent('_switchwindow', {
     detail: {
       id: this.id
     }

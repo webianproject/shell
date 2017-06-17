@@ -48,6 +48,8 @@ var WindowManager = {
   start: function() {
     window.addEventListener('_openwindow',
       this.handleOpenWindow.bind(this));
+    window.addEventListener('_switchwindow',
+      this.handleSwitchWindow.bind(this));
     window.addEventListener('_closewindow',
       this.handleCloseWindow.bind(this));
     this.createWindow(this.WINDOW_TYPES.home);
@@ -60,15 +62,42 @@ var WindowManager = {
    * @param {Event} e _openwindow event.
    */
   handleOpenWindow: function(e) {
-    if (e.detail && e.detail.id !== undefined) {
-      this.switchWindow(e.detail.id);
-    } else if (e.detail && e.detail.name == '_standalone' && e.detail.url) {
-      this.createWindow(this.WINDOW_TYPES.standalone, e.detail.url);
+    // Check for a site ID in the features property
+    if(e.detail && e.detail.features) {
+      var siteId = null;
+      var features = e.detail.features.split(',');
+      features.forEach(function(feature) {
+        if (feature.startsWith('siteId=')) {
+          siteId = feature.substr(7);
+        }
+      });
+    }
+    // If there's a siteId then generate window from Site in Places
+    if (siteId) {
+      Places.getSite(siteId).then((function(siteObject) {
+        // Use window type from siteObject or fall back to browser window
+        this.createWindow(this.WINDOW_TYPES[siteObject.display] ||
+          this.WINDOW_TYPES['browser'], e.detail.url, siteObject);
+      }).bind(this)).catch((function(e) {
+        console.error('Failed to get site object to open window ' + e);
+        this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
+      }).bind(this));
+    // Otherwise create a generic browser window
     } else if (e.detail && e.detail.url) {
       this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
     } else {
       this.createWindow(this.WINDOW_TYPES.browser);
     }
+  },
+
+  /**
+   * Handle a request to switch windows.
+   *
+   * @param {Event} e _switchwindow event.
+   */
+  handleSwitchWindow: function(e) {
+    var id = e.detail.id;
+    this.switchWindow(id);
   },
 
   /**
@@ -96,8 +125,9 @@ var WindowManager = {
    *
    * @param {number} Window type id from this.WINDOW_TYPES.
    * @param {string} url URL to navigate window to.
+   * @param {Object} siteObject Website metadata to use in generating a window.
    */
-  createWindow: function(windowType, url) {
+  createWindow: function(windowType, url, siteObject) {
     var newWindow = null;
     var id = this.windowCount;
     switch(windowType) {
@@ -111,7 +141,7 @@ var WindowManager = {
         break;
       // Standalone Window
       case this.WINDOW_TYPES.standalone:
-        newWindow = new StandaloneWindow(id, url);
+        newWindow = new StandaloneWindow(id, url, siteObject);
         break;
       default:
         console.error('Window type not recognised.');

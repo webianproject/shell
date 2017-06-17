@@ -13,7 +13,14 @@
  */
 var Icon = function(siteObject, target, pinned) {
   this.container = document.getElementById('top-sites-list');
-  this.siteObject = siteObject;
+  this.id = siteObject.id;
+  this.startUrl = siteObject.startUrl;
+  this.name = siteObject.name || new URL(this.startUrl).hostname;
+  if (siteObject.icons && siteObject.icons[0]) {
+    this.iconUrl = siteObject.icons[0].src;
+  } else if (siteObject.iconUrl) {
+    this.iconUrl = siteObject.iconUrl;
+  }
   this.render(target, pinned);
   return this;
 };
@@ -22,15 +29,9 @@ var Icon = function(siteObject, target, pinned) {
  * Generate Icon View.
  */
 Icon.prototype.view = function() {
-  var style = '';
-  if (this.siteObject.icons && this.siteObject.icons[0]) {
-    style += 'background-image: url(' + this.siteObject.icons[0].src +  ');'
-  } else if (this.siteObject.iconUrl) {
-    style += 'background-image: url(' + this.siteObject.iconUrl +  ');'
-  }
-  var label = this.siteObject.name || this.siteObject.id;
-  return '<li id="icon-' + this.siteObject.id +'" class="icon" style="' +
-  style + '"><span class="icon-name">' + label + '</span></li>';
+  var style = 'background-image: url(' + this.iconUrl +  ');';
+  return '<li id="icon-' + this.id +'" class="icon" style="' +
+  style + '"><span class="icon-name">' + this.name + '</span></li>';
 };
 
 /**
@@ -41,7 +42,7 @@ Icon.prototype.view = function() {
  */
 Icon.prototype.render = function(target, pinned) {
   this.container.insertAdjacentHTML('beforeend', this.view());
-  this.element = document.getElementById('icon-' + this.siteObject.id);
+  this.element = document.getElementById('icon-' + this.id);
   if (target && target == '_self') {
     this.element.addEventListener('click', this.navigate.bind(this));
   } else {
@@ -56,14 +57,15 @@ Icon.prototype.render = function(target, pinned) {
  * Launch site in a new window.
  */
 Icon.prototype.open = function() {
-  window.open(this.siteObject.startUrl, '_standalone');
-  console.log('opening window at ' + this.siteObject.startUrl);
+  var features = 'siteId=' + this.id;
+  window.open(this.startUrl, '_blank', features);
+  console.log('opening window at ' + this.startUrl);
 };
 
 /**
  * Navigate to site in current window.
  */
 Icon.prototype.navigate = function() {
-  window.location.href = this.siteObject.startUrl;
-  console.log('navigating to ' + this.siteObject.startUrl);
+  window.location.href = this.startUrl;
+  console.log('navigating to ' + this.startUrl);
 };

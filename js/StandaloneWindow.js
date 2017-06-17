@@ -10,9 +10,15 @@
  * @extends BaseWindow.
  * @param {number} id Window ID to give standalone window.
  * @param {string} url URL to navigate to.
+ * @param {Object} siteObject Site object to generate window from.
  */
-var StandaloneWindow = function(id, url) {
+var StandaloneWindow = function(id, url, siteObject) {
   this.currentUrl = url;
+  if (siteObject && siteObject.name) {
+    this.name = siteObject.name;
+  } else {
+    this.name = new URL(url).hostname;
+  }
   BaseWindow.call(this, id);
   return this;
 };
@@ -26,7 +32,7 @@ StandaloneWindow.prototype.view = function() {
   return '<div id="window' + this.id + '"class="standalone-window">' +
     '<div class="standalone-window-title-bar">' +
       '<span id="standalone-window-title' + this.id +
-      '" class="standalone-window-title"></span>' +
+      '" class="standalone-window-title">' + this.name + '</span>' +
       '<button type="button" id="close-window-button' + this.id + '" ' +
       'class="close-window-button">' +
     '</div>' +
@@ -47,7 +53,6 @@ StandaloneWindow.prototype.render = function() {
   this.frame = document.getElementById('standalone-window-frame' + this.id);
   this.frame.addEventListener('mozbrowserlocationchange',
     this.handleLocationChange.bind(this));
-  this.title.textContent = new URL(this.currentUrl).hostname;
 };
 
 /**
@@ -75,5 +80,4 @@ StandaloneWindow.prototype.hide = function() {
  */
 StandaloneWindow.prototype.handleLocationChange = function(e) {
   this.currentUrl = e.detail.url;
-  this.title.textContent = new URL(e.detail.url).hostname;
 };
