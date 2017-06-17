@@ -254,7 +254,7 @@
 .standalone-window-title-bar {
   display: flex;
   flex-direction: row;
-  height: 2.5rem;
+  height: 3.0rem;
   background-color: #5d5d5d;
   border-radius: 0.5rem;
   border-bottom-left-radius: 0;
@@ -265,7 +265,8 @@
   flex: 1;
   color: #fff;
   font-size: 1.3rem;
-  padding: 0.6rem;
+  line-height: 3rem;
+  padding: 0 0.6rem;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -276,8 +277,8 @@
 
 .standalone-window .close-window-button {
   position: relative;
-  height: 2.5rem;
-  width: 2.5rem;
+  height: 3rem;
+  width: 3rem;
 }
 
 .standalone-window-frame {

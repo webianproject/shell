@@ -19,7 +19,7 @@ body {
 }
 
 body.home {
-  background-image: linear-gradient(to bottom, #079fda, #07559f);
+  background-image: radial-gradient(closest-side, #434343 0%, #000 100%);
 }
 
 /* Prevent dotted outlines on buttons */
