@@ -19,6 +19,9 @@ var StandaloneWindow = function(id, url, siteObject) {
   } else {
     this.name = new URL(url).hostname;
   }
+  if (siteObject && siteObject.themeColor) {
+    this.themeColor = siteObject.themeColor;
+  }
   BaseWindow.call(this, id);
   return this;
 };
@@ -29,8 +32,16 @@ StandaloneWindow.prototype = Object.create(BaseWindow.prototype);
  * Window View.
  */
 StandaloneWindow.prototype.view = function() {
+  var titleBarStyle = '';
+  var titleBarClass = 'standalone-window-title-bar';
+  if (this.themeColor) {
+    titleBarStyle = 'background-color: ' + this.themeColor + ';';
+    var rgb = this.hexToRgb(this.themeColor);
+    backgroundBrightness = this.darkOrLight(rgb);
+    titleBarClass += ' ' + backgroundBrightness;
+  }
   return '<div id="window' + this.id + '"class="standalone-window">' +
-    '<div class="standalone-window-title-bar">' +
+    '<div class="' + titleBarClass + '" style="' + titleBarStyle + '">' +
       '<span id="standalone-window-title' + this.id +
       '" class="standalone-window-title">' + this.name + '</span>' +
       '<button type="button" id="close-window-button' + this.id + '" ' +
@@ -80,4 +91,33 @@ StandaloneWindow.prototype.hide = function() {
  */
 StandaloneWindow.prototype.handleLocationChange = function(e) {
   this.currentUrl = e.detail.url;
+};
+
+/**
+ * Convert hex color value to rgb.
+ *
+ * @argument {String} hex color string e.g. #ff0000
+ * @returns {Object} RGB object with separate r, g and b properties
+ */
+StandaloneWindow.prototype.hexToRgb = function(hex) {
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+  } : null;
+};
+
+/**
+ * Measure whether color is dark or light.
+ *
+ * @param {Object} RGB object with r, g, b properties.
+ * @return {String} 'dark' or 'light'.
+ */
+StandaloneWindow.prototype.darkOrLight = function(rgb) {
+  if ((rgb.r*0.299 + rgb.g*0.587 + rgb.b*0.114) > 186) {
+    return 'light';
+  } else {
+    return 'dark';
+  }
 };

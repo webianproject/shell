@@ -40,7 +40,7 @@
   background-image: url("../images/close-light.png");
   background-position: center center;
   background-repeat: no-repeat;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .browser-window .close-window-button {
@@ -52,7 +52,7 @@
 }
 
 .close-window-button:hover {
-  opacity: 0.75;
+  opacity: 0.8;
 }
 
 .close-window-button:active {
@@ -275,10 +275,18 @@
 
 }
 
+.standalone-window-title-bar.light .standalone-window-title {
+  color: #333;
+}
+
 .standalone-window .close-window-button {
   position: relative;
   height: 3rem;
   width: 3rem;
+}
+
+.standalone-window-title-bar.light .close-window-button {
+  background-image: url("../images/close-dark.png");
 }
 
 .standalone-window-frame {
