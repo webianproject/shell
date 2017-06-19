@@ -4,9 +4,9 @@
 
 ## Getting Started
 
-You can run and debug Webian Shell 0.3 using [qbrt](https://mykzilla.org/2017/03/15/introducing-qbrt), an experimental Gecko application runtime.
+Webian Shell 0.3 is powered by the experimental Quantum Browser Runtime (qbrt) from Mozilla which you can use to run and debug the code.
 
-First make sure that you have [NodeJS](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/) installed.
+To get started hacking on Webian Shell first make sure that you have [NodeJS](https://nodejs.org/en/), [NPM](https://www.npmjs.com/) and [qbrt](https://mykzilla.org/2017/03/15/introducing-qbrt) installed, then simply clone the repository from GitHub and run it.
 
 ```
 $ npm install -g qbrt
