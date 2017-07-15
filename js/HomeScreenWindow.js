@@ -15,6 +15,9 @@ var HomeScreenWindow = function(id) {
   BaseWindow.call(this, id);
   this.frame = document.getElementById('home-screen-frame' + this.id);
   this.frame.addEventListener('mozbrowseropenwindow', this.newWindow);
+  this.powerButton = document.getElementById('power-button');
+  this.powerButton.addEventListener('click',
+    this.handlePowerButtonClick.bind(this));
   return this;
 };
 
@@ -29,6 +32,7 @@ HomeScreenWindow.prototype.view = function() {
              '" class="home-screen-frame" src="' + this.HOME_SCREEN_URL +
              '" mozbrowser remote transparent>' +
          '  </iframe>'+
+         '  <button id="power-button"></button>'
          '</div>';
 };
 
@@ -52,6 +56,8 @@ HomeScreenWindow.prototype.hide = function() {
 
 /**
  * Open a new window.
+ *
+ * @param {Event} e Open window event.
  */
 HomeScreenWindow.prototype.newWindow = function(e) {
   e.preventDefault();
@@ -59,3 +65,13 @@ HomeScreenWindow.prototype.newWindow = function(e) {
     'detail': e.detail
   }));
 };
+
+/**
+ * Handle power button click.
+ *
+ * @param {Event} e Click event.
+ */
+ HomeScreenWindow.prototype.handlePowerButtonClick = function(e) {
+   // Close Shell.
+   window.close();
+ };

@@ -1,4 +1,28 @@
 /* Home Screen Window */
+#power-button {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 3.2rem;
+  width: 3.2rem;
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+  border: none;
+  background-image: url("../images/power.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.5;
+}
+
+#power-button:hover {
+  opacity: 0.75;
+}
+
+#power-button:active {
+  opacity: 1;
+}
+
 .home-screen-window {
   display: block;
   box-sizing: border-box;
