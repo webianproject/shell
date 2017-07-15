@@ -50,6 +50,18 @@ BaseWindow.prototype.hide = function() {
 };
 
 /**
+ * Open a new window.
+ *
+ * @param {Event} e Open window event.
+ */
+BaseWindow.prototype.handleOpenWindow = function(e) {
+  e.preventDefault();
+  window.dispatchEvent(new CustomEvent('_openwindow', {
+    'detail': e.detail
+  }));
+};
+
+/**
  * Close the window.
  */
 BaseWindow.prototype.close = function() {

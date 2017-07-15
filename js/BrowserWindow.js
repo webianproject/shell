@@ -50,6 +50,8 @@ BrowserWindow.prototype.render = function() {
   this.closeButton.addEventListener('click', this.close.bind(this));
   this.tabsElement = document.getElementById('tabs' + this.id);
   this.tabsElement.addEventListener('click', this.handleTabClick.bind(this));
+  this.element.addEventListener('mozbrowseropenwindow',
+    this.handleOpenWindow.bind(this));
 };
 
 /**
@@ -126,4 +128,15 @@ BrowserWindow.prototype.closeTab = function(tabId) {
   } else {
     this.close();
   }
+};
+
+/**
+ * Open a new tab.
+ *
+ * @param {Event} e Open window event.
+ * @override
+ */
+BrowserWindow.prototype.handleOpenWindow = function(e) {
+  e.preventDefault();
+  this.createTab(e.detail.url);
 };

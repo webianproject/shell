@@ -14,7 +14,7 @@ var HomeScreenWindow = function(id) {
   this.HOME_SCREEN_URL = 'homescreen/homescreen.html';
   BaseWindow.call(this, id);
   this.frame = document.getElementById('home-screen-frame' + this.id);
-  this.frame.addEventListener('mozbrowseropenwindow', this.newWindow);
+  this.frame.addEventListener('mozbrowseropenwindow', this.handleOpenWindow);
   this.powerButton = document.getElementById('power-button');
   this.powerButton.addEventListener('click',
     this.handlePowerButtonClick.bind(this));
@@ -52,18 +52,6 @@ HomeScreenWindow.prototype.hide = function() {
   this.element.classList.add('hidden');
   this.frame.setVisible(false);
   this.frame.setActive(false);
-};
-
-/**
- * Open a new window.
- *
- * @param {Event} e Open window event.
- */
-HomeScreenWindow.prototype.newWindow = function(e) {
-  e.preventDefault();
-  window.dispatchEvent(new CustomEvent('_openwindow', {
-    'detail': e.detail
-  }));
 };
 
 /**

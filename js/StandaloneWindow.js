@@ -64,6 +64,8 @@ StandaloneWindow.prototype.render = function() {
   this.frame = document.getElementById('standalone-window-frame' + this.id);
   this.frame.addEventListener('mozbrowserlocationchange',
     this.handleLocationChange.bind(this));
+  this.frame.addEventListener('mozbrowseropenwindow',
+    this.handleOpenWindow.bind(this));
 };
 
 /**
