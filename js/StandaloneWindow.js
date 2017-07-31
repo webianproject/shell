@@ -73,8 +73,6 @@ StandaloneWindow.prototype.render = function() {
  */
 StandaloneWindow.prototype.show = function() {
   this.element.classList.remove('hidden');
-  this.frame.setVisible(true);
-  this.frame.setActive(true);
 };
 
 /**
@@ -82,8 +80,6 @@ StandaloneWindow.prototype.show = function() {
  */
 StandaloneWindow.prototype.hide = function() {
   this.element.classList.add('hidden');
-  this.frame.setVisible(false);
-  this.frame.setActive(false);
 };
 
 /**

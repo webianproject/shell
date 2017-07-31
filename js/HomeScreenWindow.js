@@ -32,7 +32,7 @@ HomeScreenWindow.prototype.view = function() {
              '" class="home-screen-frame" src="' + this.HOME_SCREEN_URL +
              '" mozbrowser remote transparent>' +
          '  </iframe>'+
-         '  <button id="power-button"></button>'
+         '  <button id="power-button"></button>' +
          '</div>';
 };
 
@@ -40,8 +40,6 @@ HomeScreenWindow.prototype.view = function() {
  * Show the Window.
  */
 HomeScreenWindow.prototype.show = function() {
-  this.frame.setVisible(true);
-  this.frame.setActive(true);
   this.element.classList.remove('hidden');
 };
 
@@ -50,8 +48,6 @@ HomeScreenWindow.prototype.show = function() {
  */
 HomeScreenWindow.prototype.hide = function() {
   this.element.classList.add('hidden');
-  this.frame.setVisible(false);
-  this.frame.setActive(false);
 };
 
 /**
@@ -59,7 +55,7 @@ HomeScreenWindow.prototype.hide = function() {
  *
  * @param {Event} e Click event.
  */
- HomeScreenWindow.prototype.handlePowerButtonClick = function(e) {
-   // Close Shell.
-   window.close();
- };
+HomeScreenWindow.prototype.handlePowerButtonClick = function(e) {
+  // Close Shell.
+  window.close();
+};

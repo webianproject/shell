@@ -101,7 +101,6 @@ BrowserTab.prototype.destroy = function() {
  * Select this tab.
  */
 BrowserTab.prototype.select = function() {
-  this.activate();
   this.tabElement.classList.add('selected');
   this.tabPanelElement.classList.add('selected');
 };
@@ -112,29 +111,6 @@ BrowserTab.prototype.select = function() {
 BrowserTab.prototype.deselect = function() {
   this.tabElement.classList.remove('selected');
   this.tabPanelElement.classList.remove('selected');
-  this.deactivate();
-};
-
-/**
- * Activate this tab.
- *
- * Raises resource priority.
- */
-BrowserTab.prototype.activate = function() {
-  this.frame.setVisible(true);
-  this.frame.setActive(true);
-};
-
-/**
- * Deactivate this tab.
- *
- * Lowers resource priority. A deactivated BrowserTab may still be the selected
- * tab in a given BrowserWindow, but is deactivated because the BrowserWindow
- * is hidden.
- */
-BrowserTab.prototype.deactivate = function() {
-  this.frame.setVisible(false);
-  this.frame.setActive(false);
 };
 
 /**
