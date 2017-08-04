@@ -3,6 +3,9 @@
   "version": "0.3.0",
   "description": "A graphical shell for the web",
   "main": "main.js",
+  "scripts": {
+    "start": "qbrt run ./"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/webianproject/shell.git"

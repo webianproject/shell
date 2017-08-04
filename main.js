@@ -1,7 +1,7 @@
 /**
  * Webian Shell.
  *
- * Main script used by qbrt to load index.html as chrome.
+ * Main script which loads shell.html as chrome.
  */
 'use strict';
 
@@ -10,7 +10,7 @@ const { console } = Cu.import('resource://gre/modules/Console.jsm', {});
 const { Runtime } = Cu.import('resource://qbrt/modules/Runtime.jsm', {});
 const { Services } = Cu.import('resource://gre/modules/Services.jsm', {});
 
-const WINDOW_URL = 'chrome://app/content/shell.html';
+const WINDOW_URL = 'chrome://app/content/chrome/shell.html';
 
 const WINDOW_FEATURES = [
   'chrome',

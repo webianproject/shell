@@ -12,12 +12,6 @@ var Shell = {
   start: function() {
     this.windowManager = WindowManager.start();
     this.systemToolbar = SystemToolbar.start();
-    // Start Places database
-    Places.start().then(function() {
-      console.log('Started the Places database');
-    }, function(error) {
-      console.error('Failed to start Places database ' + error);
-    });
     // Add event listeners
     window.addEventListener('_goinghome', this.handleGoingHome);
     window.addEventListener('_leavinghome', this.handleLeavingHome);

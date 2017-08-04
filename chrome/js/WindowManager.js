@@ -74,14 +74,16 @@ var WindowManager = {
     }
     // If there's a siteId then generate window from Site in Places
     if (siteId) {
-      Places.getSite(siteId).then((function(siteObject) {
+      this.createWindow(this.WINDOW_TYPES['standalone'], e.detail.url, null);
+      // TODO: Replace with call to Places service
+      /*Places.getSite(siteId).then((function(siteObject) {
         // Use window type from siteObject or fall back to browser window
         this.createWindow(this.WINDOW_TYPES[siteObject.display] ||
           this.WINDOW_TYPES['browser'], e.detail.url, siteObject);
       }).bind(this)).catch((function(e) {
         console.error('Failed to get site object to open window ' + e);
         this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
-      }).bind(this));
+      }).bind(this));*/
     // Otherwise create a generic browser window
     } else if (e.detail && e.detail.url) {
       this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);

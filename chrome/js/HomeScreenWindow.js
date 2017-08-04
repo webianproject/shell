@@ -11,7 +11,7 @@
  * @param {number} id Window ID to give browser window.
  */
 var HomeScreenWindow = function(id) {
-  this.HOME_SCREEN_URL = 'homescreen/homescreen.html';
+  this.HOME_SCREEN_URL = 'http://localhost:8080';
   BaseWindow.call(this, id);
   this.frame = document.getElementById('home-screen-frame' + this.id);
   this.frame.addEventListener('mozbrowseropenwindow', this.handleOpenWindow);
