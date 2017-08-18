@@ -3,6 +3,9 @@
   "version": "0.3.0",
   "description": "A graphical shell for the web",
   "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/webianproject/shell.git"
@@ -13,7 +16,7 @@
     "url": "https://github.com/webianproject/shell/issues"
   },
   "homepage": "https://webian.org/shell",
-  "dependencies": {
-    "qbrt": "^0.1.0"
+  "devDependencies": {
+    "electron": "~1.6.2"
   }
 }

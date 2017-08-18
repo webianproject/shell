@@ -4,18 +4,21 @@
 
 ## Getting Started
 
-Webian Shell 0.3 is powered by the experimental Quantum Browser Runtime (qbrt) from Mozilla which you can use to run and debug the code.
+To get started hacking on Webian Shell first make sure that you have [Git](https://git-scm.com/), [NodeJS](https://nodejs.org/en/) and [NPM](https://www.npmjs.com/) installed.
 
-To get started hacking on Webian Shell first make sure that you have [NodeJS](https://nodejs.org/en/), [NPM](https://www.npmjs.com/) and [qbrt](https://mykzilla.org/2017/03/15/introducing-qbrt) installed, then simply clone the repository from GitHub and run it.
+Then  simply clone the Shell repository from GitHub and run it.
 
 ```
-$ npm install -g qbrt
 $ git clone https://github.com/webianproject/shell.git
 $ cd shell
-$ qbrt run ./
+$ npm install
+$ npm start
 ```
 
 This will launch Webian Shell in a new window and also open developer tools.
+
+This desktop version of Webian Shell is powered by [Electron](https://electron.atom.io/).
+
 
 ## Copyrights, Trademarks and Licensing
 

@@ -2,7 +2,7 @@
   {
     "name": "Google Mail",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/google-mail.png",
+      "src": "google-mail.png",
       "sizes": "300x300",
       "type": "image/png"
     }],
@@ -13,7 +13,7 @@
   {
     "name": "Google Calendar",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/google-calendar.png",
+      "src": "google-calendar.png",
       "sizes": "300x300",
       "type": "image/png"
     }],
@@ -24,7 +24,7 @@
   {
     "name": "IRCCloud",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/irccloud.png",
+      "src": "irccloud.png",
       "sizes": "300x300",
       "type": "image/png"
     }],
@@ -35,7 +35,7 @@
   {
     "name": "Google Play Music",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/google-play-music.png",
+      "src": "google-play-music.png",
       "sizes": "300x300",
       "type": "image/png"
     }],
@@ -46,7 +46,7 @@
   {
     "name": "Evernote",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/evernote.png",
+      "src": "evernote.png",
       "sizes": "300x300",
       "type": "image/png"
     }],
@@ -57,7 +57,7 @@
   {
     "name": "Facebook",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/facebook.png",
+      "src": "facebook.png",
       "sizes": "300x300",
       "type": "image/png"
     }],
@@ -68,7 +68,7 @@
   {
     "name": "Twitter",
     "icons": [{
-      "src": "chrome://app/content/config/defaults/icons/twitter.png",
+      "src": "twitter.png",
       "sizes": "300x300",
       "type": "image/png"
     }],

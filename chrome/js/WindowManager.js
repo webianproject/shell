@@ -62,18 +62,9 @@ var WindowManager = {
    * @param {Event} e _openwindow event.
    */
   handleOpenWindow: function(e) {
-    // Check for a site ID in the features property
-    if(e.detail && e.detail.features) {
-      var siteId = null;
-      var features = e.detail.features.split(',');
-      features.forEach(function(feature) {
-        if (feature.startsWith('siteId=')) {
-          siteId = feature.substr(7);
-        }
-      });
-    }
     // If there's a siteId then generate window from Site in Places
-    if (siteId) {
+    if (e.detail && e.detail.options && e.detail.options.siteId) {
+      var siteId = e.detail.options.siteId;
       Places.getSite(siteId).then((function(siteObject) {
         // Use window type from siteObject or fall back to browser window
         this.createWindow(this.WINDOW_TYPES[siteObject.display] ||

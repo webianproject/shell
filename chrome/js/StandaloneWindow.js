@@ -47,8 +47,8 @@ StandaloneWindow.prototype.view = function() {
       '<button type="button" id="close-window-button' + this.id + '" ' +
       'class="close-window-button">' +
     '</div>' +
-    '<iframe src="' + this.currentUrl + '" id="standalone-window-frame' +
-    this.id + '" class="standalone-window-frame" mozbrowser remote>' +
+    '<webview src="' + this.currentUrl + '" id="standalone-window-frame' +
+    this.id + '" class="standalone-window-frame">' +
   '</div>';
 };
 
@@ -62,9 +62,11 @@ StandaloneWindow.prototype.render = function() {
   this.closeButton = document.getElementById('close-window-button' + this.id);
   this.closeButton.addEventListener('click', this.close.bind(this));
   this.frame = document.getElementById('standalone-window-frame' + this.id);
-  this.frame.addEventListener('mozbrowserlocationchange',
+  this.frame.addEventListener('did-navigate',
     this.handleLocationChange.bind(this));
-  this.frame.addEventListener('mozbrowseropenwindow',
+  this.frame.addEventListener('did-navigate-in-page',
+    this.handleLocationChange.bind(this));
+  this.frame.addEventListener('new-window',
     this.handleOpenWindow.bind(this));
 };
 
@@ -88,7 +90,7 @@ StandaloneWindow.prototype.hide = function() {
  * @param {Event} e mozbrowserlocationchange event.
  */
 StandaloneWindow.prototype.handleLocationChange = function(e) {
-  this.currentUrl = e.detail.url;
+  this.currentUrl = e.url;
 };
 
 /**

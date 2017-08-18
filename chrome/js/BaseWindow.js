@@ -57,7 +57,7 @@ BaseWindow.prototype.hide = function() {
 BaseWindow.prototype.handleOpenWindow = function(e) {
   e.preventDefault();
   window.dispatchEvent(new CustomEvent('_openwindow', {
-    'detail': e.detail
+    'detail': e
   }));
 };
 

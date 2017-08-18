@@ -12,10 +12,10 @@
  */
 var HomeScreenWindow = function(id) {
   this.HOME_SCREEN_URL =
-    'chrome://app/content/chrome/homescreen/homescreen.html';
+    'file://' + __dirname + '/homescreen/homescreen.html';
   BaseWindow.call(this, id);
   this.frame = document.getElementById('home-screen-frame' + this.id);
-  this.frame.addEventListener('mozbrowseropenwindow', this.handleOpenWindow);
+  this.frame.addEventListener('new-window', this.handleOpenWindow);
   this.powerButton = document.getElementById('power-button');
   this.powerButton.addEventListener('click',
     this.handlePowerButtonClick.bind(this));
@@ -29,10 +29,9 @@ HomeScreenWindow.prototype = Object.create(BaseWindow.prototype);
  */
 HomeScreenWindow.prototype.view = function() {
   return '<div id="window' + this.id + '"class="home-screen-window">' +
-         '  <iframe id="home-screen-frame' + this.id +
-             '" class="home-screen-frame" src="' + this.HOME_SCREEN_URL +
-             '" mozbrowser remote transparent>' +
-         '  </iframe>'+
+         '  <webview id="home-screen-frame' + this.id +
+         '" class="home-screen-frame" src="' + this.HOME_SCREEN_URL + '">' +
+         '  </webview>'+
          '  <button id="power-button"></button>' +
          '</div>';
 };
