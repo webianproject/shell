@@ -13,7 +13,7 @@
  * @param {string} url URL to navigate
  */
 var BrowserTab = function(tabId, windowId, url) {
-  this.NEW_TAB_URL = 'chrome://app/content/chrome/newtab/newtab.html';
+  this.NEW_TAB_URL = 'file://' + __dirname + '/newtab/newtab.html';
   this.ABOUT_BLANK_URL = 'about:blank';
   if (url && url.length > 0 && url != this.ABOUT_BLANK_URL) {
     this.currentUrl = url;
@@ -53,9 +53,8 @@ BrowserTab.prototype.tabPanelView = function() {
     '" class="browser-tab-panel"><menu class="browser-toolbar">' +
     '<form class="url-bar"><input type="text" class="url-bar-input">' +
     '<button class="url-bar-button" type="submit"/></form></menu>' +
-    '<iframe src="' + this.currentUrl + '" id="browser-tab-frame' +
-    this.windowId + '-' + this.id + '" class="browser-tab-frame" mozbrowser ' +
-    ' remote></div>';
+    '<webview src="' + this.currentUrl + '" id="browser-tab-frame' +
+    this.windowId + '-' + this.id + '" class="browser-tab-frame"></div>';
 };
 
 /**
@@ -83,9 +82,11 @@ BrowserTab.prototype.renderTabPanel = function() {
   this.urlBarButton = this.tabPanelElement.getElementsByClassName(
     'url-bar-button')[0];
   this.urlBar.addEventListener('submit', this.handleSubmit.bind(this));
-  this.frame.addEventListener('mozbrowsertitlechange',
+  this.frame.addEventListener('page-title-updated',
     this.handleTitleChange.bind(this));
-  this.frame.addEventListener('mozbrowserlocationchange',
+    this.frame.addEventListener('did-navigate',
+      this.handleLocationChange.bind(this));
+    this.frame.addEventListener('did-navigate-in-page',
       this.handleLocationChange.bind(this));
 };
 
@@ -141,23 +142,24 @@ BrowserTab.prototype.handleSubmit = function(e) {
 /**
  * Handle a change in document title.
  *
- * @param Event e mozbrowsertitlechange event.
+ * @param Event e page-title-updated event.
  */
 BrowserTab.prototype.handleTitleChange = function(e) {
-  this.tabTitle.textContent = e.detail;
+  this.tabTitle.textContent = e.title;
 };
 
 /**
  * Handle a change in document location.
  *
- * @param Event e mozbrowserlocationchange event.
+ * @param Event e did-navigate event.
  */
 BrowserTab.prototype.handleLocationChange = function(e) {
-  if (e.detail.url == this.NEW_TAB_URL) {
+  var url = e.url;
+  if (url == this.NEW_TAB_URL) {
     this.urlBarInput.value = '';
     this.urlBarInput.focus();
   } else {
-    this.urlBarInput.value = e.detail.url;
+    this.urlBarInput.value = url;
   }
-  this.currentUrl = e.detail.url;
+  this.currentUrl = url;
 };

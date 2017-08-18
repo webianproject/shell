@@ -1,35 +1,37 @@
 /**
  * Webian Shell.
  *
- * Main script used by qbrt to load index.html as chrome.
+ * Main script which loads shell.html as chrome.
  */
-'use strict';
 
-const { classes: Cc, interfaces: Ci, results: Cr, utils: Cu } = Components;
-const { console } = Cu.import('resource://gre/modules/Console.jsm', {});
-const { Runtime } = Cu.import('resource://qbrt/modules/Runtime.jsm', {});
-const { Services } = Cu.import('resource://gre/modules/Services.jsm', {});
+const electron = require('electron');
+const app = electron.app;
+const BrowserWindow = electron.BrowserWindow;
+const path = require('path');
+const url = require('url');
 
-const WINDOW_URL = 'chrome://app/content/chrome/shell.html';
+let mainWindow;
 
-const WINDOW_FEATURES = [
-  'chrome',
-  'dialog=no',
-  'all',
-  'width=1024',
-  'height=768',
-].join(',');
+function startShell () {
+ // Create the main window
+ mainWindow = new BrowserWindow({width: 800, height: 600});
+ mainWindow.setFullScreen(true);
+ // Load shell.html as chrome
+ mainWindow.loadURL(url.format({
+   pathname: path.join(__dirname, 'chrome/shell.html'),
+   protocol: 'file:',
+   slashes: true
+ }));
+ // Open DevTools
+ mainWindow.webContents.openDevTools();
+ // Emitted when the window is closed.
+ mainWindow.on('closed', function () {
+   // Dereference the window object
+   mainWindow = null;
+   // Quit Electron
+   app.quit();
+ });
+};
 
-// On startup, activate ourselves, since starting up from Node doesn't do this.
-// TODO: do this by default for all apps started via Node.
-if (Services.appinfo.OS === 'Darwin') {
-  Cc['@mozilla.org/widget/macdocksupport;1'].getService(Ci.nsIMacDockSupport).activateApplication(true);
-}
-
-console.log('Starting Webian Shell...');
-
-const window = Services.ww.openWindow(null, WINDOW_URL, '_blank', WINDOW_FEATURES, null);
-window.fullScreen = true;
-
-// Comment this out to disable Dev Tools
-Runtime.openDevTools(window);
+// Start Shell when Electron is ready
+app.on('ready', startShell);

@@ -136,5 +136,5 @@ BrowserWindow.prototype.closeTab = function(tabId) {
  */
 BrowserWindow.prototype.handleOpenWindow = function(e) {
   e.preventDefault();
-  this.createTab(e.detail.url);
+  this.createTab(e.url);
 };

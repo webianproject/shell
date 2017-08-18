@@ -75,32 +75,34 @@
    * Populate the database with default content.
    */
   populate: function() {
-    fetch('chrome://app/content/config/defaults/sites.json').then(
-      (function(response) {
-      if (!response.ok) {
-        console.error('Bad network response while fetching default sites');
-        return;
-      }
-      response.json().then((function(manifests) {
-        var pinnedSites = [];
-
-        manifests.forEach(function(manifestObject) {
-          var siteObject = new Site(manifestObject);
-          pinnedSites.push(siteObject.id); // Default sites are pinned by default
-          this.addSite(siteObject);
-        }, this);
-        // Persist list of pinned sites in a special record
-        this.addSite({
-          'id': '{pinnedSites}',
-          'list': pinnedSites
-        }).then((function() {
-          this.broadcastChannel.postMessage('siteupdated');
-        }).bind(this));
-      }).bind(this));
-    }).bind(this))
-    .catch(function(error) {
-      console.error('Failed to fetch default sites: ' + error.message);
+    // XHR can GET file:// URLs but fetch can not
+    var request = new XMLHttpRequest();
+    request.addEventListener('error', function(error) {
+      console.error('Error fetching default sites ' + error);
     });
+    request.onreadystatechange = (function() {
+     if (!request.responseText) {
+       return;
+     }
+     var manifests = JSON.parse(request.responseText);
+     var pinnedSites = [];
+     manifests.forEach(function(manifestObject) {
+       manifestObject.icons[0].src = __dirname +
+         '/../config/defaults/icons/' + manifestObject.icons[0].src;
+       var siteObject = new Site(manifestObject);
+       pinnedSites.push(siteObject.id); // Default sites are pinned by default
+       this.addSite(siteObject);
+     }, this);
+     // Persist list of pinned sites in a special record
+     this.addSite({
+       'id': '{pinnedSites}',
+       'list': pinnedSites
+     }).then((function() {
+       this.broadcastChannel.postMessage('siteupdated');
+     }).bind(this));
+   }).bind(this);
+    request.open('GET', __dirname + '/../config/defaults/sites.json', true);
+    request.send();
   },
 
   /*
