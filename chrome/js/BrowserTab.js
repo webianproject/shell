@@ -13,7 +13,7 @@
  * @param {string} url URL to navigate
  */
 var BrowserTab = function(tabId, windowId, url) {
-  this.NEW_TAB_URL = 'chrome://app/content/newtab/newtab.html';
+  this.NEW_TAB_URL = 'chrome://app/content/chrome/newtab/newtab.html';
   this.ABOUT_BLANK_URL = 'about:blank';
   if (url && url.length > 0 && url != this.ABOUT_BLANK_URL) {
     this.currentUrl = url;
