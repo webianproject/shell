@@ -75,7 +75,8 @@
    * Populate the database with default content.
    */
   populate: function() {
-    fetch('chrome://app/content/defaults/sites.json').then((function(response) {
+    fetch('chrome://app/content/config/defaults/sites.json').then(
+      (function(response) {
       if (!response.ok) {
         console.error('Bad network response while fetching default sites');
         return;
