@@ -1,27 +1,26 @@
 /**
  * Icon.
  *
- * An icon represents a web app or website .
+ * An icon represents a web app .
  */
 
 /**
  * Icon Constructor.
  *
- * @param {Object} siteObject A SiteObject representing a site.
+ * @param {Object} appObject An AppObject representing an app.
  * @param {String} target Open in current window (_self) or a new one (_blank).
- * @param {Boolean} pinned Whether or not the site is pinned.
  */
-var Icon = function(siteObject, target, pinned) {
-  this.container = document.getElementById('top-sites-list');
-  this.id = siteObject.id;
-  this.startUrl = siteObject.startUrl;
-  this.name = siteObject.name || new URL(this.startUrl).hostname;
-  if (siteObject.icons && siteObject.icons[0]) {
-    this.iconUrl = siteObject.icons[0].src;
-  } else if (siteObject.iconUrl) {
-    this.iconUrl = siteObject.iconUrl;
+var Icon = function(appObject, target) {
+  this.container = document.getElementById('app-grid');
+  this.id = appObject._id;
+  this.startUrl = appObject.startUrl;
+  this.name = appObject.name || new URL(this.startUrl).hostname;
+  if (appObject.icons && appObject.icons[0]) {
+    this.iconUrl = appObject.icons[0].src;
+  } else {
+    this.iconUrl = null;
   }
-  this.render(target, pinned);
+  this.render(target);
   return this;
 };
 
@@ -38,9 +37,8 @@ Icon.prototype.view = function() {
  * Render Icon.
  *
  * @param {String} target Open in current window (_self) or a new one (_blank).
- * @param {Boolean} pinned Whether or not the site is pinned.
  */
-Icon.prototype.render = function(target, pinned) {
+Icon.prototype.render = function(target) {
   this.container.insertAdjacentHTML('beforeend', this.view());
   this.element = document.getElementById('icon-' + this.id);
   if (target && target == '_self') {
@@ -48,22 +46,19 @@ Icon.prototype.render = function(target, pinned) {
   } else {
     this.element.addEventListener('click', this.open.bind(this));
   }
-  if (pinned) {
-    this.element.classList.add('pinned');
-  }
 };
 
 /**
- * Launch site in a new window.
+ * Launch app in a new window.
  */
 Icon.prototype.open = function() {
-  var features = 'siteId=' + this.id;
+  var features = 'appId=' + this.id;
   window.open(this.startUrl, '_blank', features);
   console.log('opening window at ' + this.startUrl);
 };
 
 /**
- * Navigate to site in current window.
+ * Navigate to app in current window.
  */
 Icon.prototype.navigate = function() {
   window.location.href = this.startUrl;

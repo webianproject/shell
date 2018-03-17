@@ -26,9 +26,10 @@
   <head>
     <meta charset="utf-8">
     <title>Home Screen</title>
+    <script type="text/javascript" src="../js/lib/pouchdb-6.4.3.min.js"></script>
     <script type="text/javascript" src="js/HomeScreen.js"></script>
-    <script type="text/javascript" src="../js/Places.js"></script>
-    <script type="text/javascript" src="../js/Site.js"></script>
+    <script type="text/javascript" src="../js/Database.js"></script>
+    <script type="text/javascript" src="../js/App.js"></script>
     <script type="text/javascript" src="../js/Icon.js"></script>
     <link rel="stylesheet" href="css/homescreen.css" type="text/css" />
     <link rel="stylesheet" href="../css/icon.css" type="text/css" />
@@ -36,7 +37,7 @@
   <body>
     <input id="search-bar" type="text" placeholder="Search or enter address">
     </input>
-    <ul id="top-sites-list"></ul>
+    <ul id="app-grid"></ul>
   </body>
 
 </html>
