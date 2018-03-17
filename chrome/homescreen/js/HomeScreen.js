@@ -14,14 +14,12 @@ var HomeScreen = {
    * Start Home Screen.
    */
   start: function() {
+    console.log('Starting home screen...');
     this.searchBar = document.getElementById('search-bar');
-    this.topSites = document.getElementById('top-sites-list');
-    // Start the Places database
-    Places.start().then((function() {
-      this.showTopSites();
-    }).bind(this), function(error) {
-      console.error('Failed to start Places database ' + error);
-    });
+    this.appGrid = document.getElementById('app-grid');
+    //Start the Shell Database
+    Database.start();
+    this.showApps();
     this.broadcastChannel = new BroadcastChannel('system');
     this.broadcastChannel.onmessage = this.handleMessage.bind(this);
     this.searchBar.addEventListener('focus', this.handleSearchBarClick);
@@ -35,35 +33,28 @@ var HomeScreen = {
   },
 
   /*
-   * Show top sites.
+   * Show grid of app icons.
    */
-  showTopSites: function() {
-    this.topSites.innerHTML = '';
-    var pinnedSiteIds = [];
+  showApps: function() {
+    this.appGrid.innerHTML = '';
 
-    // First get pinned sites
-    Places.getPinnedSites().then(function(pinnedSites) {
-      pinnedSites.forEach(function(siteObject) {
-        pinnedSiteIds.push(siteObject.id);
-        var icon = new Icon(siteObject, '_blank', true);
-      }, this);
-    });
-
-    // Then get all top sites and de-dupe
-    Places.getTopSites().then((function(topSites) {
-      topSites.forEach(function(siteObject) {
-        if (pinnedSiteIds.indexOf(siteObject.id) == -1) {
-          var icon = new Icon(siteObject, '_blank');
+    Database.getApps().then(function(apps) {
+      apps.forEach(function(appObject) {
+        try {
+          var icon = new Icon(appObject, '_blank');
+        } catch(e) {
+          alert(e);
         }
-      }, this);
-    }).bind(this));
+
+      });
+    });
   },
 
   /**
    * Handle a message received via postMessage().
    */
   handleMessage: function(event) {
-    this.showTopSites();
+    this.showApps();
     console.log('Received message saying ' + event.data);
   }
 };

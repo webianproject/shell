@@ -62,15 +62,15 @@ var WindowManager = {
    * @param {Event} e _openwindow event.
    */
   handleOpenWindow: function(e) {
-    // If there's a siteId then generate window from Site in Places
-    if (e.detail && e.detail.options && e.detail.options.siteId) {
-      var siteId = e.detail.options.siteId;
-      Places.getSite(siteId).then((function(siteObject) {
-        // Use window type from siteObject or fall back to browser window
-        this.createWindow(this.WINDOW_TYPES[siteObject.display] ||
-          this.WINDOW_TYPES['browser'], e.detail.url, siteObject);
+    // If there's an appId then generate window from App in Database
+    if (e.detail && e.detail.options && e.detail.options.appId) {
+      var appId = e.detail.options.appId;
+      Database.getApp(appId).then((function(appObject) {
+        // Use display mode from appObject or fall back to browser window
+        this.createWindow(this.WINDOW_TYPES[appObject.display] ||
+          this.WINDOW_TYPES['browser'], e.detail.url, appObject);
       }).bind(this)).catch((function(e) {
-        console.error('Failed to get site object to open window ' + e);
+        console.error('Failed to get app object to open window ' + e);
         this.createWindow(this.WINDOW_TYPES.browser, e.detail.url);
       }).bind(this));
     // Otherwise create a generic browser window
@@ -116,9 +116,9 @@ var WindowManager = {
    *
    * @param {number} Window type id from this.WINDOW_TYPES.
    * @param {string} url URL to navigate window to.
-   * @param {Object} siteObject Website metadata to use in generating a window.
+   * @param {Object} appObject App metadata to use in generating a window.
    */
-  createWindow: function(windowType, url, siteObject) {
+  createWindow: function(windowType, url, appObject) {
     var newWindow = null;
     var id = this.windowCount;
     switch(windowType) {
@@ -132,14 +132,14 @@ var WindowManager = {
         break;
       // Standalone Window
       case this.WINDOW_TYPES.standalone:
-        newWindow = new StandaloneWindow(id, url, siteObject);
+        newWindow = new StandaloneWindow(id, url, appObject);
         break;
       default:
         console.error('Window type not recognised.');
         return;
     }
     this.windows[id] = newWindow;
-    var newWindowSelector = new WindowSelector(id, windowType, siteObject);
+    var newWindowSelector = new WindowSelector(id, windowType, appObject);
     this.windowSelectors[id] = newWindowSelector;
     this.switchWindow(id);
     this.windowCount++;

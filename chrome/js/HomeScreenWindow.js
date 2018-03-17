@@ -19,6 +19,9 @@ var HomeScreenWindow = function(id) {
   this.powerButton = document.getElementById('power-button');
   this.powerButton.addEventListener('click',
     this.handlePowerButtonClick.bind(this));
+  this.frame.addEventListener('console-message', (e) => {
+    console.log('Homescreen said: ', e.message)
+  });
   return this;
 };
 
