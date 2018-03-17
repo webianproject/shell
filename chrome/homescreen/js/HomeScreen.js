@@ -40,12 +40,7 @@ var HomeScreen = {
 
     Database.getApps().then(function(apps) {
       apps.forEach(function(appObject) {
-        try {
-          var icon = new Icon(appObject, '_blank');
-        } catch(e) {
-          alert(e);
-        }
-
+        var icon = new Icon(appObject, '_blank');
       });
     });
   },
