@@ -1,15 +1,15 @@
 /**
- * Site.
+ * App.
  *
- * A site object represents a website's metadata.
+ * An app object represents an app's metadata.
  */
 
 /**
- * Site constructor.
+ * App constructor.
  *
  * @param {Object} manifest A W3C web app manifest parsed as JSON.
  */
-var Site = function(manifest) {
+var App = function(manifest) {
   this.name = manifest.name;
   this.icons = manifest.icons;
   this.startUrl = manifest.start_url;
@@ -17,13 +17,12 @@ var Site = function(manifest) {
   this.themeColor = manifest.theme_color;
   this.scope = manifest.scope;
   this.display = manifest.display;
-  this.frecency = manifest.frecency || 0;
   var hostname = new URL(this.startUrl).hostname;
 
   if (this.scope) {
-    this.id = hostname + this.scope;
+    this._id = hostname + this.scope;
   } else {
-    this.id = hostname;
+    this._id = hostname;
   }
 
   return this;
