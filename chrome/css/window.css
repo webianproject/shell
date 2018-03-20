@@ -201,9 +201,48 @@
   display: flex;
 }
 
+.back-button, .forward-button {
+  width: 3rem;
+  height: 3rem;
+  margin: 0.5rem 0.5rem 0.5rem 0;
+  padding: 0;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  background-size: 2.4rem;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.back-button {
+  background-image: url('../images/back.svg');
+}
+
+.forward-button {
+  background-image: url('../images/forward.svg');
+}
+
+.back-button:disabled, .forward-button:disabled {
+  opacity: 0.5;
+}
+
+.back-button:hover, .forward-button:hover {
+    background-color: #4a4a4a;
+}
+
+.back-button:active, .forward-button:active {
+    background-color: #3a3a3a;
+}
+
+.back-button:disabled:hover, .forward-button:disabled:hover,
+.back-button:disabled:active, .forward-button:disabled:active {
+  background-color: transparent;
+}
+
 .browser-tab-frame {
   height: 100%;
   width: 100%;
+  flex: 1;
   border: none;
   border-radius: 0.5rem;
   border-top-left-radius: 0;
@@ -216,8 +255,8 @@
 
 .browser-toolbar {
   height: 4rem;
-  margin: 0;
-  padding: 0.8rem 0.6rem;
+  margin: 0 0.5rem;
+  padding: 0;
   display: flex;
   flex-direction: row;
   box-sizing: border-box;
@@ -232,6 +271,7 @@
   border-radius: 0.5rem;
   padding: 0;
   background-color: #fff;
+  margin: 0.8rem 0;
 }
 
 .url-bar-input {

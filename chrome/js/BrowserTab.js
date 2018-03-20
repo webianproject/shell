@@ -50,11 +50,18 @@ BrowserTab.prototype.tabView = function() {
  */
 BrowserTab.prototype.tabPanelView = function() {
   return '<div id="tab-panel' + this.windowId + '-' + this.id +
-    '" class="browser-tab-panel"><menu class="browser-toolbar">' +
-    '<form class="url-bar"><input type="text" class="url-bar-input">' +
-    '<button class="url-bar-button" type="submit"/></form></menu>' +
-    '<webview src="' + this.currentUrl + '" id="browser-tab-frame' +
-    this.windowId + '-' + this.id + '" class="browser-tab-frame"></div>';
+    '" class="browser-tab-panel">' +
+    '  <menu class="browser-toolbar">' +
+    '    <button class="back-button" disabled></button>' +
+    '    <button class="forward-button" disabled></button>' +
+    '    <form class="url-bar">' +
+    '      <input type="text" class="url-bar-input">' +
+    '      <button class="url-bar-button" type="submit"/>' +
+    '    </form>' +
+    '  </menu>' +
+    '  <webview src="' + this.currentUrl + '" id="browser-tab-frame' +
+       this.windowId + '-' + this.id + '" class="browser-tab-frame">' +
+    '</div>';
 };
 
 /**
@@ -76,6 +83,10 @@ BrowserTab.prototype.renderTabPanel = function() {
     '-' + this.id);
   this.frame = document.getElementById('browser-tab-frame' + this.windowId +
     '-' + this.id);
+  this.backButton = this.tabPanelElement.getElementsByClassName(
+    'back-button')[0];
+  this.forwardButton = this.tabPanelElement.getElementsByClassName(
+    'forward-button')[0];
   this.urlBar = this.tabPanelElement.getElementsByClassName('url-bar')[0];
   this.urlBarInput = this.tabPanelElement.getElementsByClassName(
     'url-bar-input')[0];
@@ -88,6 +99,10 @@ BrowserTab.prototype.renderTabPanel = function() {
       this.handleLocationChange.bind(this));
     this.frame.addEventListener('did-navigate-in-page',
       this.handleLocationChange.bind(this));
+    this.backButton.addEventListener('click',
+      this.handleBackClick.bind(this));
+    this.forwardButton.addEventListener('click',
+      this.handleForwardClick.bind(this));
 };
 
 /**
@@ -162,4 +177,32 @@ BrowserTab.prototype.handleLocationChange = function(e) {
     this.urlBarInput.value = url;
   }
   this.currentUrl = url;
+
+  // Enable/disable back button
+  if (this.frame.canGoBack()) {
+    this.backButton.disabled = false;
+  } else {
+    this.backButton.disabled = true;
+  }
+
+  // Enable/disable forward button
+  if (this.frame.canGoForward()) {
+    this.forwardButton.disabled = false;
+  } else {
+    this.forwardButton.disabled = true;
+  }
+};
+
+/**
+ * Go back.
+ */
+BrowserTab.prototype.handleBackClick = function() {
+  this.frame.goBack();
+};
+
+/**
+ * Go forward.
+ */
+BrowserTab.prototype.handleForwardClick = function() {
+  this.frame.goForward();
 };
