@@ -6,11 +6,6 @@
 
 var HomeScreen = {
   /**
-   * Broadcast channel used to communicate with the system.
-   */
-  broadcastChannel: null,
-
-  /**
    * Start Home Screen.
    */
   start: function() {
@@ -20,9 +15,9 @@ var HomeScreen = {
     //Start the Shell Database
     Database.start();
     this.showApps();
-    this.broadcastChannel = new BroadcastChannel('system');
-    this.broadcastChannel.onmessage = this.handleMessage.bind(this);
     this.searchBar.addEventListener('focus', this.handleSearchBarClick);
+    // Update the app grid whenever there's a database change
+    window.addEventListener('_databasechanged', this.showApps.bind(this));
   },
 
   /**
@@ -43,14 +38,6 @@ var HomeScreen = {
         var icon = new Icon(appObject, '_blank');
       });
     });
-  },
-
-  /**
-   * Handle a message received via postMessage().
-   */
-  handleMessage: function(event) {
-    this.showApps();
-    console.log('Received message saying ' + event.data);
   }
 };
 

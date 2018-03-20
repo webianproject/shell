@@ -10,10 +10,11 @@ var Shell = {
    * Start Shell.
    */
   start: function() {
+    console.log('Starting Shell...');
     this.windowManager = WindowManager.start();
     this.systemToolbar = SystemToolbar.start();
     // Start the shell database
-    Database.start();
+    Database.start(true);
     // Add event listeners
     window.addEventListener('_goinghome', this.handleGoingHome);
     window.addEventListener('_leavinghome', this.handleLeavingHome);
