@@ -15,6 +15,16 @@
 var BrowserTab = function(tabId, windowId, url) {
   this.NEW_TAB_URL = 'file://' + __dirname + '/newtab/newtab.html';
   this.ABOUT_BLANK_URL = 'about:blank';
+
+  // Url bar button modes
+  this.GO = 0;
+  this.STOP = 1;
+  this.RELOAD = 2;
+  this.urlBarButtonMode = this.GO;
+
+  this.loading = false;
+  this.urlBarFocused = false;
+
   if (url && url.length > 0 && url != this.ABOUT_BLANK_URL) {
     this.currentUrl = url;
   } else {
@@ -56,7 +66,7 @@ BrowserTab.prototype.tabPanelView = function() {
     '    <button class="forward-button" disabled></button>' +
     '    <form class="url-bar">' +
     '      <input type="text" class="url-bar-input">' +
-    '      <button class="url-bar-button" type="submit"/>' +
+    '      <button class="url-bar-button" type="button" />' +
     '    </form>' +
     '  </menu>' +
     '  <webview src="' + this.currentUrl + '" id="browser-tab-frame' +
@@ -93,12 +103,20 @@ BrowserTab.prototype.renderTabPanel = function() {
   this.urlBarButton = this.tabPanelElement.getElementsByClassName(
     'url-bar-button')[0];
   this.urlBar.addEventListener('submit', this.handleSubmit.bind(this));
+  this.urlBarInput.addEventListener('focus', this.handleUrlBarFocus.bind(this));
+  this.urlBarInput.addEventListener('blur', this.handleUrlBarBlur.bind(this));
   this.frame.addEventListener('page-title-updated',
     this.handleTitleChange.bind(this));
     this.frame.addEventListener('did-navigate',
       this.handleLocationChange.bind(this));
     this.frame.addEventListener('did-navigate-in-page',
       this.handleLocationChange.bind(this));
+    this.frame.addEventListener('did-start-loading',
+      this.handleLoadStart.bind(this));
+    this.frame.addEventListener('did-stop-loading',
+      this.handleLoadStop.bind(this));
+    this.urlBarButton.addEventListener('click',
+      this.handleUrlBarButtonClick.bind(this));
     this.backButton.addEventListener('click',
       this.handleBackClick.bind(this));
     this.forwardButton.addEventListener('click',
@@ -130,11 +148,50 @@ BrowserTab.prototype.deselect = function() {
 };
 
 /**
+ * Handle URL bar focus.
+ */
+BrowserTab.prototype.handleUrlBarFocus = function() {
+  this.urlBarFocused = true;
+  this.setUrlBarButtonMode(this.GO);
+};
+
+/**
+ * Handle URL bar blur.
+ */
+BrowserTab.prototype.handleUrlBarBlur = function() {
+  this.urlBarFocused = false;
+  if (this.loading) {
+    this.setUrlBarButtonMode(this.STOP);
+  } else if (this.urlBarInput.value == this.currentUrl) {
+    this.setUrlBarButtonMode(this.RELOAD);
+  } else {
+    this.setUrlBarButtonMode(this.GO);
+  }
+};
+
+/**
+ * Set URL bar button mode.
+ *
+ * @param {number} mode Mode to switch button to. One of:
+ * this.GO (0)
+ * this.STOP (1)
+ * this.RELOAD (2)
+ */
+BrowserTab.prototype.setUrlBarButtonMode = function(mode) {
+  this.urlBarButtonMode = mode;
+  this.urlBarButton.dataset.mode = mode;
+};
+
+/**
  * Handle URL bar submit.
+ *
+ * @param {Event} e Submit event.
  */
 BrowserTab.prototype.handleSubmit = function(e) {
   // stop form submission reloading top level document
-  e.preventDefault();
+  if (e) {
+    e.preventDefault();
+  }
   var url = this.urlBarInput.value;
   // Check for valid URL
   try {
@@ -152,6 +209,49 @@ BrowserTab.prototype.handleSubmit = function(e) {
   }
   this.frame.src = url;
   this.urlBarInput.blur();
+};
+
+/**
+ * Handle click on URL bar button.
+ *
+ * @param {Event} e Click event.
+ */
+BrowserTab.prototype.handleUrlBarButtonClick = function(e) {
+  switch(this.urlBarButtonMode) {
+    case this.GO:
+      this.handleSubmit();
+      break;
+    case this.STOP:
+      this.frame.stop();
+      break;
+    case this.RELOAD:
+      this.frame.reload();
+      break;
+  }
+};
+
+/**
+ * Handle start of page load.
+ *
+ * @param {Event} e did-start-loading event.
+ */
+BrowserTab.prototype.handleLoadStart = function(e) {
+  this.loading = true;
+  this.setUrlBarButtonMode(this.STOP);
+};
+
+/**
+ * Handle page load stopping.
+ *
+ * @param {Event} e did-stop-loading-event.
+ */
+BrowserTab.prototype.handleLoadStop = function(e) {
+  this.loading = false;
+  if (this.urlBarFocused) {
+    this.setUrlBarButtonMode(this.GO);
+  } else {
+    this.setUrlBarButtonMode(this.RELOAD);
+  }
 };
 
 /**
