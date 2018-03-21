@@ -289,12 +289,24 @@
 .url-bar-button {
   height: 2.4rem;
   width: 2.4rem;
-  background-image: url('../images/go.png');
+  background-image: url('../images/go.svg');
   background-position: center;
   border: 0;
   background-color: transparent;
   opacity: 0.8;
   border-radius: 0.5rem;
+}
+
+.url-bar-button[data-mode='0'] {
+  background-image: url('../images/go.svg');
+}
+
+.url-bar-button[data-mode='1'] {
+  background-image: url('../images/stop.svg');
+}
+
+.url-bar-button[data-mode='2'] {
+  background-image: url('../images/reload.svg');
 }
 
 .url-bar-button:hover, .url-bar-button:active {
