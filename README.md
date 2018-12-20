@@ -19,6 +19,9 @@ This will launch Webian Shell in a new window and also open developer tools.
 
 This desktop version of Webian Shell is powered by [Electron](https://electron.atom.io/).
 
+Note: On Linux you may need to install libgconf-2-4.
+
+`$ sudo apt-get install libgconf-2-4`
 
 ## Copyrights, Trademarks and Licensing
 
