@@ -17,6 +17,6 @@
   },
   "homepage": "https://webian.org/shell",
   "devDependencies": {
-    "electron": "~1.6.2"
+    "electron": "^5.0.6"
   }
 }

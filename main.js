@@ -14,8 +14,13 @@ let mainWindow;
 
 function startShell () {
  // Create the main window
- mainWindow = new BrowserWindow({width: 800, height: 600});
- mainWindow.setFullScreen(true);
+ mainWindow = new BrowserWindow({
+   fullscreen: true,
+   webPreferences: {
+     nodeIntegration: true,
+     webviewTag: true
+   }
+ });
  // Load shell.html as chrome
  mainWindow.loadURL(url.format({
    pathname: path.join(__dirname, 'chrome/shell.html'),
