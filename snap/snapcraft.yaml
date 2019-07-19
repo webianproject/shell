@@ -1,0 +1,94 @@
+name: webian-shell
+version: '0.3'
+summary: Webian Shell
+description: |
+  A graphical shell for the web
+base: core18
+confinement: strict
+grade: devel
+
+apps:
+  webian-shell:
+    daemon: simple
+    restart-condition: always
+    command: desktop-launch xwayland-kiosk-launch "$SNAP/webian-shell"
+    environment:
+      XWAYLAND_FULLSCREEN_WINDOW_HINT: window_role="browser-window"
+    slots: [ x11 ]
+    plugs:
+    - browser-sandbox
+    - network
+    - network-bind
+    - opengl
+    - pulseaudio
+    - wayland
+    - x11-plug
+
+plugs:
+  browser-sandbox:
+    interface: browser-support
+    allow-sandbox: true
+  x11-plug: # because cannot have identical plug/slot name in same yaml.
+    interface: x11
+
+parts:
+  webian-shell:
+    plugin: nodejs
+    source: https://github.com/webianproject/shell.git
+    after: [desktop-gtk3, xwayland-kiosk-helper]
+    override-build: |
+        case $SNAPCRAFT_ARCH_TRIPLET in
+          "i386-linux-gnu") ARCH="ia32";;
+          "x86_64-linux-gnu") ARCH="x64";;
+          "arm-linux-gnueabihf") ARCH="armv7l";;
+          "aarch64-linux-gnu") ARCH="arm64";;
+          *) echo "ERROR: electron does not support the '$SNAPCRAFT_ARCH_TRIPLET' architecture" && exit 1;;
+        esac
+        npm install electron-packager &&
+        ./node_modules/.bin/electron-packager . --overwrite --platform=linux --arch=$ARCH --output=release-build --prune=true
+        cp -v -R ./webian-shell-linux-$ARCH $SNAPCRAFT_PART_INSTALL/webian-shell
+    stage-packages:
+    - libasound2
+    - libgconf-2-4
+    - libnss3
+    - libx11-xcb1
+    - libxss1
+    - libxtst6
+    build-packages:
+    - nodejs
+    - npm
+    - unzip
+
+  # Adapted from snapcraft-desktop-helpers https://github.com/ubuntu/snapcraft-desktop-helpers/blob/master/snapcraft.yaml#L183
+  desktop-gtk3:
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: gtk
+    plugin: make
+    make-parameters: ["FLAVOR=gtk3"]
+    build-packages:
+      - build-essential
+      - libgtk-3-dev
+    stage-packages:
+      - libxkbcommon0  # XKB_CONFIG_ROOT
+      - ttf-ubuntu-font-family
+      - dmz-cursor-theme
+      - light-themes
+      - adwaita-icon-theme
+      - gnome-themes-standard
+      - shared-mime-info
+      - libgtk-3-0
+      - libgdk-pixbuf2.0-0
+      - libglib2.0-bin
+      - libgtk-3-bin
+      - unity-gtk3-module
+      - libappindicator3-1
+      - locales-all
+      - xdg-user-dirs
+      - ibus-gtk3
+      - libibus-1.0-5
+
+  xwayland-kiosk-helper:
+    plugin: cmake
+    source: https://github.com/MirServer/xwayland-kiosk-helper.git
+    build-packages: [ build-essential ]
+    stage-packages: [ xwayland, i3, libegl1-mesa, libgl1-mesa-glx ]
