@@ -11,7 +11,7 @@ apps:
   webian-shell:
     daemon: simple
     restart-condition: always
-    command: desktop-launch xwayland-kiosk-launch "$SNAP/webian-shell"  "--no-sandbox"
+    command: desktop-launch xwayland-kiosk-launch "$SNAP/webian-shell/webian-shell"  "--no-sandbox"
     environment:
       XWAYLAND_FULLSCREEN_WINDOW_HINT: window_role="browser-window"
     slots: [ x11 ]
