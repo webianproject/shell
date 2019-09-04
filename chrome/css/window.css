@@ -247,6 +247,7 @@
   border-radius: 0.5rem;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  background-color: #fff;
 }
 
 .browser-tab-panel:first-child .browser-tab-frame {
@@ -371,4 +372,5 @@
   border-radius: 0.5rem;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  background-color: #fff;
 }
