@@ -16,6 +16,7 @@ var BrowserTab = function(tabId, windowId, url) {
   this.NEW_TAB_URL = 'file://' + __dirname + '/newtab/newtab.html';
   this.ABOUT_BLANK_URL = 'about:blank';
   this.FAVICON_PLACEHOLDER = 'images/favicon-placeholder.png';
+  this.PRELOAD_SCRIPT = 'file://' + __dirname + '/js/WebviewPreload.js';
 
   // Url bar button modes
   this.GO = 0;
@@ -34,6 +35,10 @@ var BrowserTab = function(tabId, windowId, url) {
   if (tabId === undefined || windowId === undefined) {
     return;
   }
+  
+  // URL of web app manifest linked from current page
+  this.manifestUrl = null;
+  
   this.id = tabId;
   this.windowId = windowId;
   this.tabContainer = document.getElementById('tabs' + windowId);
@@ -72,7 +77,8 @@ BrowserTab.prototype.tabPanelView = function() {
     '    </form>' +
     '  </menu>' +
     '  <webview src="' + this.currentUrl + '" id="browser-tab-frame' +
-       this.windowId + '-' + this.id + '" class="browser-tab-frame">' +
+       this.windowId + '-' + this.id + '" class="browser-tab-frame" ' +
+       'preload="' + this.PRELOAD_SCRIPT + '">' +
     '</div>';
 };
 
@@ -120,12 +126,17 @@ BrowserTab.prototype.renderTabPanel = function() {
       this.handleLoadStop.bind(this));
     this.frame.addEventListener('page-favicon-updated',
       this.handleFaviconUpdate.bind(this));
+    this.frame.addEventListener('ipc-message',
+      this.handleIpcMessage.bind(this));
     this.urlBarButton.addEventListener('click',
       this.handleUrlBarButtonClick.bind(this));
     this.backButton.addEventListener('click',
       this.handleBackClick.bind(this));
     this.forwardButton.addEventListener('click',
       this.handleForwardClick.bind(this));
+    // Uncomment the following line to open developer tools for the webview
+    //this.frame.addEventListener('dom-ready', 
+    //  e => { this.frame.openDevTools(); });
 };
 
 /**
@@ -285,6 +296,9 @@ BrowserTab.prototype.handleLocationChange = function(e) {
   
   // Reset favicon
   this.favicon.src = this.FAVICON_PLACEHOLDER;
+  
+  // Reset manifest URL 
+  this.manifestUrl = null;
 
   // Enable/disable back button
   if (this.frame.canGoBack()) {
@@ -316,6 +330,18 @@ BrowserTab.prototype.handleFaviconUpdate = function(e) {
     return;
   }
   this.favicon.src = faviconUrl;
+};
+
+/**
+ * Handle a message sent from the webview preload script.
+ *
+ * @param Event e ipc-message event.
+ */
+BrowserTab.prototype.handleIpcMessage = function(e) {
+  // Detect links to web app manifests in current page
+  if (e.channel == 'manifestdetected') {
+    this.manifestUrl = e.args[0];
+  }
 };
 
 /**
