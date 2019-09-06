@@ -27,8 +27,7 @@ function startShell () {
    protocol: 'file:',
    slashes: true
  }));
- // Open DevTools
- mainWindow.webContents.openDevTools();
+
  // Emitted when the window is closed.
  mainWindow.on('closed', function () {
    // Dereference the window object
@@ -36,6 +35,9 @@ function startShell () {
    // Quit Electron
    app.quit();
  });
+ 
+ // Uncomment the following line to open developer tools for the main window
+ //mainWindow.webContents.openDevTools();
 };
 
 // Start Shell when Electron is ready
