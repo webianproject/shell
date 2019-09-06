@@ -15,6 +15,7 @@
 var BrowserTab = function(tabId, windowId, url) {
   this.NEW_TAB_URL = 'file://' + __dirname + '/newtab/newtab.html';
   this.ABOUT_BLANK_URL = 'about:blank';
+  this.FAVICON_PLACEHOLDER = 'images/favicon-placeholder.png';
 
   // Url bar button modes
   this.GO = 0;
@@ -49,6 +50,7 @@ var BrowserTab = function(tabId, windowId, url) {
 BrowserTab.prototype.tabView = function() {
   return '<div id="tab-' + this.windowId + '-' + this.id +
     '" class="browser-tab" data-tab-id="'+ this.id + '">' +
+      '<img class="tab-favicon" src="images/favicon-placeholder.png"></img>' +
       '<span class="tab-title"></span>' +
       '<button type="button" id="close-tab-button' + this.windowId +
         '-' + this.id + '" class="close-tab-button">' +
@@ -81,6 +83,7 @@ BrowserTab.prototype.renderTab = function() {
   this.newTabButton.insertAdjacentHTML('beforebegin', this.tabView());
   this.tabElement = document.getElementById('tab-' +
     this.windowId + '-' + this.id);
+  this.favicon = this.tabElement.getElementsByClassName('tab-favicon')[0];
   this.tabTitle = this.tabElement.getElementsByClassName('tab-title')[0];
 };
 
@@ -115,6 +118,8 @@ BrowserTab.prototype.renderTabPanel = function() {
       this.handleLoadStart.bind(this));
     this.frame.addEventListener('did-stop-loading',
       this.handleLoadStop.bind(this));
+    this.frame.addEventListener('page-favicon-updated',
+      this.handleFaviconUpdate.bind(this));
     this.urlBarButton.addEventListener('click',
       this.handleUrlBarButtonClick.bind(this));
     this.backButton.addEventListener('click',
@@ -277,6 +282,9 @@ BrowserTab.prototype.handleLocationChange = function(e) {
     this.urlBarInput.value = url;
   }
   this.currentUrl = url;
+  
+  // Reset favicon
+  this.favicon.src = this.FAVICON_PLACEHOLDER;
 
   // Enable/disable back button
   if (this.frame.canGoBack()) {
@@ -291,6 +299,23 @@ BrowserTab.prototype.handleLocationChange = function(e) {
   } else {
     this.forwardButton.disabled = true;
   }
+};
+
+/**
+ * Handle a change in page favicon.
+ *
+ * @param Event e page-favicon-updated event.
+ */
+BrowserTab.prototype.handleFaviconUpdate = function(e) {
+  var faviconUrl = e.favicons[0];
+  // Check for valid URL
+  try {
+    var faviconUrl = new URL(faviconUrl).href;
+  }
+  catch (e) {
+    return;
+  }
+  this.favicon.src = faviconUrl;
 };
 
 /**
