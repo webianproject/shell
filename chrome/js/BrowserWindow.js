@@ -101,7 +101,8 @@ BrowserWindow.prototype.switchTab = function(id) {
  * @param {Event} e Click event.
  */
 BrowserWindow.prototype.handleTabClick = function(e) {
-  if (e.target.classList.contains('tab-title')) {
+  if (e.target.classList.contains('tab-title') || 
+    e.target.classList.contains('tab-favicon')) {
     this.switchTab(e.target.parentNode.dataset.tabId);
   } else if (e.target.classList.contains('close-tab-button')) {
     this.closeTab(e.target.parentNode.dataset.tabId);

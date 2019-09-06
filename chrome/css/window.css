@@ -123,11 +123,17 @@
   border-radius: 0.5rem 0.5rem 0 0;
 }
 
+.tab-favicon {
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0.7rem;
+}
+
 .tab-title {
   flex: 1;
   color: #fff;
   font-size: 1.3rem;
-  padding: 0.8rem;
+  padding: 0.8rem 0.8rem 0.8rem 0;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
