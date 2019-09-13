@@ -276,6 +276,7 @@ BrowserTab.prototype.handleLoadStop = function(e) {
  * @param Event e page-title-updated event.
  */
 BrowserTab.prototype.handleTitleChange = function(e) {
+  // No need to sanitize if only setting via textContent
   this.tabTitle.textContent = e.title;
 };
 
@@ -321,7 +322,8 @@ BrowserTab.prototype.handleLocationChange = function(e) {
  * @param Event e page-favicon-updated event.
  */
 BrowserTab.prototype.handleFaviconUpdate = function(e) {
-  var faviconUrl = e.favicons[0];
+  // Sanitize just in case
+  var faviconUrl = DOMPurify.sanitize(e.favicons[0]);
   // Check for valid URL
   try {
     var faviconUrl = new URL(faviconUrl).href;
@@ -356,4 +358,22 @@ BrowserTab.prototype.handleBackClick = function() {
  */
 BrowserTab.prototype.handleForwardClick = function() {
   this.frame.goForward();
+};
+
+/**
+ * Get title of current page.
+ *
+ * @return String Title of current page.
+ */
+ BrowserTab.prototype.getTitle = function() {
+   return this.tabTitle.textContent;
+ };
+
+/**
+ * Get favicon URL for current page.
+ *
+ *  @return String URL of favicon of current page.
+ */
+BrowserTab.prototype.getFaviconUrl = function() {
+  return this.favicon.src;
 };
