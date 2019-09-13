@@ -101,14 +101,41 @@ BrowserWindow.prototype.switchTab = function(id) {
  * @param {Event} e Click event.
  */
 BrowserWindow.prototype.handleTabClick = function(e) {
-  if (e.target.classList.contains('tab-title') || 
-    e.target.classList.contains('tab-favicon')) {
+  if (e.target.classList.contains('tab-favicon')) {
+    if (e.target.parentNode.dataset.tabId == this.currentTab) {
+      // If current tab, show site info menu
+      this.showSiteInfo(e.target);
+    } else {
+      // Otherwise, switch to that tab
+      this.switchTab(e.target.parentNode.dataset.tabId);
+    }
+  } else if (e.target.classList.contains('tab-title')) {
     this.switchTab(e.target.parentNode.dataset.tabId);
   } else if (e.target.classList.contains('close-tab-button')) {
     this.closeTab(e.target.parentNode.dataset.tabId);
   } else if (e.target.classList.contains('new-tab-button')) {
     this.createTab();
   }
+};
+
+/**
+ * Show site info.
+ * 
+ * Show a site information window for the current website.
+ * 
+ * @param Element target The img element of the clicked favicon.
+ */
+BrowserWindow.prototype.showSiteInfo = function(target) {
+  // Get position of favicon to position menu relative to
+  var rect = target.getBoundingClientRect();
+  var x = rect.left;
+  var y = rect.bottom;
+  var tabId = target.parentNode.dataset.tabId;
+  // Get page metadata to populate site info
+  var title = this.tabs[tabId].getTitle();
+  var faviconUrl = this.tabs[tabId].getFaviconUrl();
+  // Generate site info menu
+  var siteInfoMenu = new SiteInfoMenu(this.element, x, y, title, faviconUrl);
 };
 
 /**

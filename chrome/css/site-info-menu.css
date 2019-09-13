@@ -1,0 +1,73 @@
+.scrim {
+  background-color: transparent;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.site-info {
+  width: 25rem;
+  display: block;
+  background-color: #e5e5e5;
+  border-radius: 0.5rem;
+  border: solid 1px #bfbfbf;
+  position: fixed;
+  padding: 1rem;
+  margin: 0.75rem 0rem;
+  z-index: 2;
+}
+
+.site-info:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 1.4rem;
+  width: 0;
+  height: 0;
+  border: 1rem solid transparent;
+  border-bottom-color: #e5e5e5;
+  border-top: 0;
+  margin-left: -1rem;
+  margin-top: -1rem;
+}
+
+.site-info h1 {
+  text-align: center;
+  font-style: italic;
+  font-weight: normal;
+  font-size: 1.4rem;
+  padding: 2rem auto;
+}
+
+.site-info .app-icon {
+  display: block;
+  width: 6.4rem;
+  height: 6.4rem;
+  margin: 2rem auto 1rem auto;
+}
+
+.site-info .app-name {
+  display: block;
+  font-size: 1.4rem;
+  width: 20rem;
+  margin: 0 auto 1rem auto;
+  text-align: center;
+}
+
+.site-info button {
+  display: block;
+  margin: 2rem auto;
+  background-color: #5f8dd3;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 1rem 4rem;
+  color: #fff;
+  font-size: 1.4rem;
+}
+
+.site-info button:hover {
+  background-color: #3e76ca;
+}
