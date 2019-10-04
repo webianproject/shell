@@ -35,10 +35,11 @@ var BrowserTab = function(tabId, windowId, url) {
   if (tabId === undefined || windowId === undefined) {
     return;
   }
-  
-  // URL of web app manifest linked from current page
+
+  // URL and crossOrigin attribute of web app manifest linked from current page
   this.manifestUrl = null;
-  
+  this.manifestCrossOrigin = null;
+
   this.id = tabId;
   this.windowId = windowId;
   this.tabContainer = document.getElementById('tabs' + windowId);
@@ -119,7 +120,7 @@ BrowserTab.prototype.renderTabPanel = function() {
     this.frame.addEventListener('did-navigate',
       this.handleLocationChange.bind(this));
     this.frame.addEventListener('did-navigate-in-page',
-      this.handleLocationChange.bind(this));
+      this.handleInPageLocationChange.bind(this));
     this.frame.addEventListener('did-start-loading',
       this.handleLoadStart.bind(this));
     this.frame.addEventListener('did-stop-loading',
@@ -135,7 +136,7 @@ BrowserTab.prototype.renderTabPanel = function() {
     this.forwardButton.addEventListener('click',
       this.handleForwardClick.bind(this));
     // Uncomment the following line to open developer tools for the webview
-    //this.frame.addEventListener('dom-ready', 
+    //this.frame.addEventListener('dom-ready',
     //  e => { this.frame.openDevTools(); });
 };
 
@@ -294,13 +295,35 @@ BrowserTab.prototype.handleLocationChange = function(e) {
     this.urlBarInput.value = url;
   }
   this.currentUrl = url;
-  
+
   // Reset favicon
   this.favicon.src = this.FAVICON_PLACEHOLDER;
-  
-  // Reset manifest URL 
-  this.manifestUrl = null;
 
+  // Reset manifest link
+  this.manifestUrl = null;
+  this.manifestCrossOrigin = null;
+
+  this.updateBackForwardButtons();
+};
+
+/**
+ * Handle a change in document location within a page.
+ *
+ * E.g. a hash change.
+ *
+ * @param Event e did-navigate-in-page event.
+ */
+BrowserTab.prototype.handleInPageLocationChange = function(e) {
+    var url = e.url;
+    this.currentUrl = url;
+    this.urlBarInput.value = url;
+    this.updateBackForwardButtons();
+}
+
+/**
+ * Updates the state of back and forward buttons based on back/forward history.
+ */
+BrowserTab.prototype.updateBackForwardButtons = function() {
   // Enable/disable back button
   if (this.frame.canGoBack()) {
     this.backButton.disabled = false;
@@ -314,7 +337,7 @@ BrowserTab.prototype.handleLocationChange = function(e) {
   } else {
     this.forwardButton.disabled = true;
   }
-};
+}
 
 /**
  * Handle a change in page favicon.
@@ -343,6 +366,7 @@ BrowserTab.prototype.handleIpcMessage = function(e) {
   // Detect links to web app manifests in current page
   if (e.channel == 'manifestdetected') {
     this.manifestUrl = e.args[0];
+    this.manifestCrossOrigin = e.args[1];
   }
 };
 
@@ -376,4 +400,104 @@ BrowserTab.prototype.handleForwardClick = function() {
  */
 BrowserTab.prototype.getFaviconUrl = function() {
   return this.favicon.src;
+};
+
+/**
+ * Get document URL.
+ *
+ *  @return String URL of currently loaded web page.
+ */
+BrowserTab.prototype.getDocumentUrl = function() {
+  return this.currentUrl;
+};
+
+/**
+ * Get web app manifest URL for current page.
+ *
+ *  @return String URL of web app manifest for current page.
+ */
+BrowserTab.prototype.getManifestUrl = function() {
+  return this.manifestUrl;
+};
+
+/**
+ * Fetch web app manifest for current page.
+ *
+ * Follows "steps for obtaining a manifest" in the W3C Web App Manifest spec
+ * https://www.w3.org/TR/appmanifest/#obtaining
+ *
+ * @return Promise Promise which resolves with parsed web app manifest.
+ */
+BrowserTab.prototype.fetchManifest = function() {
+  var pageUrl = this.currentUrl;
+  var manifestUrl = this.manifestUrl;
+  var credentialsMode = null;
+  return new Promise((resolve, reject) => {
+    // "Let origin be the Document's origin"
+    var origin = new URL(pageUrl).origin;
+    // "If origin is an opaque origin, terminate this algorithm."
+    if (origin === null) {
+      reject('Manifest linked from opaque origin');
+    }
+    // "If manifest link is null, terminate this algorithm.""
+    if (!manifestUrl) {
+      reject('No manifest URL');
+    }
+    // "If manifest link's href attribute's value is the empty string,
+    // then abort these steps."
+    if (manifestUrl == '') {
+      reject('Manifest URL is an empty string');
+    }
+    // "Let manifest URL be the result of parsing the value of the href attribute,
+    // relative to the element's base URL."
+    try {
+      var resolvedManifestUrl = new URL(manifestUrl, pageUrl).href;
+    } catch(e) {
+      // "If parsing fails, then abort these steps."
+      reject('Parsing manifest URL resolved against page URL failed.');
+    }
+
+    // 'If the manifest link's crossOrigin attribute's value is
+    // "use-credentials", then set request's credentials mode to "include".
+    // Otherwise, set request's credentials mode to "omit"'.
+    if (this.manifestCrossOrigin == 'use-credentials') {
+      credentialsMode = 'include';
+    } else {
+      credentialsMode = 'omit';
+    }
+    // Note: The following code is executed in the browsing context of the page
+    this.frame.executeJavaScript(`
+        function fetchManifest() {
+          return new Promise((resolve, reject) => {
+            // "Let request be a new Request."
+            // "Set request's URL to manifest URL."
+            var request = new Request('${resolvedManifestUrl}');
+            // "Set request's credentials mode..."
+            request.credentials = '${credentialsMode}';
+            // "Set request's mode is "cors"."
+            request.mode = 'cors';
+            // "Await the result of performing a fetch with request,
+            // letting response be the result."
+            fetch(request)
+              .then(response => response.json())
+              .then(json => {
+                resolve(json);
+              }).catch(e =>{
+                reject(e);
+              });
+          });
+        }
+        fetchManifest();
+      `
+    ).then(
+      (manifest) => {
+        resolve(manifest);
+      }
+    ).catch(
+      (reason) => {
+        console.error('Error fetching manifest' + reason);
+        reject(reason);
+      }
+    );
+  });
 };

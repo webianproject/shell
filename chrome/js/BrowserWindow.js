@@ -12,6 +12,8 @@
  * @param {string} url URL to navigate to.
  */
 var BrowserWindow = function(id, url) {
+  this.APP_ICON_SIZE = 64;
+
   BaseWindow.call(this, id);
   this.tabCount = 0; // Total number of tabs ever created in this window
   this.tabs = [];
@@ -120,9 +122,9 @@ BrowserWindow.prototype.handleTabClick = function(e) {
 
 /**
  * Show site info.
- * 
+ *
  * Show a site information window for the current website.
- * 
+ *
  * @param Element target The img element of the clicked favicon.
  */
 BrowserWindow.prototype.showSiteInfo = function(target) {
@@ -134,8 +136,28 @@ BrowserWindow.prototype.showSiteInfo = function(target) {
   // Get page metadata to populate site info
   var title = this.tabs[tabId].getTitle();
   var faviconUrl = this.tabs[tabId].getFaviconUrl();
-  // Generate site info menu
-  var siteInfoMenu = new SiteInfoMenu(this.element, x, y, title, faviconUrl);
+  var manifestUrl = this.tabs[tabId].getManifestUrl();
+  var documentUrl = this.tabs[tabId].getDocumentUrl();
+
+  if (!manifestUrl) {
+      var siteInfoMenu = new SiteInfoMenu(this.element, x, y, title,
+        faviconUrl, false);
+  } else {
+    this.tabs[tabId].fetchManifest().then((rawManifest) => {
+      var manifest = new WebAppManifest();
+      manifest.parse(rawManifest, manifestUrl, documentUrl);
+      var name = manifest.getShortestName();
+      var appIconUrl = manifest.getBestIconUrl(this.APP_ICON_SIZE);
+      var siteInfoMenu = new SiteInfoMenu(this.element, x, y,
+        name || title, appIconUrl || faviconUrl, true
+      );
+    }).catch((error) => {
+      console.error('Failed to fetch or parse web app manifest: ' + error);
+      // Fall back to showing site info.
+      var siteInfoMenu = new SiteInfoMenu(this.element, x, y, title,
+        faviconUrl, false);
+    });
+  }
 };
 
 /**
