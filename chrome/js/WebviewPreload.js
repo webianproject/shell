@@ -7,12 +7,21 @@
  */
 const ipcRenderer = require('electron').ipcRenderer;
 
-var preload = function() {
-  // Inform browser chrome if link to web app manifest detected
+var checkForManifest = function() {
+  // Inform browser chrome if link to web app manifest detected and send the
+  // values of its href and crossOrigin attributes.
   var manifestLink = document.querySelector('link[rel="manifest"]');
   if (manifestLink) {
-    ipcRenderer.sendToHost('manifestdetected', manifestLink.href);
+    ipcRenderer.sendToHost(
+      'manifestdetected',
+      manifestLink.href,
+      manifestLink.crossOrigin
+    );
   }
+}
+
+var preload = function() {
+  checkForManifest();
 };
 
 document.addEventListener('DOMContentLoaded', preload);

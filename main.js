@@ -35,7 +35,7 @@ function startShell () {
    // Quit Electron
    app.quit();
  });
- 
+
  // Uncomment the following line to open developer tools for the main window
  //mainWindow.webContents.openDevTools();
 };
