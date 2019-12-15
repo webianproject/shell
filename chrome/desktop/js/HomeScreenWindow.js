@@ -12,15 +12,18 @@
  */
 var HomeScreenWindow = function(id) {
   this.HOME_SCREEN_URL =
-    'file://' + __dirname + '/homescreen/homescreen.html';
+    'file://' + __dirname + '/../homescreen/homescreen.html';
   BaseWindow.call(this, id);
   this.frame = document.getElementById('home-screen-frame' + this.id);
   this.frame.addEventListener('new-window', this.handleOpenWindow);
   this.powerButton = document.getElementById('power-button');
   this.powerButton.addEventListener('click',
     this.handlePowerButtonClick.bind(this));
+  // Uncomment the next line to enable developer tools
+  //this.frame.addEventListener('dom-ready',
+  //  e => { this.frame.openDevTools(); });
   this.frame.addEventListener('console-message', (e) => {
-    console.log('Homescreen said: ', e.message)
+    console.log('Homescreen said: ', e.message);
   });
   return this;
 };

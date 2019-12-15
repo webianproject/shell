@@ -22,13 +22,13 @@ function startShell () {
       webviewTag: true
     }
   });
-  
+
   // Workaround for https://github.com/electron/electron/issues/21259
   Menu.setApplicationMenu(null);
 
   // Load shell.html as chrome
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'chrome/shell.html'),
+    pathname: path.join(__dirname, 'chrome/desktop/shell.html'),
     protocol: 'file:',
     slashes: true
   }));

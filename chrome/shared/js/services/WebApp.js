@@ -1,15 +1,20 @@
 /**
- * Web App Manifest.
+ * Web App.
  *
- * Represents a parsed web app manifest.
+ * Represents a web app and its metadata.
  */
-class WebAppManifest {
+class WebApp {
 
   /**
    * Constructor.
    */
-  constructor() {
+  constructor(rawManifest, manifestUrl, documentUrl) {
+    this.id = manifestUrl;
+    this.manifest = rawManifest;
+
+    // Parse manifest to dictionary
     this.dictionary = {};
+    this.parseFromManifest(rawManifest, manifestUrl, documentUrl);
   }
 
   /**
@@ -22,7 +27,7 @@ class WebAppManifest {
    * @param String manifestUrl URL manifest was fetched from.
    * @param String documentUrl URL of the document manifest was linked from.
    */
-  parse(rawManifest, manifestUrl, documentUrl) {
+  parseFromManifest(rawManifest, manifestUrl, documentUrl) {
 
     // "If Type(json) is not Object"
     if(typeof(rawManifest) !== 'object' || rawManifest == null) {
@@ -35,6 +40,12 @@ class WebAppManifest {
     // "Let manifest be the result of converting json to a
     // WebAppManifest dictionary."
     var manifest = {};
+
+    // Set app ID if saved in database
+    if(rawManifest._id) {
+      this.id = rawManifest._id;
+    }
+
     manifest.name = rawManifest.name;
     manifest.short_name = rawManifest.short_name;
 
@@ -45,6 +56,12 @@ class WebAppManifest {
       manifestUrl, documentUrl);
 
     manifest.icons = this.processImageResources(rawManifest.icons, manifestUrl);
+
+    // Note: Currently no processing steps due to bug in specification
+    // https://github.com/w3c/manifest/issues/760
+    manifest.theme_color = rawManifest.theme_color;
+
+    manifest.display = this.processDisplayMember(rawManifest.display);
 
     this.dictionary = manifest;
   }
@@ -57,7 +74,8 @@ class WebAppManifest {
    *
    * @param String value The raw value provided for start_url.
    * @param String manifestUrl URL from which the manifest was fetched.
-   * @oaram String documentUrl URL of document from which manifest was linked.
+   * @param String documentUrl URL of document from which manifest was linked.
+   * @return String processed start URL.
    */
   processStartUrlMember(value, manifestUrl, documentUrl) {
     // "If value is the empty string, return document URL."
@@ -73,7 +91,7 @@ class WebAppManifest {
       // "If start URL is failure:"
       // "Issue a developer warning."
       console.warn('Failed to resolve start URL of manifest, using ' +
-        'document URL ' + value);
+        'manifest URL ' + value);
       // "Return document URL."
       return documentUrl;
     }
@@ -143,7 +161,7 @@ class WebAppManifest {
   *
   * @param Object imageResource The ImageResource containing the src.
   * @param String manifestUrl The URL from which the manifest was fetched.
-  * @return Array An array of processed image resources.
+  * @return URL The parsed src URL.
   */
   processSrcMember(imageResource, manifestUrl) {
     // 'Let value be image["src"].'
@@ -266,6 +284,27 @@ class WebAppManifest {
   }
 
   /**
+  * Process the display member.
+  *
+  * Check that display member is a valid display mode as per
+  * https://www.w3.org/TR/appmanifest/#dom-displaymodetype
+  *
+  * @param String displayMode The display mode specified in the manifest.
+  * @return String A valid display mode or undefined.
+  */
+  processDisplayMember(displayMode) {
+    if (displayMode ===
+      'fullscreen' ||
+      'standalone' ||
+      'minimal-ui' ||
+      'browser') {
+      return displayMode;
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
   * Get the shortest name of the app.
   *
   * @return String short_name or name of app.
@@ -347,5 +386,50 @@ class WebAppManifest {
     } else {
       return undefined;
     }
+  }
+
+  /**
+   * Get start URL.
+   *
+   * @return String Start URL.
+   */
+  get startUrl() {
+    return this.dictionary.start_url;
+  }
+
+  /**
+   * Get name.
+   *
+   * @return String Name of web app.
+   */
+  get name() {
+    return this.dictionary.name;
+  }
+
+  /**
+   * Get short name.
+   *
+   * @return String Short name of web app.
+   */
+  get shortName() {
+    return this.dictionary.short_name;
+  }
+
+  /**
+   * Get display mode.
+   *
+   * @return String Display mode of app.
+   */
+  get display() {
+    return this.dictionary.display;
+  }
+
+  /**
+   * Get theme color.
+   *
+   * @return String RGB hex string.
+   */
+  get themeColor() {
+    return this.dictionary.theme_color;
   }
 }

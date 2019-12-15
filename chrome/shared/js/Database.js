@@ -11,58 +11,85 @@ var Database = {
   * Start the Database.
   *
   * @param {Boolean} populate Whether to populate the database if it's empty.
-  * @return {Object} The database object.
+  * @return Promise Resolves with database object.
   */
-  start: function(populate) {
-    this.db = new PouchDB(this.DB_NAME);
-    this.db.info().then((function (info) {
-      // If database empty and caller asked to populate it then add some default
-      // apps
-      if (populate && info.doc_count == 0) {
-        this.populate();
-      }
-      // Listen for database changes
-      this.listen();
-    }).bind(this));
-    return this;
+  init: function(populate) {
+    return new Promise((resolve, reject) => {
+      this.db = new PouchDB(this.DB_NAME);
+      this.db.info().then((info) => {
+        // If database empty and caller asked to populate it then add some default
+        // apps
+        if (populate && info.doc_count == 0) {
+          this.populate().then(() => {
+            resolve()
+          }).catch(() => {
+            console.error('Failed to populate app database.');
+            reject();
+          });
+        }
+        // Listen for database changes
+        this.listen();
+        resolve();
+      });
+    });
+
   },
 
   /**
    * Populate the database with default content.
+   *
+   * @return Promise resolves when population complete.
    */
   populate: function() {
     console.log('Populating database...');
-    // XHR can GET file:// URLs but fetch can not
-    var request = new XMLHttpRequest();
+    return new Promise((resolve, reject) => {
+      // XHR can GET file:// URLs but fetch can not
+      var request = new XMLHttpRequest();
 
-    request.addEventListener('load', (function() {
-      if (!request.responseText) {
-        return;
-      }
-      var manifests = JSON.parse(request.responseText);
-      manifests.forEach(function(manifestObject) {
-        manifestObject.icons[0].src = __dirname +
-          '/../config/defaults/icons/' + manifestObject.icons[0].src;
-        var app = new App(manifestObject);
-        this.saveApp(app);
-      }, this);
-    }).bind(this));
+      request.addEventListener('load', (function() {
+        if (!request.responseText) {
+          return;
+        }
+        var manifests = JSON.parse(request.responseText);
+        manifests.forEach(function(manifest) {
+          manifest.icons[0].src = 'file://' + __dirname +
+            '/../config/defaults/icons/' + manifest.icons[0].src;
+          this.saveApp(manifest, manifest._id);
+        }, this);
+        resolve();
+      }).bind(this));
 
-    request.addEventListener('error', function(error) {
-      console.error('Error fetching default sites ' + error);
+      request.addEventListener('error', function(error) {
+        console.error('Error fetching apps from database ' + error);
+        reject();
+      });
+
+      request.open('GET', __dirname + '/../config/defaults/apps.json', true);
+      request.send();
     });
-
-    request.open('GET', __dirname + '/../config/defaults/sites.json', true);
-    request.send();
   },
 
   /**
    * Save App.
    *
-   * @param App app App to save.
+   * @param Object manifest of WebApp to save.
+   * @param String URL manifest was fetched from (used as ID).
    */
-  saveApp: function(app) {
-    app.type = 'app'; // Document type for database.
+  saveApp: function(manifest, manifestUrl) {
+    var app = manifest;
+
+    // Set id
+    if (!app._id) {
+      if (manifestUrl) {
+        app._id = manifestUrl;
+      } else {
+        return;
+      }
+    }
+
+    // Add document type for database
+    app.type = 'app';
+
     this.db.put(app).then(function() {
       console.log('Saved app with ID ' + app._id);
     });
@@ -87,8 +114,6 @@ var Database = {
 
   /**
    * Get App by ID.
-   *
-   * Get all apps in the database.
    */
   getApp: function(id) {
     return this.db.get(id);

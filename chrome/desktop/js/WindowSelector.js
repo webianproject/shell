@@ -9,18 +9,17 @@
  *
  * @param {number} id Window ID.
  * @param {number} windowType Type of window from WindowManager.WINDOW_TYPES.
- * @param {Object} siteObject A Site object representing a web app or website.
+ * @param {Object} webApp A WebApp object.
  */
-var WindowSelector = function(id, windowType, siteObject) {
+var WindowSelector = function(id, windowType, webApp) {
   if (id === undefined) {
     return null;
   }
+  this.TARGET_ICON_SIZE = 24;
   this.id = id;
   this.container = document.getElementById('window-switcher');
-  if (siteObject && siteObject.icons && siteObject.icons[0]) {
-    this.iconUrl = siteObject.icons[0].src;
-  } else if (siteObject && siteObject.iconUrl) {
-    this.iconUrl = siteObject.iconUrl;
+  if (webApp) {
+    this.iconUrl = webApp.getBestIconUrl(this.TARGET_ICON_SIZE);
   }
   this.render(windowType);
   this.element.addEventListener('click', this.handleClick.bind(this));
