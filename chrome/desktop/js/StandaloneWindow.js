@@ -10,17 +10,24 @@
  * @extends BaseWindow.
  * @param {number} id Window ID to give standalone window.
  * @param {string} url URL to navigate to.
- * @param {Object} siteObject Site object to generate window from.
+ * @param {Object} webApp WebApp with metadata to generate window from.
  */
-var StandaloneWindow = function(id, url, siteObject) {
+var StandaloneWindow = function(id, url, webApp) {
   this.currentUrl = url;
-  if (siteObject && siteObject.name) {
-    this.name = siteObject.name;
+  if (webApp && webApp.name) {
+    this.name = webApp.name;
+  } else if (webApp && webApp.shortName) {
+    this.name = webApp.shortName;
   } else {
-    this.name = new URL(url).hostname;
+    try {
+      this.name = new URL(url).hostname;
+    } catch(e) {
+      this.name = '';
+    }
   }
-  if (siteObject && siteObject.themeColor) {
-    this.themeColor = siteObject.themeColor;
+
+  if (webApp && webApp.themeColor) {
+    this.themeColor = webApp.themeColor;
   }
   BaseWindow.call(this, id);
   return this;

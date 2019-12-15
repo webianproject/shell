@@ -144,10 +144,9 @@ BrowserWindow.prototype.showSiteInfo = function(target) {
         faviconUrl, false);
   } else {
     this.tabs[tabId].fetchManifest().then((rawManifest) => {
-      var manifest = new WebAppManifest();
-      manifest.parse(rawManifest, manifestUrl, documentUrl);
-      var name = manifest.getShortestName();
-      var appIconUrl = manifest.getBestIconUrl(this.APP_ICON_SIZE);
+      var webApp = new WebApp(rawManifest, manifestUrl, documentUrl);
+      var name = webApp.getShortestName();
+      var appIconUrl = webApp.getBestIconUrl(this.APP_ICON_SIZE);
       var siteInfoMenu = new SiteInfoMenu(this.element, x, y,
         name || title, appIconUrl || faviconUrl, true
       );

@@ -10,13 +10,19 @@ var HomeScreen = {
    */
   start: function() {
     console.log('Starting home screen...');
+    this.webAppManager = WebApps;
     this.searchBar = document.getElementById('search-bar');
     this.appGrid = document.getElementById('app-grid');
-    //Start the Shell Database
-    Database.start();
-    this.showApps();
+
+    Database.init().then(() => {
+      this.webAppManager.init(Database).then(() => {
+        this.showApps();
+      });
+    });
+
     this.searchBar.addEventListener('focus', this.handleSearchBarClick);
-    // Update the app grid whenever there's a database change
+
+    // TODO: Reload apps from database on change
     window.addEventListener('_databasechanged', this.showApps.bind(this));
   },
 
@@ -32,12 +38,10 @@ var HomeScreen = {
    */
   showApps: function() {
     this.appGrid.innerHTML = '';
-
-    Database.getApps().then(function(apps) {
-      apps.forEach(function(appObject) {
-        var icon = new Icon(appObject, '_blank');
-      });
-    });
+    var apps = this.webAppManager.getApps();
+    for (let [appId, app] of Object.entries(apps)) {
+      const icon = new WebAppIcon(app, '_blank');
+    }
   }
 };
 

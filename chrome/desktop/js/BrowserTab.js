@@ -5,6 +5,8 @@
  * tab panel which includes the webview which displays web content.
  */
 
+ const path = require('path');
+
 /**
  * Browser Tab Constructor.
  *
@@ -13,10 +15,11 @@
  * @param {string} url URL to navigate
  */
 var BrowserTab = function(tabId, windowId, url) {
-  this.NEW_TAB_URL = 'file://' + __dirname + '/newtab/newtab.html';
+  this.NEW_TAB_URL = 'file://' + path.join(__dirname, '/../newtab/newtab.html');
   this.ABOUT_BLANK_URL = 'about:blank';
   this.FAVICON_PLACEHOLDER = 'images/favicon-placeholder.png';
-  this.PRELOAD_SCRIPT = 'file://' + __dirname + '/js/WebviewPreload.js';
+  this.PRELOAD_SCRIPT = 'file://' +
+    path.join(__dirname, '/../shared/js/WebviewPreload.js');
 
   // Url bar button modes
   this.GO = 0;
