@@ -243,7 +243,7 @@ class WebApp {
   */
   processPurposeMember(imageResource) {
     // 'The icon purposes are as follows:'
-    const ICON_PURPOSES = ['badge', 'maskable', 'any'];
+    const ICON_PURPOSES = ['monochrome', 'maskable', 'any'];
     // 'If Type(image["purpose"]) it not String, or image["purpose"] consists
     // solely of ascii whitespace, then return the set « "any" ».'
     var purpose = imageResource.purpose;
@@ -332,10 +332,10 @@ class WebApp {
 
     this.dictionary.icons.forEach(function(icon) {
 
-      // filter out badge and maskable icons and those without a src
+      // filter out monochrome and maskable icons and those without a src
       if(!icon.src ||
-        icon.purpose.has('badge') ||
-        icon.purpose.has('maskable')) {
+        (!icon.purpose.has('any') && icon.purpose.has('monochrome')) ||
+        (!icon.purpose.has('any') && icon.purpose.has('maskable'))) {
         return;
       }
 
@@ -362,7 +362,7 @@ class WebApp {
         // Parse number (e.g. 32) from size string (e.g. '32x32')
         // Note: Format of sizes attribute is specified in
         // https://html.spec.whatwg.org/multipage/semantics.html#the-link-element:dom-link-sizes
-        var size = sizeString.split('x')[0];
+        var size = Number(sizeString.split('x')[0]);
         sizes.push(size);
       });
 
@@ -370,6 +370,10 @@ class WebApp {
       sizes.forEach(function(size) {
         // If larger than but closer to target
         if (size >= targetSize && size <= bestSize) {
+          bestSize = size;
+          bestIcon = icon;
+        // If larger than current best which is smaller than target
+        } else if(bestSize < targetSize && size > bestSize) {
           bestSize = size;
           bestIcon = icon;
         // If smaller than but closer to target
