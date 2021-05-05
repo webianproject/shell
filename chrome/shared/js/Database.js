@@ -53,7 +53,7 @@ var Database = {
         var manifests = JSON.parse(request.responseText);
         manifests.forEach(function(manifest) {
           manifest.icons[0].src = 'file://' + __dirname +
-            '/../config/defaults/icons/' + manifest.icons[0].src;
+            '/../../config/defaults/icons/' + manifest.icons[0].src;
           this.saveApp(manifest, manifest._id);
         }, this);
         resolve();
@@ -64,7 +64,7 @@ var Database = {
         reject();
       });
 
-      request.open('GET', __dirname + '/../config/defaults/apps.json', true);
+      request.open('GET', __dirname + '/../../config/defaults/apps.json', true);
       request.send();
     });
   },
