@@ -5,6 +5,9 @@
  */
 
 var HomeScreen = {
+
+  TARGET_ICON_SIZE: 64,
+
   /**
    * Start Home Screen.
    */
@@ -38,9 +41,12 @@ var HomeScreen = {
    */
   showApps: function() {
     this.appGrid.innerHTML = '';
-    var apps = this.webAppManager.getApps();
+    const apps = this.webAppManager.getApps();
+    const newWindow = true;
     for (let [appId, app] of Object.entries(apps)) {
-      const icon = new WebAppIcon(app, '_blank');
+      const src = app.getBestIconUrl(this.TARGET_ICON_SIZE);
+      const icon = new AppIcon(appId, src, app.name, app.startUrl, newWindow);
+      this.appGrid.insertAdjacentElement('beforeend', icon);
     }
   }
 };
