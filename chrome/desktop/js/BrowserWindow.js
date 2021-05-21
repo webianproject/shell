@@ -129,32 +129,33 @@ BrowserWindow.prototype.handleTabClick = function(e) {
  */
 BrowserWindow.prototype.showSiteInfo = function(target) {
   // Get position of favicon to position menu relative to
-  var rect = target.getBoundingClientRect();
-  var x = rect.left;
-  var y = rect.bottom;
-  var tabId = target.parentNode.dataset.tabId;
+  const rect = target.getBoundingClientRect();
+  const x = rect.left;
+  const y = rect.bottom;
+  const tabId = target.parentNode.dataset.tabId;
   // Get page metadata to populate site info
-  var title = this.tabs[tabId].getTitle();
-  var faviconUrl = this.tabs[tabId].getFaviconUrl();
-  var manifestUrl = this.tabs[tabId].getManifestUrl();
-  var documentUrl = this.tabs[tabId].getDocumentUrl();
+  const title = this.tabs[tabId].getTitle();
+  const faviconUrl = this.tabs[tabId].getFaviconUrl();
+  const manifestUrl = this.tabs[tabId].getManifestUrl();
+  const documentUrl = this.tabs[tabId].getDocumentUrl();
 
   if (!manifestUrl) {
-      var siteInfoMenu = new SiteInfoMenu(this.element, x, y, title,
-        faviconUrl, false);
+      const siteInfoMenu = new SiteInfoMenu(title, faviconUrl, false, x, y);
+      this.element.insertAdjacentElement('beforeend', siteInfoMenu);
   } else {
     this.tabs[tabId].fetchManifest().then((rawManifest) => {
-      var webApp = new WebApp(rawManifest, manifestUrl, documentUrl);
-      var name = webApp.getShortestName();
-      var appIconUrl = webApp.getBestIconUrl(this.APP_ICON_SIZE);
-      var siteInfoMenu = new SiteInfoMenu(this.element, x, y,
-        name || title, appIconUrl || faviconUrl, true
+      const webApp = new WebApp(rawManifest, manifestUrl, documentUrl);
+      const name = webApp.getShortestName();
+      const appIconUrl = webApp.getBestIconUrl(this.APP_ICON_SIZE);
+      const siteInfoMenu = new SiteInfoMenu(
+        name || title, appIconUrl || faviconUrl, true, x, y
       );
+      this.element.insertAdjacentElement('beforeend', siteInfoMenu);
     }).catch((error) => {
       console.error('Failed to fetch or parse web app manifest: ' + error);
       // Fall back to showing site info.
-      var siteInfoMenu = new SiteInfoMenu(this.element, x, y, title,
-        faviconUrl, false);
+      const siteInfoMenu = new SiteInfoMenu(title, faviconUrl, false, x, y);
+      this.element.insertAdjacentElement('beforeend', siteInfoMenu);
     });
   }
 };
