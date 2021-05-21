@@ -11,6 +11,7 @@ class AppIcon extends HTMLElement {
    * @param {string} id - App ID to associate with icon.
    * @param {string} src - Path of icon image.
    * @param {string} name - Name of app from web app manifest.
+   * @param {string} startUrl - Starting URL of app to load.
    * @param {boolean} newWindow - Whether to launch in new or current window.
    */
   constructor(id, src, name, startUrl, newWindow) {
