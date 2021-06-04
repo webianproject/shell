@@ -60,36 +60,6 @@ button::-moz-focus-inner {
   float: left;
 }
 
-.window-selector {
-  width: 3.2rem;
-  height: 3rem;
-  background-color: transparent;
-  background-image: url("../images/browser-icon.png");
-  background-size: 2.4rem;
-  background-position: center center;
-  background-repeat: no-repeat;
-  border: none;
-  margin: 0 0.2rem;
-  padding: 0;
-  border-bottom: solid 2px transparent;
-}
-
-.window-selector:hover {
-  border-bottom: solid 2px rgba(255, 255, 255, 0.6);
-}
-
-.window-selector:active {
-  border-bottom: solid 2px #fff;
-}
-
-.window-selector.selected {
-  border-bottom: solid 2px rgba(255, 255, 255, 0.9);
-}
-
-.window-selector.home-button {
-  background-image: url("../images/home.png");
-}
-
 #new-window-button {
   float: left;
   height: 3.2rem;

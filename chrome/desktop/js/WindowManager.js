@@ -12,7 +12,7 @@ var WindowManager = {
   windows: [],
 
   /**
-   * The collection of App Window Buttons used to select an App Window.
+   * The collection of WindowSelectors used to select an App Window.
    */
   windowSelectors: [],
 
@@ -46,6 +46,7 @@ var WindowManager = {
    * @return {Object} The WindowManager object.
    */
   start: function() {
+    this.windowSwitcher = document.getElementById('window-switcher');
     window.addEventListener('_openwindow',
       this.handleOpenWindow.bind(this));
     window.addEventListener('_switchwindow',
@@ -109,7 +110,7 @@ var WindowManager = {
     }
     this.windows[e.detail.id].destroy();
     delete this.windows[e.detail.id];
-    this.windowSelectors[e.detail.id].destroy();
+    this.windowSwitcher.removeChild(this.windowSelectors[e.detail.id]);
     delete this.windowSelectors[e.detail.id];
     this.currentWindow = null;
     var windowIds = Object.keys(this.windows);
@@ -146,7 +147,8 @@ var WindowManager = {
         return;
     }
     this.windows[id] = newWindow;
-    var newWindowSelector = new WindowSelector(id, windowType, webApp);
+    const newWindowSelector = new WindowSelector(id, windowType, webApp);
+    this.windowSwitcher.insertAdjacentElement('beforeend', newWindowSelector);
     this.windowSelectors[id] = newWindowSelector;
     this.switchWindow(id);
     this.windowCount++;
@@ -161,7 +163,7 @@ var WindowManager = {
     // Hide the current window
     if (this.currentWindow !== null) {
       this.windows[this.currentWindow].hide();
-      this.windowSelectors[this.currentWindow].deselect();
+      this.windowSelectors[this.currentWindow].removeAttribute('selected');
     }
     // Dispatch an event if switching to or from homescreen.
     if (id == this.WINDOW_TYPES.home &&
@@ -174,6 +176,6 @@ var WindowManager = {
     this.currentWindow = id;
     // Show the selected window
     this.windows[id].show();
-    this.windowSelectors[id].select();
+    this.windowSelectors[id].setAttribute('selected', '');
   }
 };
